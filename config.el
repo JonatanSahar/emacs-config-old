@@ -89,32 +89,15 @@
 (setq pdf-view-resize-factor 1.1)
 
 
-(use-package zoom
-  :hook (doom-first-input . zoom-mode)
-  :config
-  (setq zoom-size '(0.7 . 0.7)
-        zoom-ignored-major-modes '(dired-mode vterm-mode help-mode helpful-mode rxt-help-mode help-mode-menu org-mode)
-        zoom-ignored-buffer-names '("*doom:scratch*" "*info*" "*helpful variable: argv*")
-        zoom-ignored-buffer-name-regexps '("^\\*calc" "\\*helpful variable: .*\\*")
-        zoom-ignore-predicates (list (lambda () (> (count-lines (point-min) (point-max)) 20)))))
+;; (use-package zoom
+;;   :hook (doom-first-input . zoom-mode)
+;;   :config
+;;   (setq zoom-size '(0.618 . 0.618)
+;;         zoom-ignored-major-modes '(dired-mode vterm-mode help-mode helpful-mode rxt-help-mode help-mode-menu org-mode which-key-mode)
+;;         zoom-ignored-buffer-names '("*doom:scratch*" "*info*" "*helpful variable: argv*")
+;;         zoom-ignored-buffer-name-regexps '("^\\*calc" "\\*helpful variable: .*\\*")
+;;         zoom-ignore-predicates (list (lambda () (> (count-lines (point-min) (point-max)) 20)))))
 
-
-;; My mappings
-(map! :map org-roam-backlinks-mode-map "return" #'org-open-at-point)
-
-(map! "C-s" #'save-buffer
-      [C-o] #'better-jumper-jump-forward
-      [C-i] #'better-jumper-jump-forward)
-
-(map! :map pdf-view-mode-map
-      :nvi
-      "I" #'org-noter-insert-precise-note)
-
-(map! :map pdf-view-mode-map
-      :nvi "i" #'org-noter-insert-note
-      :nvi "I" #'org-noter-insert-precise-note)
-
-(map! :i "C-l" #'org-roam-insert)
 
 (defun my/snipe_ivy ()
   (evilem-create (list 'evil-snipe-repeat
@@ -135,12 +118,25 @@
 ;;         :desc "find file" "f" 'org-roam-find-file)))
 (map!
  :nvi "C-\\" #'toggle-input-method
+ :nvi "C-s" #'save-buffer
+ :nvi "C-l" #'org-roam-insert
+ :nvi "C-S-L" #'org-ref-insert-link
  :i "S-SPC" #'evil-force-normal-state)
+
+(map! [C-o] #'better-jumper-jump-forward
+      [C-i] #'better-jumper-jump-forward)
+
+(map! :map pdf-view-mode-map
+      :nvi "I" #'org-noter-insert-precise-note
+      :nvi "i" #'org-noter-insert-note)
 
 (map! :leader
       :desc "Org Noter" :nv "nN" #'org-noter
       (:when (featurep! :completion helm)
-        :desc "M-x"                     :n "SPC" #'helm-M-x))
+        :desc "M-x" :n "SPC" #'helm-M-x))
+
+(map! :n "gO" #'+evil/insert-newline-above
+      :n "go" #'+evil/insert-newline-below)
 
 (map! :leader
   :nv
@@ -188,7 +184,7 @@
 
 ;; Deft
 (setq deft-extensions '("txt" "tex" "org")
-      deft-directory "~/google_drive/.notes/"
+      deft-directory "~/google_drive/.notes/slip-box"
       deft-recursive t)
 
 (setq-default evil-escape-delay 0.4)
@@ -609,9 +605,9 @@
 ;; (setq ispell-dictionary "~/google_drive/dictionary_en_SCOWL_80.txt")
 ;; (setq ispell-personal-dictionary "~/google_drive/hunspell_personal")
 
-(setq which-key-idle-delay 0.5)
-(setq which-key-idle-secondary-delay 0.5)
-;; (setq which-key-allow-multiple-replacements t)
+(setq which-key-idle-delay 0.2)
+(setq which-key-idle-secondary-delay 0.1)
+(setq which-key-allow-multiple-replacements t)
 
 (defun my_refile(file headline)
   (let ((pos (save-excursion
