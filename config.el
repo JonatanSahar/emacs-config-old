@@ -21,10 +21,35 @@
 ;; font string. You generally only need these two:
 ;; (setq doom-font (font-spec :family "monospace" :size 12 :weight 'semi-light)
 ;;       doom-variable-pitch-font (font-spec :family "sans" :size 13))
-(setq doom-font (font-spec :family "Source Code Pro" :size 16)
+;; (setq doom-font
+(setq
+       doom-font  (font-spec :family "Source Code Pro" :size 18)
+     ;; doom-font (font-spec :family "Alef" :size 20)
       doom-big-font (font-spec :family "JetBrains Mono" :size 16)
       doom-variable-pitch-font (font-spec :family "Source Code Pro" :size 16)
       doom-unicode-font (font-spec :name "DejaVu Sans Mono" :size 16))
+
+
+;; Setting English Font
+;; (set-face-attribute
+;;  'default nil
+;;  :stipple nil
+;;  :height 200
+;;  :width 'normal
+;;  :inverse-video nil
+;;  :box nil
+;;  :strike-through nil
+;;  :overline nil
+;;  :underline nil
+;;  :slant 'normal
+;;  :weight 'normal
+;;  :foundry "outline"
+;;  :family "Fira code retina")
+;;
+;; (custom-theme-set-faces 'user
+  ;;        '(variable-pitch ((t (:family "ETBembo" :height 180 :weight thin))))
+  ;;        '(fixed-pitch ((t ( :family "Fira Code Retina" :height 200))))))
+ 
 ;; There are two ways to load a theme. Both assume the theme is installed and
 ;; available. You can either set `doom-theme' or manually load a theme with the
 ;; `load-theme' function. This is the default:
@@ -67,7 +92,28 @@
 (setq auto-save-interval 20)
 (setq auto-save-visited-mode t)
 
+(defun my/org-faces()
+ (let* ((variable-tuple (cond
+                              ((x-family-fonts "Alef")    '(:family "Alef"))
+                              ((x-family-fonts "Fira Code Retina")    '(:family "Fira Code Retina"))
+                              ((x-family-fonts "Source Sans Pro")    '(:family "Source Sans Pro"))
+                              (nil (warn "Cannot find a Sans Serif Font.  Install Source Sans Pro."))
+                              )
+                        )
+        (base-font-color     (face-foreground 'default nil 'default))
+        (headline           `(:inherit default :weight normal :foreground ,base-font-color)))
 
+   (custom-theme-set-faces 'user
+                           `(org-level-8 ((t (,@headline ,@variable-tuple))))
+                           `(org-level-7 ((t (,@headline ,@variable-tuple))))
+                           `(org-level-6 ((t (,@headline ,@variable-tuple))))
+                           `(org-level-5 ((t (,@headline ,@variable-tuple))))
+                           `(org-level-4 ((t (,@headline ,@variable-tuple :height 1.1))))
+                           `(org-level-3 ((t (,@headline ,@variable-tuple :height 1.1))))
+                           `(org-level-2 ((t (,@headline ,@variable-tuple :height 1.1))))
+                           `(org-level-1 ((t (,@headline ,@variable-tuple :height 1.15))))
+                           `(org-document-title ((t (,@headline ,@variable-tuple :height 1.2 :underline nil))))))
+ )
 ;; join lines
 (define-key evil-normal-state-map (kbd "J") 'evil-join)
 (define-key evil-normal-state-map (kbd "K") 'join-line)
@@ -79,6 +125,12 @@
 (key-chord-define evil-visual-state-map "jk" #'evil-force-normal-state)
 (key-chord-define-global "jk" #'evil-force-normal-state)
 
+(key-chord-define-global "zh" #'windmove-left)
+(key-chord-define-global "zl" #'windmove-right)
+(key-chord-define-global "zk" #'windmove-up)
+(key-chord-define-global "zj" #'windmove-down)
+
+(setq org-todo-keywords '((sequence "PENDING(p)" "TODO(t)" "NEXT(n)" "WAITING(w)" "DELEGATED(d)" "NOTE(N)"  "|" "DONE(d)" "CANCELLED(c)")))
 
 ;; movement
 (define-key evil-normal-state-map (kbd "j") 'evil-next-visual-line)
@@ -119,12 +171,15 @@
 (map!
  :nvi "C-\\" #'toggle-input-method
  :nvi "C-s" #'save-buffer
- :nvi "C-l" #'org-roam-insert
- :nvi "C-S-L" #'org-ref-insert-link
- :i "S-SPC" #'evil-force-normal-state)
+ :i "S-SPC" #'evil-force-normal-state
+ :map evil-org-mode-map
+ :i "C-l" #'org-roam-insert
+ :i "C-S-L" #'org-ref-insert-link)
 
 (map! [C-o] #'better-jumper-jump-forward
       [C-i] #'better-jumper-jump-forward)
+
+(map! :map org-roam-backlinks-mode-map "return" #'org-open-at-point)
 
 (map! :map pdf-view-mode-map
       :nvi "I" #'org-noter-insert-precise-note
@@ -135,8 +190,57 @@
       (:when (featurep! :completion helm)
         :desc "M-x" :n "SPC" #'helm-M-x))
 
+(map! :map org-mode-map
+      :nvi [(control h)] nil
+      :nvi [(control j)] nil
+      :nvi [(control k)] nil
+      :nvi [(control l)] nil
+      :nvi [(control shift h)] nil
+      :nvi [(control shift j)] nil
+      :nvi [(control shift k)] nil
+      :nvi [(control shift l)] nil
+      :nvi [(control shift left)] nil
+      :nvi [(control shift right)] nil
+      :nvi [(control shift up)] nil
+      :nvi [(control shift down)] nil
+      :n [(control shift left)]  #'windmove-left
+      :n [(control shift right)] #'windmove-right
+      :n [(control shift up)]    #'windmove-up
+      :n [(control shift down)]  #'windmove-down
+      :n [(control h)] #'windmove-left
+      :n [(control l)] #'windmove-right
+      :n [(control k)] #'windmove-up
+      :n [(control j)] #'windmove-down
+      ;; :n [(z h)] #'windmove-left
+      ;; :n [(z l)] #'windmove-right
+      ;; :n [(z k)] #'windmove-up
+      ;; :n [(z j)] #'windmove-down
+      )
+
+
+
 (map! :n "gO" #'+evil/insert-newline-above
-      :n "go" #'+evil/insert-newline-below)
+      :n "go" #'+evil/insert-newline-below
+      :n "g]" #'kmacro-end-and-call-macro
+      :n "g." #'er/expand-region
+      )
+
+(map!
+ :n "zz" nil
+ :n "zh" nil
+ :n "zj" nil
+ :n "zk" nil
+ :n "zl" nil
+ )
+
+(map! :prefix "zz"
+       :n "z" #'evil-scroll-line-to-center
+       :n "h" #'evil-window-left
+       :n "j" #'evil-window-down
+       :n "k" #'evil-window-up
+       :n "l" #'evil-window-right)
+
+
 
 (map! :leader
   :nv
@@ -155,15 +259,17 @@
       "7" 'winum-select-window-7
       "8" 'winum-select-window-8
       "9" 'winum-select-window-9
-      (:prefix-map ("j" . "navigation")
+      (:prefix ("j" . "navigation")
        :desc "avy timer" "j" 'avy-goto-char-timer
        :desc "avy line" "l" 'avy-goto-line)
-      (:prefix-map ("k" . "my commands")
+      (:prefix ("k" . "my commands")
        :desc "kill all other windows" "o" 'delete-other-windows
-       :desc "kill buffer and window" "d" 'kill-buffer-and-window
+       :desc "kill buffer and window" "w" '+workspace/close-window-or-workspace
+       :desc "kill buffer and window" "d" 'kill-current-buffer
        :desc "switch to previous buffer" "k" 'evil-switch-to-windows-last-buffer
        :desc "save current buffer" "s" 'save-buffer
-       (:prefix-map ("r" . "references")
+       :desc "refile subtree" "r" 'org-refile
+       (:prefix ("b" . "references")
         :desc "crossref search for refernce" "r" 'doi-utils-add-entry-from-crossref-query
         :desc "add refernce from doi" "d" 'doi-utils-add-bibtex-entry-from-doi
         :desc "helm bibtex" "h" 'helm-bibtex
@@ -205,11 +311,12 @@
                             "~/google_drive/.notes/gtd/someday.org"
                             "~/google_drive/.notes/gtd/writing_inbox.org"))
 
-(setq org-refile-targets '(( org-capture-projects-file :maxlevel . 1)
+(setq org-refile-targets '(
+                           ( org-capture-projects-file :maxlevel . 1)
                            ( org-capture-someday-file :level . 1)
                            ( org-capture-inbox-file :maxlevel . 2)
+                           (nil . (:maxlevel . 2)) ;; current buffer
                            ( org-capture-reminders-file :maxlevel . 1)))
-
 
 (setq org-capture-templates
       '(("t" "Todo"
@@ -248,126 +355,79 @@
 (add-hook 'org-roam-mode-hook (function (lambda () (setq bidi-paragraph-direction nil))))
 ;; (add-hook! 'org-mode-hook #'org-roam-buffer-activate)
 
-(use-package org-super-agenda
-  :commands (org-super-agenda-mode)
-  :after org-agenda
-  :config (org-super-agenda-mode))
-
-(org-super-agenda-mode)
-
 (evil-snipe-override-mode 1)
 
 
-;; Super-agenda
-(setq org-agenda-skip-scheduled-if-done t
-      org-agenda-skip-deadline-if-done t
-      org-agenda-include-deadlines t
-      org-agenda-block-separator nil
-      org-agenda-tags-column 100 ;; from testing this seems to be a good value
-      org-agenda-compact-blocks t)
+
+
+;;pomodoro
+(use-package org-pomodoro)
+(setq org-pomodoro-manual-break nil)
 
 
 (setq
  org-ellipsis "▼"
  ;; ➡, ⚡, ▼, ↴, ∞, ⬎, ⤷, ⤵, …
- ;; org-agenda-files (quote ("~/Notes/todo.org" "~/Notes/appointments.org"))
  org-deadline-warning-days 7
  org-agenda-breadcrumbs-separator " ❱ "
- ;; org-directory "~/Notes")
- )
+org-odd-levels-only  t
+org-hide-emphasis-markers t)
+
+(defun my/org-search ()
+  (interactive)
+  (org-refile '(4)))
+
+;; (customize-set-value
+;;  'org-agenda-category-icon-alist
+;;  `(
+;;    ("research" "~/google_drive/icons/004-laboratory.svg" nil nil :ascent center)
+;;    ("school" "~/google_drive/icons/003-microscope.svg" nil nil :ascent center)
+;;    ("home" "~/google_drive/icons/009-home.svg" nil nil :ascent center)
+;;    ("todo" "~/google_drive/icons/011-to-do-list.svg" nil nil :ascent center)
+;;    ("wedding" "~/google_drive/icons/012-wedding-rings.svg" nil nil :ascent center)
+;;    ("bills" "~/google_drive/icons/005-calculator.svg" nil nil :ascent center)
+;;    ("downtown" "~/google_drive/icons/013-buildings.svg" nil nil :ascent center)
+;;    ("emacs" "~/google_drive/icons/014-coding.svg" nil nil :ascent center)
+;;    ))
 
 (customize-set-value
  'org-agenda-category-icon-alist
  `(
-   ("work" "~/dotfiles/icons/money-bag.svg" nil nil :ascent center)
-   ("chore" "~/dotfiles/icons/loop.svg" nil nil :ascent center)
-   ("events" "~/dotfiles/icons/calendar.svg" nil nil :ascent center)
-   ("todo" "~/dotfiles/icons/checklist.svg" nil nil :ascent center)
-   ("walk" "~/dotfiles/icons/walk.svg" nil nil :ascent center)
-   ("solution" "~/dotfiles/icons/solution.svg" nil nil :ascent center)
-   ("research" ,(list (all-the-icons-material "check_box" :height 1.2)) nil nil :ascent center)
+   ("research" "~/google_drive/icons/calendar.svg" nil nil :ascent center)
+   ("school" "~/google_drive/icons/calendar.svg" nil nil :ascent center)
+   ("home" "~/google_drive/icons/checklist.svg" nil nil :ascent center)
+   ("todo" "~/google_drive/icons/checklist.svg" nil nil :ascent center)
+   ("wedding" "~/google_drive/icons/012-wedding-rings.svg" nil nil :ascent center)
+   ("bills" "~/google_drive/icons/money-bag.svg" nil nil :ascent center)
+   ("downtown" "~/google_drive/icons/013-buildings.svg" nil nil :ascent center)
+   ("emacs" "~/google_drive/icons/014-coding.svg" nil nil :ascent center)
    ))
-(setq org-agenda-custom-commands
-      '(("o" "My Agenda"
+
+(setq
+ org-agenda-block-separator " "
+ org-agenda-custom-commands
+      '(("o" "my agenda"
          (
-          (todo "TODO" (
-                        (org-agenda-overriding-header "⚡ Do Today:\n")
+          (todo "STRT" (
+                        (org-agenda-overriding-header "\n⚡ do today:\n")
                         (org-agenda-remove-tags t)
-                        (org-agenda-prefix-format (concat "  %-2i %-13b" org-agenda-hidden-separator))
+                        (org-agenda-prefix-format (concat "  %-2i %-13b" ))
                         (org-agenda-todo-keyword-format "")))
           (agenda "" (
-                      (org-agenda-overriding-header "⚡ Schedule:\n")
+                      (org-agenda-overriding-header "⚡ schedule:\n")
                       (org-agenda-start-day "+0d")
                       (org-agenda-span 5)
-                      (org-agenda-repeating-timestamp-show-all nil)
                       (org-agenda-remove-tags t)
-                      (org-agenda-prefix-format   (concat "  %-3i  %-15b %t%s" org-agenda-hidden-separator))
-                      (org-agenda-todo-keyword-format " ☐ ")
-                      (org-agenda-current-time-string "<┈┈┈┈┈┈┈ now")
+                      (org-agenda-prefix-format   (concat "  %-3i  %-15b %t%s"))
+                      (org-agenda-current-time-string "⟸ now")
                       (org-agenda-scheduled-leaders '("" ""))
                       (org-agenda-time-grid (quote ((daily today remove-match)
                                                     (0900 1200 1800 2100)
                                                     "      " "┈┈┈┈┈┈┈┈┈┈┈┈┈")))))
           )
          )))
-;;
-;; (setq org-agenda-custom-commands
-;;       '(("o" "Overview"
-;;          ((agenda "" ((org-agenda-span 'day)
-;;                       (org-super-agenda-groups
-;;                        '((:name "Today"
-;;                           :time-grid t
-;;                           :date today
-;;                           :todo "TODAY"
-;;                           :scheduled today
-;;                           :order 1)))))
-;;           (alltodo "" ((org-agenda-overriding-header "")
-;;                        (org-super-agenda-groups
-;;                         '((:name "Next to do"
-;;                            :todo "NEXT"
-;;                            :order 1)
-;;                           (:name "Important"
-;;                            :tag "Important"
-;;                            :priority "A"
-;;                            :order 6)
-;;                           (:name "Due Today"
-;;                            :deadline today
-;;                            :order 2)
-;;                           (:name "Due Soon"
-;;                            :deadline future
-;;                            :order 8)
-;;                           (:name "Overdue"
-;;                            :deadline past
-;;                            :face error
-;;                            :order 7)
-;;                           (:name "Assignments"
-;;                            :tag "Assignment"
-;;                            :order 10)
-;;                           (:name "Issues"
-;;                            :tag "Issue"
-;;                            :order 12)
-;;                           (:name "Emacs"
-;;                            :tag "Emacs"
-;;                            :order 13)
-;;                           (:name "Projects"
-;;                            :tag "Project"
-;;                            :order 14)
-;;                           (:name "Research"
-;;                            :tag "Research"
-;;                            :order 15)
-;;                           (:name "To read"
-;;                            :tag "Read"
-;;                            :order 30)
-;;                           (:name "Waiting"
-;;                            :todo "WAITING"
-;;                            :order 20)
-;;                           (:name "Wedding"
-;;                            :tag "wedding"
-;;                            :order 32)
-;;                           (:name "University"
-;;                            :tag "uni"
-;;                            :order 32)
-;;                           (:discard (:tag ("Chore" "Routine" "Daily")))))))))))
+
+
 
 (add-to-list 'load-path "/home/jonathan/wordnut")
 (require 'wordnut)
@@ -383,58 +443,19 @@
 (evil-define-key 'normal wordnut-mode-map (kbd "/") 'wordnut-search)
 (evil-define-key 'normal wordnut-mode-map (kbd "o") 'wordnut-show-overview)
 
-;; Dictionary for completion.
-;; Set up spell checker using Hunspell
-(setq ispell-complete-word-dict
-      (expand-file-name (concat user-emacs-directory "misc/" "complete-dictionary.txt")))
-
-(defun my-generic-ispell-company-complete-setup ()
-  ;; Only apply this locally.
-  (make-local-variable 'company-backends)
-  (setq company-backends (list 'company-ispell))
-
-  (when ispell-complete-word-dict
-    (let*
-        (
-          (has-dict-complete
-          (and ispell-complete-word-dict (file-exists-p ispell-complete-word-dict)))
-          (has-dict-personal
-          (and ispell-personal-dictionary (file-exists-p ispell-personal-dictionary)))
-          (is-dict-outdated
-          (and
-            has-dict-complete has-dict-personal
-            (time-less-p
-            (nth 5 (file-attributes ispell-complete-word-dict))
-            (nth 5 (file-attributes ispell-personal-dictionary))))))
-
-      (when (or (not has-dict-complete) is-dict-outdated)
-        (with-temp-buffer
-
-          ;; Optional: insert personal dictionary, stripping header and inserting a newline.
-          (when has-dict-personal
-            (insert-file-contents ispell-personal-dictionary)
-            (goto-char (point-min))
-            (when (looking-at "personal_ws\-")
-              (delete-region (line-beginning-position) (1+ (line-end-position))))
-            (goto-char (point-max))
-            (unless (eq ?\n (char-after))
-              (insert "\n")))
-
-          (call-process "aspell" nil t nil "-d" "en_US" "dump" "master")
-          ;; Case insensitive sort is important for the lookup.
-          (let ((sort-fold-case t))
-            (sort-lines nil (point-min) (point-max)))
-          (write-region nil nil ispell-complete-word-dict))))))
-
 
 ;; Org mode hooks and configuration
 
 ;; olivetti mode and text wrapping
 (setq olivetti-body-width 90)
-(add-hook! 'text-mode-hook #'olivetti-mode)
+(add-hook! 'text-mode-hook #'olivetti-mode #'my/org-faces);; #'variable-pitch-mode)
 ;; (add-hook 'org-mode-hook (lambda () (my-generic-ispell-company-complete-setup)))
-;; (add-hook 'text-mode-hook
-;;           '(lambda() (turn-on-auto-fill) (set-fill-column 80)))
+
+(use-package org-roam-bibtex
+  :after org-roam
+  :hook (org-roam-mode . org-roam-bibtex-mode)
+  :bind (:map org-mode-map
+         (("C-c n a" . orb-note-actions))))
 
 (setq dired-dwim-target t)
 
@@ -501,7 +522,6 @@
       bibtex-completion-find-additional-pdfs t)
 
 ;; (setq org-agenda-files '("~/google_drive/.notes/agenda.org"))
-(setq org-todo-keywords '((sequence "PENDING(p)" "TODO(t)" "NEXT(n)" "WAITING(w)" "DELEGATED(d)" "NOTE(N)"  "|" "DONE(d)" "CANCELLED(c)")))
 
 (defun org-archive-done-tasks ()
   (interactive)
@@ -510,6 +530,14 @@
       (org-archive-subtree)
       (setq org-map-continue-from (org-element-property :begin (org-element-at-point))))
     "/DONE" 'agenda))
+
+(defun my/paragraph-LTR ()
+    (setq bidi-paragraph-direction 'left-to-right))
+
+
+(defun my/paragraph-RTL ()
+    (setq bidi-paragraph-direction 'right-to-left))
+
 
 (defun my/org-ref-open-pdf-at-point ()
   "Open the pdf for bibtex key under point if it exists."
@@ -595,7 +623,7 @@
 (setq company-idle-delay 0.5
       company-minimum-prefix-length 2
       company-show-numbers t)
-(add-hook 'evil-normal-state-entry-hook #'company-abort) ;; make aborting less annoying.
+;; (add-hook 'evil-normal-state-entry-hook #'company-abort) ;; make aborting less annoying.
 
 (setq-default history-length 1000)
 (setq-default prescient-history-length 1000)

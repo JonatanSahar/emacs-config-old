@@ -65,7 +65,15 @@
 (package! anki-editor)
 (package! olivetti)
 (package! zoom)
+(package! org-pomodoro)
+(package! org-roam-bibtex
+  :recipe (:host github :repo "org-roam/org-roam-bibtex"))
+;; When using org-roam via the `+roam` flag
 
+
+
+
+(unpin! org-roam company-org-roam)
 ;; for spaccemacs
 (package! auto-highlight-symbol) ;; for spacemacs-navigation
 (package! eyebrowse) ;; for spacemacs-layouts
