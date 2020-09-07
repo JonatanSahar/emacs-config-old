@@ -81,18 +81,28 @@
 ;; You can also try 'gd' (or 'C-c c d') to jump to their definition and see how
 ;; they are implemented.
 
-;; save every 20 characters typed (this is the minimum)
-(setq org-my-anki-file "~/google_drive/.notes/slip-box/anki.org")
-(setq org-capture-inbox-file "~/google_drive/.notes/gtd/inbox.org")
-(setq org-capture-reminders-file "~/google_drive/.notes/gtd/reminders.org")
-(setq org-capture-projects-file "~/google_drive/.notes/gtd/projects.org")
-(setq org-capture-someday-file "~/google_drive/.notes/gtd/someday.org")
-(setq org-capture-writing-inbox-file "~/google_drive/.notes/slip-box/2020-06-02-writing_inbox.org")
+;; various settings
+(setq
+ notes-dir (concat (getenv "HOME") "/google_drive/.notes/")
+ gtd-dir (concat notes-dir  "gtd/")
+ slip-box-dir (concat notes-dir "slip-box/")
+ literature-notes-dir (concat notes-dir "literature-notes/")
+ org-my-anki-file (concat notes-dir "anki.org")
+ org-capture-inbox-file (concat gtd-dir "inbox.org")
+ org-capture-reminders-file (concat gtd-dir "reminders.org")
+ org-capture-projects-file (concat gtd-dir "projects.org")
+ org-capture-someday-file (concat gtd-dir "someday.org")
+ org-capture-writing-inbox-file (concat slip-box-dir "writing_inbox.org")
+ org-directory notes-dir
+ org-roam-directory notes-dir
 
-(setq auto-save-interval 20)
-(setq auto-save-visited-mode t)
+ auto-save-interval 20
+ auto-save-visited-mode t)
+
+(global-hl-fill-column-mode -1)
 
 (defun my/org-faces()
+  (interactive)
  (let* ((variable-tuple (cond
                               ((x-family-fonts "Alef")    '(:family "Alef"))
                               ((x-family-fonts "Fira Code Retina")    '(:family "Fira Code Retina"))
@@ -114,7 +124,6 @@
                            `(org-level-1 ((t (,@headline ,@variable-tuple :height 1.15))))
                            `(org-document-title ((t (,@headline ,@variable-tuple :height 1.2 :underline nil))))))
  )
-;; join lines
 (define-key evil-normal-state-map (kbd "J") 'evil-join)
 (define-key evil-normal-state-map (kbd "K") 'join-line)
 ;; (eval-after-load 'org-mode
@@ -130,8 +139,6 @@
 (key-chord-define-global "zk" #'windmove-up)
 (key-chord-define-global "zj" #'windmove-down)
 
-(setq org-todo-keywords '((sequence "PENDING(p)" "TODO(t)" "NEXT(n)" "WAITING(w)" "DELEGATED(d)" "NOTE(N)"  "|" "DONE(d)" "CANCELLED(c)")))
-
 ;; movement
 (define-key evil-normal-state-map (kbd "j") 'evil-next-visual-line)
 (define-key evil-normal-state-map (kbd "k") 'evil-previous-visual-line)
@@ -140,15 +147,6 @@
 (setq-default pdf-view-display-size 'fit-width)
 (setq pdf-view-resize-factor 1.1)
 
-
-;; (use-package zoom
-;;   :hook (doom-first-input . zoom-mode)
-;;   :config
-;;   (setq zoom-size '(0.618 . 0.618)
-;;         zoom-ignored-major-modes '(dired-mode vterm-mode help-mode helpful-mode rxt-help-mode help-mode-menu org-mode which-key-mode)
-;;         zoom-ignored-buffer-names '("*doom:scratch*" "*info*" "*helpful variable: argv*")
-;;         zoom-ignored-buffer-name-regexps '("^\\*calc" "\\*helpful variable: .*\\*")
-;;         zoom-ignore-predicates (list (lambda () (> (count-lines (point-min) (point-max)) 20)))))
 
 
 (defun my/snipe_ivy ()
@@ -160,14 +158,12 @@
 
 (map! :map evil-snipe-parent-transient-map "C-;" #'my/snipe_ivy)
 
-;; (map! :leader
-;;       (:prefix-map "n"
-;;       "r" nil))
 
-;; (map! :leader                           ; Use leader key from now on
-;;       (:prefix-map ("n" . "notes")
-;;        (:prefix-map ("r" . "roam")
-;;         :desc "find file" "f" 'org-roam-find-file)))
+
+(map!
+ :map evil-org-mode-map
+ :i "C-S-L" nil)
+
 (map!
  :nvi "C-\\" #'toggle-input-method
  :nvi "C-s" #'save-buffer
@@ -176,7 +172,7 @@
  :i "C-l" #'org-roam-insert
  :i "C-S-L" #'org-ref-insert-link)
 
-(map! [C-o] #'better-jumper-jump-forward
+(map! [C-o] #'better-jumper-jump-backward
       [C-i] #'better-jumper-jump-forward)
 
 (map! :map org-roam-backlinks-mode-map "return" #'org-open-at-point)
@@ -190,48 +186,51 @@
       (:when (featurep! :completion helm)
         :desc "M-x" :n "SPC" #'helm-M-x))
 
-(map! :map org-mode-map
-      :nvi [(control h)] nil
-      :nvi [(control j)] nil
-      :nvi [(control k)] nil
-      :nvi [(control l)] nil
-      :nvi [(control shift h)] nil
-      :nvi [(control shift j)] nil
-      :nvi [(control shift k)] nil
-      :nvi [(control shift l)] nil
-      :nvi [(control shift left)] nil
-      :nvi [(control shift right)] nil
-      :nvi [(control shift up)] nil
-      :nvi [(control shift down)] nil
-      :n [(control shift left)]  #'windmove-left
-      :n [(control shift right)] #'windmove-right
-      :n [(control shift up)]    #'windmove-up
-      :n [(control shift down)]  #'windmove-down
-      :n [(control h)] #'windmove-left
-      :n [(control l)] #'windmove-right
-      :n [(control k)] #'windmove-up
-      :n [(control j)] #'windmove-down
-      ;; :n [(z h)] #'windmove-left
-      ;; :n [(z l)] #'windmove-right
-      ;; :n [(z k)] #'windmove-up
-      ;; :n [(z j)] #'windmove-down
-      )
+(map!
+    :n "gk" nil
+    :n "zj" nil
+    :n "zz" nil
+    :n "zh" nil
+    :n "zj" nil
+    :n "zk" nil
+    :n "zl" nil
 
+    :map org-mode-map
+    :n "gz" nil
+    :n "gh" nil
+    :n "gj" nil
+    :n "gk" nil
+    :n "gl" nil
+    :n "gJ" nil
+    :n "gK" nil
 
-
-(map! :n "gO" #'+evil/insert-newline-above
-      :n "go" #'+evil/insert-newline-below
-      :n "g]" #'kmacro-end-and-call-macro
-      :n "g." #'er/expand-region
-      )
+    :n "zz" nil
+    :n "zh" nil
+    :n "zj" nil
+    :n "zk" nil
+    :n "zl" nil
+ )
 
 (map!
- :n "zz" nil
- :n "zh" nil
- :n "zj" nil
- :n "zk" nil
- :n "zl" nil
+ :n "gO" #'+evil/insert-newline-above
+ :n "go" #'+evil/insert-newline-below
+ :n "gK" #'+evil/insert-newline-above
+ :n "gJ" #'+evil/insert-newline-below
+
+ :n "g]" #'kmacro-end-and-call-macro
+ :n "g." #'er/expand-region
+
+ :n "gh" #'windmove-left
+ :n "gj" #'windmove-down
+ :n "gk" #'windmove-up
+ :n "gl" #'windmove-right
+
+ :n "zh" #'windmove-left
+ :n "zj" #'windmove-down
+ :n "zk" #'windmove-up
+ :n "zl" #'windmove-right
  )
+
 
 (map! :prefix "zz"
        :n "z" #'evil-scroll-line-to-center
@@ -240,12 +239,10 @@
        :n "k" #'evil-window-up
        :n "l" #'evil-window-right)
 
-
-
 (map! :leader
   :nv
-       :desc "add line above" "iO" #'+evil/insert-newline-above
-       :desc "add line below" "io" #'+evil/insert-newline-below)
+  :desc "add line above" "ik" #'+evil/insert-newline-above
+  :desc "add line below" "ij" #'+evil/insert-newline-below)
 
 (map! :leader
       ;; "`" 'winum-select-window-by-number
@@ -275,6 +272,20 @@
         :desc "helm bibtex" "h" 'helm-bibtex
         )))
 
+;; (use-package org-noter
+;;   :after (:any org pdf-view)
+;;   :config
+;;   (setq
+;;    ;; ;; The WM can handle splits
+;;    ;; org-noter-notes-window-location 'other-frame
+;;    ;; ;; Please stop opening frames
+;;    ;; org-noter-always-create-frame nil
+;;    ;; ;; I want to see the whole file
+;;    ;; org-noter-hide-other nil
+;;    ;; ;; Everything is relative to the main notes file
+;;    org-noter-notes-search-path (list  literature-notes-dir)
+;;    )
+;;   )
 
 (evil-define-command my-evil-insert-char (count char)
   (interactive "<c><C>")
@@ -290,7 +301,7 @@
 
 ;; Deft
 (setq deft-extensions '("txt" "tex" "org")
-      deft-directory "~/google_drive/.notes/slip-box"
+      deft-directory slip-box-dir
       deft-recursive t)
 
 (setq-default evil-escape-delay 0.4)
@@ -306,10 +317,11 @@
   ;; will add the new entry as a child entry.
   ;; (goto-char (point-min)))
   )
-(setq org-agenda-files '("~/google_drive/.notes/gtd/reminders.org"
-                            "~/google_drive/.notes/gtd/projects.org"
-                            "~/google_drive/.notes/gtd/someday.org"
-                            "~/google_drive/.notes/gtd/writing_inbox.org"))
+(setq org-agenda-files '("~/google_drive/.notes/gtd/inbox.org"
+                         "~/google_drive/.notes/gtd/reminders.org"
+                         "~/google_drive/.notes/gtd/projects.org"
+                         "~/google_drive/.notes/gtd/someday.org"
+                         "~/google_drive/.notes/gtd/writing_inbox.org"))
 
 (setq org-refile-targets '(
                            ( org-capture-projects-file :maxlevel . 1)
@@ -318,11 +330,14 @@
                            (nil . (:maxlevel . 2)) ;; current buffer
                            ( org-capture-reminders-file :maxlevel . 1)))
 
-(setq org-capture-templates
+;; (after! org
+  (setq org-todo-keywords '((sequence "SORT" "TODO(t)" "NEXT(n)" "START(s)" "HOLD(h)" "NOTE(N)" "|" "DONE(d)")
+                           (sequence "[ ](T)" "[-](S)" "[?](W)" "|" "[X](D)")))
+  (setq org-capture-templates
       '(("t" "Todo"
          entry
          (file+headline org-capture-inbox-file "Tasks")
-         "** TODO %? %i\n  %a")
+         "** TODO %? %i\n")
 
         ("n" "Note"
          entry
@@ -346,6 +361,7 @@
          entry
          (file+headline org-my-anki-file "Waiting for export")
          "* %<%H:%M>   %^g\n:PROPERTIES:\n:ANKI_NOTE_TYPE: Cloze\n:ANKI_DECK: TheDeck\n:END:\n** Text\n%x\n** Extra\n")))
+;; )
 
 (setq org-outline-path-complete-in-steps nil
       org-goto-interface 'outline-path-completion)
@@ -373,22 +389,26 @@
 org-odd-levels-only  t
 org-hide-emphasis-markers t)
 
+
+
+(defun my/evaluate_in_parens()
+(interactive)
+(let (pos1 pos2 bds)
+  (if (use-region-p)
+     (setq pos1 (region-beginning) pos2 (region-end))
+    (progn
+      (setq bds (bounds-of-thing-at-point 'defun))
+      (setq pos1 (car bds) pos2 (cdr bds))))
+
+  ;; now, pos1 and pos2 are the starting and ending positions of the
+  ;; current word, or current text selection if exist.
+  (downcase-region pos1 pos2)
+  ))
+
 (defun my/org-search ()
   (interactive)
   (org-refile '(4)))
 
-;; (customize-set-value
-;;  'org-agenda-category-icon-alist
-;;  `(
-;;    ("research" "~/google_drive/icons/004-laboratory.svg" nil nil :ascent center)
-;;    ("school" "~/google_drive/icons/003-microscope.svg" nil nil :ascent center)
-;;    ("home" "~/google_drive/icons/009-home.svg" nil nil :ascent center)
-;;    ("todo" "~/google_drive/icons/011-to-do-list.svg" nil nil :ascent center)
-;;    ("wedding" "~/google_drive/icons/012-wedding-rings.svg" nil nil :ascent center)
-;;    ("bills" "~/google_drive/icons/005-calculator.svg" nil nil :ascent center)
-;;    ("downtown" "~/google_drive/icons/013-buildings.svg" nil nil :ascent center)
-;;    ("emacs" "~/google_drive/icons/014-coding.svg" nil nil :ascent center)
-;;    ))
 
 (customize-set-value
  'org-agenda-category-icon-alist
@@ -408,7 +428,7 @@ org-hide-emphasis-markers t)
  org-agenda-custom-commands
       '(("o" "my agenda"
          (
-          (todo "STRT" (
+          (todo "NEXT|STRT" (
                         (org-agenda-overriding-header "\n⚡ do today:\n")
                         (org-agenda-remove-tags t)
                         (org-agenda-prefix-format (concat "  %-2i %-13b" ))
@@ -426,7 +446,7 @@ org-hide-emphasis-markers t)
                                                     "      " "┈┈┈┈┈┈┈┈┈┈┈┈┈")))))
           )
          )))
-
+config.el
 
 
 (add-to-list 'load-path "/home/jonathan/wordnut")
@@ -443,27 +463,79 @@ org-hide-emphasis-markers t)
 (evil-define-key 'normal wordnut-mode-map (kbd "/") 'wordnut-search)
 (evil-define-key 'normal wordnut-mode-map (kbd "o") 'wordnut-show-overview)
 
-
-;; Org mode hooks and configuration
-
+(setq olivetti-body-width 120)
 ;; olivetti mode and text wrapping
-(setq olivetti-body-width 90)
-(add-hook! 'text-mode-hook #'olivetti-mode #'my/org-faces);; #'variable-pitch-mode)
-;; (add-hook 'org-mode-hook (lambda () (my-generic-ispell-company-complete-setup)))
+(add-hook! 'text-mode-hook
+           #'turn-on-olivetti-mode
+           #'my/org-faces);; #'variable-pitch-mode)
 
-(use-package org-roam-bibtex
-  :after org-roam
-  :hook (org-roam-mode . org-roam-bibtex-mode)
-  :bind (:map org-mode-map
-         (("C-c n a" . orb-note-actions))))
+(add-hook! 'prog-mode-hook
+           #'turn-on-olivetti-mode)
+
+(use-package olivetti
+  :ensure t
+  :config (setq olivetti-body-width 120)
+  )
+
+(add-hook 'visual-line-mode-hook #'visual-fill-column-mode)
+(setq
+ visual-fill-column-width 90
+ split-window-preferred-function 'visual-fill-column-split-window-sensibly)
 
 (setq dired-dwim-target t)
 
-;; org-roam, org-ref, org-roam-bibtex etc.
-(setq org-roam-directory "~/google_drive/.notes/slip-box"
-      org-roam-link-title-format "§:%s"
-      org-roam-completion-system 'helm
-      org-roam-index-file "~/google_drive/.notes/slip-box/index.org")
+(use-package org-roam
+  :hook (org-load . org-roam-mode)
+  :commands (org-roam-buffer-toggle-display
+             org-roam-find-file
+             org-roam-graph
+             org-roam-insert
+             org-roam-switch-to-buffer
+             org-roam-dailies-date
+             org-roam-dailies-today
+             org-roam-dailies-tomorrow
+             org-roam-dailies-yesterday)
+  :preface
+  :init
+  :config
+  (setq
+        ;; org-roam-verbose nil  ; https://youtu.be/fn4jIlFwuLU
+        ;; org-roam-completion-system 'default
+        org-roam-directory "~/google_drive/.notes/slip-box"
+        org-roam-link-title-format "§:%s"
+        org-roam-completion-system 'helm
+        org-roam-index-file "~/google_drive/.notes/slip-box/index.org")
+)
+
+  ;; ;; Normally, the org-roam buffer doesn't open until you explicitly call
+  ;; ;; `org-roam'. If `+org-roam-open-buffer-on-find-file' is non-nil, the
+  ;; ;; org-roam buffer will be opened for you when you use `org-roam-find-file'
+  ;; ;; (but not `find-file', to limit the scope of this behavior).
+  ;; (add-hook 'find-file-hook
+  ;;   (defun +org-roam-open-buffer-maybe-h ()
+  ;;     (and +org-roam-open-buffer-on-find-file
+  ;;          (memq 'org-roam-buffer--update-maybe post-command-hook)
+  ;;          (not (window-parameter nil 'window-side)) ; don't proc for popups
+  ;;          (not (eq 'visible (org-roam-buffer--visibility)))
+  ;;          (with-current-buffer (window-buffer)
+  ;;            (org-roam-buffer--get-create)))))
+
+  ;; ;; Hide the mode line in the org-roam buffer, since it serves no purpose. This
+  ;; ;; makes it easier to distinguish among other org buffers.
+  ;; (add-hook 'org-roam-buffer-prepare-hook #'hide-mode-line-mode)
+
+
+;; Since the org module lazy loads org-protocol (waits until an org URL is
+;; detected), we can safely chain `org-roam-protocol' to it.
+(use-package org-roam-protocol
+  :after org-protocol)
+
+
+(use-package company-org-roam
+  :after org-roam
+  :config
+  (set-company-backend! 'org-mode '(company-org-roam company-yasnippet company-dabbrev)))
+
 
 (setq org-roam-capture-templates
       '(("d" "default" plain (function org-roam-capture--get-point)
@@ -471,25 +543,6 @@ org-hide-emphasis-markers t)
           :file-name "%<%Y-%m-%d>-${slug}"
           :head "#+TITLE: ${title}\n"
           :unnarrowed t)))
-;;         ("l" "lit" plain (function org-roam--capture-get-point)
-;;            "%?"
-;;            :file-name "lit/${slug}"
-;;            :head "#+setupfile:./hugo_setup.org
-;; #+title: ${title}\n"
-;;            :unnarrowed t)
-
-;;           ("c" "concept" plain (function org-roam--capture-get-point)
-;;            "%?"
-;;            :file-name "concepts/${slug}"
-;;            :head "#+setupfile:./hugo_setup.org
-;; #+title: ${title}\n"
-;;            :unnarrowed t)
-
-;;           ("p" "private" plain (function org-roam-capture--get-point)
-;;            "%?"
-;;            :file-name "private/${slug}"
-;;            :head "#+title: ${title}\n"
-;;            :unnarrowed t)))
 
 (setq org-roam-capture-ref-templates
       '(("r" "ref" plain (function org-roam-capture--get-point)
@@ -501,29 +554,70 @@ org-hide-emphasis-markers t)
 #+roam_tags: website
 #+title: ${title}\n")))
 
-(setq org-journal-file-header  ""
+;; (use-package org-roam-bibtex
+;;   :after (org-roam)
+;;   :hook (org-roam-mode . org-roam-bibtex-mode)
+;;   :config
+;;   (setq orb-preformat-keywords
+;;    '("=key=" "title" "url" "file" "author-or-editor" "keywords"))
+;;   (setq orb-templates
+;;         '(("r" "ref" plain (function org-roam-capture--get-point)
+;;            ""
+;;            :file-name "${slug}"
+;;            :head "#+TITLE: ${=key=}: ${title}\n#+ROAM_KEY: ${ref}
+;; - tags ::
+;; - keywords :: ${keywords}
+;; \n* ${title}\n  :PROPERTIES:\n  :Custom_ID: ${=key=}\n  :URL: ${url}\n  :AUTHOR: ${author-or-editor}\n  :NOTER_DOCUMENT: %(orb-process-file-field \"${=key=}\")\n  :NOTER_PAGE: \n  :END:\n\n"
+
+;;            :unnarrowed t))))
+
+(setq
+      org-journal-file-header  ""
       org-journal-dir "~/google_drive/.notes"
       org-journal-date-prefix "#+TITLE:"
       org-journal-file-format "%Y-%m-%d.org"
       org-journal-date-format "%A, %d %B %Y \n"
       org-journal-enable-agenda-integration  t)
 
-(setq reftex-default-bibliography '("~/google_drive/.notes/.bibliography/references.bib"))
+(setq
+ org-ref-bibliography-notes "~/google_drive/.notes/.bibliography/bibliography_notes.org"
+ org-ref-default-bibliography "~/google_drive/.notes/.bibliography/references.bib"
+ org-ref-pdf-directory "~/google_drive/.notes/.bibliography/bibtex_pdf"
+ org-ref-get-pdf-filename-function 'org-ref-get-pdf-filename-helm-bibtex
+ org-ref-note-title-format "* TODO %y - %t\n :PROPERTIES:\n  :Custom_ID: %k\n  :NOTER_DOCUMENT: %F\n :ROAM_KEY: cite:%k\n  :AUTHOR: %9a\n  :JOURNAL: %j\n  :YEAR: %y\n  :VOLUME: %v\n  :PAGES: %p\n  :DOI: %D\n  :URL: %U\n :END:\n\n"
+ org-ref-notes-directory "~/google_drive/.notes/literature-notes/"
+ org-ref-notes-function 'orb-edit-notes)
 
-;; see org-ref for use of these variables
-(setq org-ref-bibliography-notes "~/google_drive/.notes/.bibliography/bibliography_notes.org"
-      org-ref-default-bibliography '("~/google_drive/.notes/.bibliography/references.bib")
-      org-ref-pdf-directory "~/google_drive/.notes/.bibliography/bibtex_pdf/")
 
-(setq bibtex-completion-bibliography "~/google_drive/.notes/.bibliography/references.bib"
-      bibtex-completion-library-path "~/google_drive/.notes/.bibliography/bibtex_pdf/"
-      bibtex-completion-notes-path "~/google_drive/.notes/.bibliography/bibliography_notes/"
-      bibtex-completion-pdf-field "File"
-      bibtex-completion-find-additional-pdfs t)
+;; (setq bibtex-completion-pdf-open-function
+;;   (lambda (fpath)
+;;     (start-process "open" "*open*" "open" fpath)))
 
-;; (setq org-agenda-files '("~/google_drive/.notes/agenda.org"))
+(require 'org-ref)
+(setq
+    bibtex-completion-bibliography "~/google_drive/.notes/.bibliography/references.bib"
+    bibtex-completion-library-path '( "~/google_drive/.notes/.bibliography/bibtex_pdf")
+    bibtex-completion-notes-path "~/google_drive/.notes/literature-notes"
+    bibtex-completion-pdf-field "File"
+    ;; bibtex-completion-notes-template-multiple-files
+    ;; (concat
+    ;; "#+TITLE: ${title}\n"
+    ;; "#+ROAM_KEY: cite:${=key=}\n"
+    ;; "* TODO Notes\n"
+    ;; ":PROPERTIES:\n"
+    ;; ":Custom_ID: ${=key=}\n"
+    ;; ":NOTER_DOCUMENT: %(orb-process-file-field \"${=key=}\")\n"
+    ;; ":AUTHOR: ${author-abbrev}\n"
+    ;; ":JOURNAL: ${journaltitle}\n"
+    ;; ":DATE: ${date}\n"
+    ;; ":YEAR: ${year}\n"
+    ;; ":DOI: ${doi}\n"
+    ;; ":URL: ${url}\n"
+    ;; ":END:\n\n")
+    bibtex-completion-find-additional-pdfs t)
 
-(defun org-archive-done-tasks ()
+
+(defun my/org-archive-done-tasks ()
   (interactive)
   (org-map-entries
     (lambda ()
@@ -538,18 +632,6 @@ org-hide-emphasis-markers t)
 (defun my/paragraph-RTL ()
     (setq bidi-paragraph-direction 'right-to-left))
 
-
-(defun my/org-ref-open-pdf-at-point ()
-  "Open the pdf for bibtex key under point if it exists."
-  (interactive)
-  (let* ((results (org-ref-get-bibtex-key-and-file))
-          (key (car results))
-          (pdf-file (funcall org-ref-get-pdf-filename-function key)))
-    (if (file-exists-p pdf-file)
-        (find-file pdf-file)
-      (message "No PDF found for %s" key))))
-
-(setq org-ref-open-pdf-function 'my/org-ref-open-pdf-at-point)
 
 ;; Anki configuration
 (use-package anki-editor
