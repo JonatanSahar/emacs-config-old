@@ -162,7 +162,9 @@
 
 (map!
  :map evil-org-mode-map
- :i "C-S-L" nil)
+ :i "C-S-L" nil
+ :map pdf-view-mode-map
+ :n "gl" nil)
 
 (map!
  :nvi "C-\\" #'toggle-input-method
@@ -271,6 +273,30 @@
         :desc "add refernce from doi" "d" 'doi-utils-add-bibtex-entry-from-doi
         :desc "helm bibtex" "h" 'helm-bibtex
         )))
+
+
+
+(defhydra hydra-window (:color red
+                        :columns 3)
+  ("h" windmove-left "window-left")
+  ("j" windmove-down "window-down")
+  ("k" windmove-up "window-up")
+  ("l" windmove-right "right-left")
+  (">" (window-resize nil 15 1) "increase window size horizontally")
+  ("<" (window-resize nil -15 1) "decrease window size horizontally")
+  ("+" (window-resize nil 15 nil) "increase window size vertically")
+  ("-" (window-resize nil -15 nil) "increase window size vertically")
+  ("|" (lambda ()
+         (interactive)
+         (split-window-right)
+         (windmove-right)) "split right")
+  ("_" (lambda ()
+         (interactive)
+         (split-window-below)
+         (windmove-down)) "split down")
+  ("q" nil "quit" :color blue))
+(map! :leader "w." 'hydra-window/body)
+
 
 ;; (use-package org-noter
 ;;   :after (:any org pdf-view)
