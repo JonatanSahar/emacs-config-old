@@ -63,6 +63,7 @@
 (package! general)
 (package! helm-org-rifle)
 (package! org-download)
+(package! emms)
 (package! anki-editor)
 (package! olivetti)
 (package! zoom)
@@ -70,6 +71,14 @@
 (package! visual-fill-column)
 (package! centered-window)
 (package! ivy-bibtex)
+(package! helm-flyspell)
+(package! wgrep)
+(package! company-statistics)
+(package! multiple-cursors)
+(package! helm-ag)
+(package! counsel)
+(package! org-superstar)
+(package! matlab-mode)
 (package! org-roam-bibtex
   :recipe (:host github :repo "org-roam/org-roam-bibtex"))
 ;; When using org-roam via the `+roam` flag
