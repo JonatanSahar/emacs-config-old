@@ -67,7 +67,11 @@
 
 (map!
  :nvi "C-\\" #'toggle-input-method
- :nvi "C-s" #'save-buffer
+ :nvi "C-s" (lambda ()
+         (interactive)
+         (save-buffer)
+         (evil-force-normal-state)
+         )
  :i "S-SPC" #'evil-force-normal-state
  :map evil-org-mode-map
  :i "C-l" #'org-roam-insert
@@ -130,9 +134,11 @@
 
  :n "g+" #'evil-numbers/inc-at-pt
  :vn "gs" #'evil-snipe-S
-
+ :nv "gf" #'evil-repeat
  :nv "E" #'evil-end-of-line-or-visual-line
  :nv "W" #'evil-beginning-of-visual-line
+ :nvi "C-l" #'windmove-right
+ :nvi "C-h" #'windmove-left
 
  ;; :map dired-mode-map
  ;; :nv "YY" #'(lambda ()
@@ -151,7 +157,9 @@
  :n "z=" #'helm-flyspell-correct
  :n "g=" #'helm-flyspell-correct
 
- :n "gf" #'evil-repeat
+ :nv "gf" #'evil-repeat
+ :nvi "C-l" #'windmove-right
+ :nvi "C-h" #'windmove-left
  )
 
 ;; (map!
@@ -217,13 +225,11 @@
        :desc "kill buffer and window" "w" '+workspace/close-window-or-workspace
        :desc "kill buffer and window" "d" 'kill-current-buffer
        :desc "switch to previous buffer" "k" 'evil-switch-to-windows-last-buffer
-       :desc "search and replace vim style" "s" #'(lambda ()
-                                                    (interactive)
-                                                    (evil-ex "%s/")
-                                                    )
-       :desc "save current buffer" "S" 'save-buffer
+       :desc "search and replace vim style" "s" #'(lambda () (interactive) (evil-ex "%s/"))
+       :desc "search and replace vim style - in region" "S" #'my/search-replace-in-region
+       ;; :desc "save current buffer" "S" 'save-buffer
        :desc "refile subtree" "r" 'org-refile
-       :desc "helm org rifle" "r" 'helm-org-rifle
+       :desc "helm org rifle" "R" 'helm-org-rifle
        :desc "run macro" "e" #'kmacro-end-and-call-macro
 
 

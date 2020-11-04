@@ -84,7 +84,7 @@
 
 delete-by-moving-to-trash t                      ; Delete files to trash
 tab-width 4                                      ; Set width for tabs
-uniquify-buffer-name-style 'forward              ; Uniquify buffer names
+uniquify-buffer-name-style nil              ; Uniquify buffer names
 window-combination-resize t                      ; take new window space from all other windows (not just current)
 x-stretch-cursor t                              ; Stretch cursor to the glyph width
 
@@ -114,9 +114,10 @@ truncate-string-ellipsis "…")               ; Unicode ellispis are nicer than 
       evil-split-window-below t)
 
 
-(load-file "~/.doom.d/keybindings.el")
-(load-file "~/.doom.d/my-functions.el")
 (load-file "~/.doom.d/package-config.el")
+(load-file "~/.doom.d/my-functions.el")
+(load-file "~/.doom.d/keybindings.el")
+(load-file "~/.doom.d/faces.el")
 
                         ;; `(line-number ((t (:inherit default :foreground "#9fa6b" :strike-through nil :underline nil :slant normal :weight normal :height 174 :width normal :foundry "ADBO" :family "Source Code Pro"))))
                         ;; `(line-number-current-line ((t (:inherit (hl-line default) :foreground "#bbc2cf" :strike-through nil :underline nil :slant normal :weight normal :height 174 :width normal :foundry "ADBO" :family "Source Code Pro"))))
@@ -194,9 +195,9 @@ truncate-string-ellipsis "…")               ; Unicode ellispis are nicer than 
  `(
    ("research" "~/google_drive/icons/calendar.svg" nil nil :ascent center)
    ("school" "~/google_drive/icons/calendar.svg" nil nil :ascent center)
+   ("personal" "~/google_drive/icons/checklist.svg" nil nil :ascent center)
    ("home" "~/google_drive/icons/checklist.svg" nil nil :ascent center)
    ("todo" "~/google_drive/icons/checklist.svg" nil nil :ascent center)
-   ("wedding" "~/google_drive/icons/012-wedding-rings.svg" nil nil :ascent center)
    ("bills" "~/google_drive/icons/money-bag.svg" nil nil :ascent center)
    ("downtown" "~/google_drive/icons/013-buildings.svg" nil nil :ascent center)
    ("emacs" "~/google_drive/icons/014-coding.svg" nil nil :ascent center)
@@ -229,22 +230,7 @@ truncate-string-ellipsis "…")               ; Unicode ellispis are nicer than 
 (add-to-list 'load-path "/home/jonathan/wordnut")
 (require 'wordnut)
 
-  ;; ;; Normally, the org-roam buffer doesn't open until you explicitly call
-  ;; ;; `org-roam'. If `+org-roam-open-buffer-on-find-file' is non-nil, the
-  ;; ;; org-roam buffer will be opened for you when you use `org-roam-find-file'
-  ;; ;; (but not `find-file', to limit the scope of this behavior).
-  ;; (add-hook 'find-file-hook
-  ;;   (defun +org-roam-open-buffer-maybe-h ()
-  ;;     (and +org-roam-open-buffer-on-find-file
-  ;;          (memq 'org-roam-buffer--update-maybe post-command-hook)
-  ;;          (not (window-parameter nil 'window-side)) ; don't proc for popups
-  ;;          (not (eq 'visible (org-roam-buffer--visibility)))
-  ;;          (with-current-buffer (window-buffer)
-  ;;            (org-roam-buffer--get-create)))))
-
-  ;; ;; Hide the mode line in the org-roam buffer, since it serves no purpose. This
-  ;; ;; makes it easier to distinguish among other org buffers.
-  (add-hook 'org-roam-buffer-prepare-hook #'hide-mode-line-mode)
+(add-hook 'org-roam-buffer-prepare-hook #'hide-mode-line-mode)
 
 (setq
       org-journal-file-header  ""

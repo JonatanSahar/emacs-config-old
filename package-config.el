@@ -20,9 +20,9 @@
 
 (use-package helm
   :config
-  (setq helm-ff-fuzzy-matching 't))
+  (setq helm-ff-fuzzy-matching t))
 
-(setq helm-ff-fuzzy-matching 't)
+(setq helm-ff-fuzzy-matching t)
 
 (use-package! pdf-tools
   :config
@@ -40,7 +40,7 @@
    ;; I want to see the whole file
    org-noter-hide-other nil
    ;; Everything is relative to the main notes file
-   org-noter-notes-search-path (list  literature-notes-dir)
+   org-noter-notes-search-path (list  slip-box-dir)
    )
   )
 
@@ -168,10 +168,10 @@
   :config
   (setq
    org-roam-db-location "~/org-roam/org-roam.db"
-   org-roam-directory "~/google_drive/.notes/slip-box"
+   org-roam-directory (file-truename org-roam-directory)
    org-roam-link-title-format "§:%s"
    org-roam-completion-system 'helm
-   org-roam-index-file "~/google_drive/.notes/slip-box/index.org"
+   org-roam-index-file (file-truename "~/google_drive/.notes/slip-box/index.org")
 
    org-roam-capture-templates
       '(("d" "default" plain (function org-roam-capture--get-point)

@@ -153,3 +153,9 @@
                       " ")))
     (delete-region beg end)
     (insert replacement)))
+
+(defun my/search-replace-in-region ()
+  (interactive)
+  (setq evil-ex-initial-input "s/")
+  (call-interactively 'evil-ex)
+  )
