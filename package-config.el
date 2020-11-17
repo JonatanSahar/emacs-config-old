@@ -55,8 +55,6 @@
                                    (buffer-file-name (current-buffer)))))
    ))
 
-(use-package helm :config (setq helm-ff-fuzzy-matching 't))
-
 (use-package org
   :ensure t
   :config
@@ -189,7 +187,9 @@
 ;; #+hugo_slug: ${slug}
 ;; #+roam_tags: website
 ;; #+title: ${title}\n"))
-))
+        )
+        (set-company-backend! 'org-mode '(company-capf company-yasnippet company-dabbrev))
+  )
 
 (add-hook 'org-roam-buffer-prepare-hook #'hide-mode-line-mode)
 
@@ -198,11 +198,6 @@
 (use-package org-roam-protocol
   :after org-protocol)
 
-
-(use-package company-org-roam
-  :after org-roam
-  :config
-  (set-company-backend! 'org-mode '(company-org-roam company-yasnippet company-dabbrev)))
 
 
 (require 'org-ref)
@@ -267,6 +262,16 @@
     (setq my-anki-editor-cloze-number (1+ my-anki-editor-cloze-number))
     (forward-sexp))
 
+  (defun anki-editor-cloze-word-under-cursor-auto-incr (&optional arg)
+    "Cloze region without hint and increase card number."
+    (interactive)
+    (call-interactively 'evil-backward-word-begin)
+    (evil-visual-char)
+    (call-interactively 'evil-forward-WORD-end)
+    (anki-editor-cloze-region my-anki-editor-cloze-number "")
+    (setq my-anki-editor-cloze-number (1+ my-anki-editor-cloze-number))
+    (forward-sexp))
+
   (defun anki-editor-cloze-region-dont-incr (&optional arg)
     "Cloze region without hint using the previous card number."
     (interactive)
@@ -288,28 +293,3 @@
   (anki-editor-reset-cloze-number))
 
 (setq olivetti-body-width 100)
-
-  (setq
-   org-roam-db-location "~/org-roam/org-roam.db"
-   org-roam-directory "~/google_drive/.notes/slip-box"
-   org-roam-link-title-format "§:%s"
-   org-roam-completion-system 'helm
-   org-roam-index-file "~/google_drive/.notes/slip-box/index.org"
-
-   org-roam-capture-templates
-      '(("d" "default" plain (function org-roam-capture--get-point)
-          "%?"
-          :file-name "%<%Y-%m-%d>-${slug}"
-          :head "#+TITLE: ${title}\n"
-          :unnarrowed t))
-
-;;   org-roam-capture-ref-templates
-;;       '(("r" "ref" plain (function org-roam-capture--get-point)
-;;           "%?"
-;;           :file-name "lit/${slug}"
-;;           :head "#+setupfile:./hugo_setup.org
-;; #+roam_key: ${ref}
-;; #+hugo_slug: ${slug}
-;; #+roam_tags: website
-;; #+title: ${title}\n"))
-)

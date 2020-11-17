@@ -48,13 +48,18 @@
     :map evil-org-mode-map
     :nvi [C-o] nil
     :nvi [C-i] nil
-    :i "C-S-L" nil)
+    :nvi "C-S-L" nil
+
+    :map helm-find-files-map
+ [control-backspace] nil
+    )
 
 (map!
  :nvi "C-h" nil
  :nvi "C-j" nil
  :nvi "C-k" nil
  :nvi "C-l" nil
+ :nvi "C-L" nil
  )
 
 (map! :map ivy-minibuffer-map
@@ -74,13 +79,17 @@
          )
  :i "S-SPC" #'evil-force-normal-state
  :map evil-org-mode-map
- :i "C-l" #'org-roam-insert
- :i "C-S-L" #'org-ref-insert-link)
+ :i "C-S-l" #'org-roam-insert)
+ ;; :i "C-S-L" #'org-ref-insert-link)
 
 (map!
  :map helm-map
  "C-j" #'helm-next-line
- "C-k" #'helm-previous-line)
+ "C-k" #'helm-previous-line
+ [control-backspace] #'backward-kill-word
+ :map helm-find-files-map
+ [control-backspace] #'backward-kill-word
+ )
 
 
 (map! :nvi
@@ -138,7 +147,13 @@
  :nv "E" #'evil-end-of-line-or-visual-line
  :nv "W" #'evil-beginning-of-visual-line
  :nvi "C-l" #'windmove-right
+ :nvi "C-S-l" #'org-roam-insert
  :nvi "C-h" #'windmove-left
+ :nvi "C-j" #'windmove-down
+ :nvi "C-k" #'windmove-up
+
+ :map vterm-mode-map
+ :nv "p" #'term-paste
 
  ;; :map dired-mode-map
  ;; :nv "YY" #'(lambda ()
@@ -158,8 +173,11 @@
  :n "g=" #'helm-flyspell-correct
 
  :nv "gf" #'evil-repeat
+ :nvi "C-S-l" #'org-roam-insert
  :nvi "C-l" #'windmove-right
  :nvi "C-h" #'windmove-left
+ :nvi "C-j" #'windmove-down
+ :nvi "C-k" #'windmove-up
  )
 
 ;; (map!
@@ -213,7 +231,7 @@
        :desc "avy line" "l" 'avy-goto-line)
 
       (:prefix ("y" . "yank")
-       :desc "header content" "h" #'(lambda ()
+       :desc "header content" "y" #'(lambda ()
                                       (interactive)
                                       (evil-middle-of-visual-line)
                                       (evil-org-beginning-of-line)
@@ -227,7 +245,6 @@
        :desc "switch to previous buffer" "k" 'evil-switch-to-windows-last-buffer
        :desc "search and replace vim style" "s" #'(lambda () (interactive) (evil-ex "%s/"))
        :desc "search and replace vim style - in region" "S" #'my/search-replace-in-region
-       ;; :desc "save current buffer" "S" 'save-buffer
        :desc "refile subtree" "r" 'org-refile
        :desc "helm org rifle" "R" 'helm-org-rifle
        :desc "run macro" "e" #'kmacro-end-and-call-macro
@@ -269,6 +286,8 @@
 (define-key evil-normal-state-map (kbd "K") 'join-line)
 
 (setq key-chord-two-keys-delay 0.1)
+(key-chord-define evil-insert-state-map "df" #'evil-force-normal-state)
+(key-chord-define evil-visual-state-map "df" #'evil-force-normal-state)
 (key-chord-define evil-insert-state-map "jk" #'evil-force-normal-state)
 (key-chord-define evil-visual-state-map "jk" #'evil-force-normal-state)
 (key-chord-define evil-insert-state-map "kk" #'evil-execute-in-normal-state)

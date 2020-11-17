@@ -79,18 +79,15 @@
  org-capture-writing-inbox-file (concat slip-box-dir "writing_inbox.org")
  org-directory notes-dir
  org-roam-directory notes-dir
- auto-save-interval 20
- auto-save-visited-mode t
 
 delete-by-moving-to-trash t                      ; Delete files to trash
-tab-width 4                                      ; Set width for tabs
 uniquify-buffer-name-style nil              ; Uniquify buffer names
 window-combination-resize t                      ; take new window space from all other windows (not just current)
 x-stretch-cursor t                              ; Stretch cursor to the glyph width
 
 undo-limit 80000000                         ; Raise undo-limit to 80Mb
 evil-want-fine-undo t                       ; By default while in insert all changes are one big blob. Be more granular
-auto-save-default t                         ; Nobody likes to loose work, I certainly don't
+auto-save-default nil                         ; Nobody likes to loose work, I certainly don't
 inhibit-compacting-font-caches t            ; When there are lots of glyphs, keep them in memory
 backup-directory-alist `(("." . ,(concat user-emacs-directory "autosaved_files")))
 truncate-string-ellipsis "…")               ; Unicode ellispis are nicer than "...", and also save /precious/ space
@@ -114,15 +111,13 @@ truncate-string-ellipsis "…")               ; Unicode ellispis are nicer than 
       evil-split-window-below t)
 
 
-(load-file "~/.doom.d/package-config.el")
 (load-file "~/.doom.d/my-functions.el")
 (load-file "~/.doom.d/keybindings.el")
 (load-file "~/.doom.d/faces.el")
+(load-file "~/.doom.d/package-config.el")
 
                         ;; `(line-number ((t (:inherit default :foreground "#9fa6b" :strike-through nil :underline nil :slant normal :weight normal :height 174 :width normal :foundry "ADBO" :family "Source Code Pro"))))
                         ;; `(line-number-current-line ((t (:inherit (hl-line default) :foreground "#bbc2cf" :strike-through nil :underline nil :slant normal :weight normal :height 174 :width normal :foundry "ADBO" :family "Source Code Pro"))))
-(defun my/org-font ()
-  (face-remap-add-relative 'default :family "alef" :height 190))
 
 (setq text-scale-mode-step 1.05)
 
@@ -160,30 +155,19 @@ truncate-string-ellipsis "…")               ; Unicode ellispis are nicer than 
 ;;                     :background "white" :foreground "black"))
 
 
-(evil-define-command my-evil-insert-char (count char)
-  (interactive "<c><C>")
-  (setq count (or count 1))
-  (insert (make-string count char)))
-
-(evil-define-command my-evil-append-char (count char)
-  (interactive "<c><C>")
-  (setq count (or count 1))
-  (when (not (eolp))
-    (forward-char))
-  (insert (make-string count char)))
-
 (setq-default evil-escape-delay 0.4)
 
 ;; set the browser location
 (setq browse-url-browser-function 'browse-url-generic browse-url-generic-program "/mnt/c/Program Files (x86)/Google/Chrome/Application/chrome.exe")
 
 (add-hook! org-mode #'flyspell-mode #'org-superstar-mode)
+;; (add-hook! 'org-mode-hook #'my/org-font)
 (add-hook 'text-mode-hook (lambda ()
                             (setq bidi-paragraph-direction nil)
                             (flyspell-mode 1)
                             (visual-fill-column-mode 1)
                             (olivetti-mode 1)
-                            (face-remap-add-relative 'default :family "alef")))
+                            (my/org-font)))
 (key-chord-mode 1)
 (evil-snipe-override-mode 1)
 
@@ -231,7 +215,6 @@ truncate-string-ellipsis "…")               ; Unicode ellispis are nicer than 
 (require 'wordnut)
 
 (add-hook 'org-roam-buffer-prepare-hook #'hide-mode-line-mode)
-
 (setq
       org-journal-file-header  ""
       org-journal-dir "~/google_drive/.notes"

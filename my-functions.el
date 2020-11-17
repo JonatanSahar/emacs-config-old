@@ -6,7 +6,7 @@
     (evil-mc-make-cursor-here))
   )
     ;;; During visual selection point has +1 value
-(defun my-evil-mc-make-vertical-cursors (beg end)
+(defun my/evil-mc-make-vertical-cursors (beg end)
   (interactive (list (region-beginning) (- (region-end) 1)))
   (evil-exit-visual-state)
   (evil-mc-pause-cursors)
@@ -20,6 +20,9 @@
   (move-to-column (evil-mc-column-number end))
       )
 
+(defun my/org-font ()
+  (interactive)
+  (face-remap-add-relative 'default :family "alef" :height 190))
 
 (defun org-journal-find-location ()
   ;; Open today's journal, but specify a non-nil prefix argument in order to
@@ -159,3 +162,22 @@
   (setq evil-ex-initial-input "s/")
   (call-interactively 'evil-ex)
   )
+
+(defun my/make-list()
+  (interactive)
+  (concat ":'<,'>s/^/\"/" (kbd "RET") "gv=gv")
+  (evil-visual-restore)
+  (concat ":'<,'>s/\n/\", /" (kbd "RET"))
+  )
+
+(evil-define-command my/evil-insert-char (count char)
+  (interactive "<c><C>")
+  (setq count (or count 1))
+  (insert (make-string count char)))
+
+(evil-define-command my/evil-append-char (count char)
+  (interactive "<c><C>")
+  (setq count (or count 1))
+  (when (not (eolp))
+    (forward-char))
+  (insert (make-string count char)))
