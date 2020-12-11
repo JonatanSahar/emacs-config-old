@@ -11,6 +11,16 @@
   (setq org-pomodoro-manual-break nil))
 
 
+(use-package! org-similarity
+  :config
+        (setq org-similarity-directory org-roam-directory)
+        ;; the language passed to nltk's Snowball stemmer
+        (setq org-similarity-language "english")
+        ;; how many similar entries to list at the end of the buffer
+        (setq org-similarity-number-of-documents 10)
+        ;; whether to prepend the list entries with their cosine similarity score
+        (setq org-similarity-show-scores nil)
+)
 ;; "◉"
 (use-package! org-superstar
   :config
@@ -96,12 +106,12 @@
     '(("o" "my agenda"
        (
         (todo "NEXT|HOLD" (
-                           (org-agenda-overriding-header "\n⚡ do today:\n")
+                           (org-agenda-overriding-header "\n⚡ Next up:\n")
                            (org-agenda-remove-tags t)
                            (org-agenda-prefix-format (concat "  %-2i %-13b" ))
                            (org-agenda-todo-keyword-format "")))
         (agenda "" (
-                    (org-agenda-overriding-header "⚡ schedule:\n")
+                    (org-agenda-overriding-header "⚡ Schedule:\n")
                     (org-agenda-start-day "+0d")
                     (org-agenda-span 5)
                     (org-agenda-remove-tags t)
@@ -148,7 +158,14 @@
                                "* %<%H:%M> :drill: \n:PROPERTIES:\n:ANKI_NOTE_TYPE: Cloze\n:ANKI_DECK: TheDeck\n:END:\n** Text\n\t%i%?\n** Extra\n\t- source: %l")
 
                               )
-    ))
+    )
+
+  (setq org-format-latex-options
+   (quote
+    (:foreground default :background default :scale 2.5 :html-foreground "Black" :html-background "Transparent" :html-scale 1.0 :matchers
+         ("begin" "$1" "$" "$$" "\\(" "\\["))))
+
+  )
 
 (use-package! org-roam
   :hook (org-load . org-roam-mode)
@@ -265,9 +282,13 @@
   (defun anki-editor-cloze-word-under-cursor-auto-incr (&optional arg)
     "Cloze region without hint and increase card number."
     (interactive)
-    (call-interactively 'evil-backward-word-begin)
+    (evil-backward-word-begin)
     (evil-visual-char)
-    (call-interactively 'evil-forward-WORD-end)
+
+    ;; (evil-select-an-object 'evil-symbol beg end type 1))
+    ;; (evil-select-an-object)
+    (evil-forward-word-end)
+    ;; (evil-forward-char)
     (anki-editor-cloze-region my-anki-editor-cloze-number "")
     (setq my-anki-editor-cloze-number (1+ my-anki-editor-cloze-number))
     (forward-sexp))
@@ -292,4 +313,137 @@
   ;; Initialize
   (anki-editor-reset-cloze-number))
 
+(use-package hydra
+  :defer 5
+  :bind (("C-c C-w" . hydra-window-resize/body)
+         ("C-c  C-u" . hydra-outline/body)
+         ("C-x  C-m " . multiple-cursors-hydra/body)
+         ("C-x  C-'" . hydra-fold/body))
+  :config
+  (defhydra hydra-expand-region ()
+    "region: "
+    ("k" er/expand-region "expand")
+    ("j" er/contract-region "contract"))
+  (general-def 'visual 'global "v" 'hydra-expand-region/body)
+
+  (defhydra hydra-fold (:pre (hs-minor-mode 1))
+    "fold"
+    ("t" fold-dwim-toggle "toggle")
+    ("h" fold-dwim-hide-all "hide-all")
+    ("s" fold-dwim-show-all "show-all")
+    ("q" nil "quit"))
+
+  (defun my-funcs/resize-window-down ()
+    "Resize a window downwards."
+    (interactive)
+    (if (window-in-direction 'below)
+        (enlarge-window 1)
+      (shrink-window 1)))
+  (defun my-funcs/resize-window-up ()
+    "Resize a window upwards."
+    (interactive)
+    (if (window-in-direction 'above)
+        (enlarge-window 1)
+      (shrink-window 1)))
+  (defun my-funcs/resize-window-left ()
+    "Resize a window leftwards."
+    (interactive)
+    (if (window-in-direction 'left)
+        (enlarge-window-horizontally 1)
+      (shrink-window-horizontally 1)))
+  (defun my-funcs/resize-window-right ()
+    "Resize a window rightwards."
+    (interactive)
+    (if (window-in-direction 'right)
+        (enlarge-window-horizontally 1)
+      (shrink-window-horizontally 1)))
+  (defhydra hydra-window-resize (global-map "C-c w")
+    "Window resizing"
+    ("j" my-funcs/resize-window-down "down")
+    ("k" my-funcs/resize-window-up "up")
+    ("l" my-funcs/resize-window-right "right")
+    ("h" my-funcs/resize-window-left "left"))
+
+  (defhydra hydra-outline (:color pink :hint nil)
+    "
+ ^Hide^             ^Show^           ^Move
+ ^^^^^^------------------------------------------------------
+ _q_: sublevels     _a_: all         _u_: up
+ _t_: body          _e_: entry       _n_: next visible
+ _o_: other         _i_: children    _p_: previous visible
+ _c_: entry         _k_: branches    _f_: forward same level
+ _l_: leaves        _s_: subtree     _b_: backward same level
+ _d_: subtree   _<tab>_: cycle
+ "
+    ;; Hide
+    ("q" hide-sublevels)  ; Hide everything but the top-level headings
+    ("t" hide-body)    ; Hide everything but headings (all body lines)
+    ("o" hide-other)   ; Hide other branches
+    ("c" hide-entry)   ; Hide this entry's body
+    ("l" hide-leaves)  ; Hide body lines in this entry and sub-entries
+    ("d" hide-subtree) ; Hide everything in this entry and sub-entries
+    ;; Show
+    ("a" show-all)                      ; Show (expand) everything
+    ("e" show-entry)                    ; Show this heading's body
+    ("i" show-children) ; Show this heading's immediate child sub-headings
+    ("k" show-branches) ; Show all sub-headings under this heading
+    ("s" show-subtree) ; Show (expand) everything in this heading & below
+    ("<tab>" org-cycle)
+    ;; Move
+    ("u" outline-up-heading)               ; Up
+    ("n" outline-next-visible-heading)     ; Next
+    ("p" outline-previous-visible-heading) ; Previous
+    ("f" outline-forward-same-level)       ; Forward - same level
+    ("b" outline-backward-same-level)      ; Backward - same level
+    ("z" nil "leave"))
+
+  (defhydra multiple-cursors-hydra (:hint nil)
+    "
+      ^Up^            ^Down^        ^Other^
+ ----------------------------------------------
+ [_p_]   Next    [_n_]   Next    [_l_] Edit lines
+ [_P_]   Skip    [_N_]   Skip    [_a_] Mark all
+ [_M-p_] Unmark  [_M-n_] Unmark  [_r_] Mark by regexp
+ ^ ^             ^ ^             [_q_] Quit
+ "
+    ("l" mc/edit-lines :exit t)
+    ("a" mc/mark-all-like-this :exit t)
+    ("n" mc/mark-next-like-this)
+    ("N" mc/skip-to-next-like-this)
+    ("M-n" mc/unmark-next-like-this)
+    ("p" mc/mark-previous-like-this)
+    ("P" mc/skip-to-previous-like-this)
+    ("M-p" mc/unmark-previous-like-this)
+    ("r" mc/mark-all-in-region-regexp :exit t)
+    ("q" nil))
+  (defhydra hydra-origami (:color red)
+    "
+  _o_pen node    _n_ext fold       toggle _f_orward    _t_oggle recursively
+  _c_lose node   _p_revious fold   toggle _a_ll
+  "
+    ("o" origami-open-node)
+    ("t" origami-recursively-toggle-node)
+    ("c" origami-close-node)
+    ("n" origami-next-fold)
+    ("p" origami-previous-fold)
+    ("f" origami-forward-toggle-node)
+    ("a" origami-toggle-all-nodes))
+  )
 (setq olivetti-body-width 100)
+
+(set-company-backend! 'matlab-mode '(company-capf company-yasnippet company-dabbrev))
+(custom-set-variables '(matlab-shell-command-switches '("-nodesktop -nosplash")))
+
+(add-hook! matlab-mode #'doom/toggle-line-numbers)
+
+;; add at top of org file: #+LATEX_CLASS: tufte-book
+;; (with-eval-after-load 'ox-latex
+;;   (append-to-list
+;;    'org-latex-classes
+;;    '(("tufte-book"
+;;       "\\documentclass[a4paper, sfsidenotes, justified, notitlepage]{tufte-book}
+;;      \\input{~/google_drive/laTex_templates/tufte-book.tex}"
+;;       ("\\part{%s}" . "\\part*{%s}")
+;;       ("\\chapter{%s}" . "\\chapter*{%s}")
+;;       ("\\section{%s}" . "\\section*{%s}")
+;;       ("\\subsection{%s}" . "\\subsection*{%s}")))))

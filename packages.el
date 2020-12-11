@@ -79,7 +79,8 @@
 (package! matlab-mode)
 (package! org-roam-bibtex
   :recipe (:host github :repo "org-roam/org-roam-bibtex"))
+(package! org-similarity
+  :recipe (:host github :repo "soldeace/org-similarity"))
+
 ;; When using org-roam via the `+roam` flag
-
-
 (unpin! org-roam company-org-roam)

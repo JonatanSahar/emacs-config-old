@@ -46,7 +46,7 @@
 ;;
 ;; This determines the style of line numbers in effect. If set to `nil', line
 ;; numbers are disabled. For relative line numbers, set this to `relative'.
-(setq display-line-numbers-type 'relative)
+(setq-default display-line-numbers-type 'relative)
 
 
 ;; Here are some additional functions/macros that could help you configure Doom:
@@ -96,6 +96,8 @@ truncate-string-ellipsis "…")               ; Unicode ellispis are nicer than 
 (display-time-mode 1)                             ; Enable time in the mode-line
 (display-battery-mode 1)                          ; On laptops it's nice to know how much power you have
 (global-subword-mode 1)                           ; Iterate through CamelCase words
+
+(setq-default major-mode 'org-mode)
 
 (if (eq initial-window-system 'x)                 ; if started by emacs command or desktop file
     (toggle-frame-maximized)
@@ -251,3 +253,28 @@ truncate-string-ellipsis "…")               ; Unicode ellispis are nicer than 
 (setq-default tab-width 4) ; globally
 (setq evil-shift-width 4)
 (setq tab-width 4)
+(defadvice! prompt-for-buffer (&rest _)
+  :after 'evil-window-vsplit (switch-to-buffer))
+;; LaTeX configuration
+(setq TeX-auto-save t)
+(setq TeX-parse-self t)
+(setq-default TeX-master nil)
+
+(add-hook 'LaTeX-mode-hook 'visual-line-mode)
+(add-hook 'LaTeX-mode-hook 'flyspell-mode)
+(add-hook 'LaTeX-mode-hook 'LaTeX-math-mode)
+(add-hook 'LaTeX-mode-hook 'TeX-source-correlate-mode)
+
+(add-hook 'LaTeX-mode-hook 'turn-on-reftex)
+(setq reftex-plug-into-AUCTeX t)
+(setq TeX-PDF-mode t)
+
+(setq TeX-output-view-style
+    (quote
+     (("^pdf$" "." "evince -f %o")
+      ("^html?$" "." "iceweasel %o"))))
+
+;; Setting up writegood-mode
+;; (require 'writegood-mode)
+;; (global-set-key "\C-cg" 'writegood-mode)
+(setq initial-major-mode 'org-mode)

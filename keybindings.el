@@ -77,6 +77,10 @@
          (save-buffer)
          (evil-force-normal-state)
          )
+ :nvi "C-m" (lambda ()
+         (interactive)
+         (org-switch-to-buffer-other-window "*MATLAB*")
+         )
  :i "S-SPC" #'evil-force-normal-state
  :map evil-org-mode-map
  :i "C-S-l" #'org-roam-insert)
@@ -192,10 +196,19 @@
 (map! :prefix "zz"
       :map org-mode-map
       :nv "n" #'anki-editor-cloze-region-auto-incr
+      :nv "N" #'anki-editor-cloze-region-dont-incr
+      :nv "c" #'anki-editor-cloze-word-under-cursor-auto-incr
       :nv "l" #'evil-next-flyspell-error
-      :nv "Z" #'evil-next-flyspell-error
-      :nv "z" #'evil-prev-flyspell-error
-      :nv "c" #'anki-editor-cloze-region-auto-incr
+      :nv "Z" (lambda ()
+         (interactive)
+         (call-interactively #'evil-next-flyspell-error)
+         (call-interactively #'helm-flyspell-correct)
+         )
+      :nv "z" (lambda ()
+         (interactive)
+         (call-interactively #'evil-prev-flyspell-error)
+         (call-interactively #'helm-flyspell-correct)
+         )
        )
 
 (map! :leader
@@ -203,6 +216,10 @@
   "sp" #'counsel-ag
   "sd" #'counsel-ag
   "ss" #'swiper
+  :desc "equate window sizes" "we" #'balance-windows
+  :desc "minimize window" "wmm" #'minimize-window
+  :desc "minimize window" "wO" #'minimize-window
+  :desc "maximize window" "wmM" #'doom/window-maximize-buffer
   :desc "switch to buffer" "bb" #'helm-mini
   :desc "add line above" "ik" #'+evil/insert-newline-above
   :desc "add line below" "ij" #'+evil/insert-newline-below)
@@ -214,46 +231,35 @@
          (evil-visual-char)
          (end-of-line))))
 
+(map! :localleader
+      (:map matlab-mode-map
+       :n "f" #'matlab-shell-help-at-point))
+
 (map! :leader
-      ;; "`" 'winum-select-window-by-number
-      "0" 'winum-select-window-0-or-10
-      "1" 'winum-select-window-1
-      "2" 'winum-select-window-2
-      "3" 'winum-select-window-3
-      "4" 'winum-select-window-4
-      "5" 'winum-select-window-5
-      "6" 'winum-select-window-6
-      "7" 'winum-select-window-7
-      "8" 'winum-select-window-8
-      "9" 'winum-select-window-9
-      (:prefix ("j" . "navigation")
-       :desc "avy timer" "j" 'avy-goto-char-timer
-       :desc "avy line" "l" 'avy-goto-line)
+        (:prefix ("j" . "navigation")
+        :desc "avy timer" "j" 'avy-goto-char-timer
+        :desc "avy line" "l" 'avy-goto-line)
 
-      (:prefix ("y" . "yank")
-       :desc "header content" "y" #'(lambda ()
-                                      (interactive)
-                                      (evil-middle-of-visual-line)
-                                      (evil-org-beginning-of-line)
-                                      (evil-visual-char)
-                                      (end-of-line)))
+        ;; (:prefix ("y" . "yank")
+        ;;  :desc "header content" "y" #'my/visual-inside-org-header)
 
-      (:prefix ("k" . "my commands")
-       :desc "kill all other windows" "o" 'delete-other-windows
-       :desc "kill buffer and window" "w" '+workspace/close-window-or-workspace
-       :desc "kill buffer and window" "d" 'kill-current-buffer
-       :desc "switch to previous buffer" "k" 'evil-switch-to-windows-last-buffer
-       :desc "search and replace vim style" "s" #'(lambda () (interactive) (evil-ex "%s/"))
-       :desc "search and replace vim style - in region" "S" #'my/search-replace-in-region
-       :desc "refile subtree" "r" 'org-refile
-       :desc "helm org rifle" "R" 'helm-org-rifle
-       :desc "run macro" "e" #'kmacro-end-and-call-macro
-
-
-       (:prefix ("b" . "references")
-        :desc "crossref search for refernce" "r" 'doi-utils-add-entry-from-crossref-query
-        :desc "add refernce from doi" "d" 'doi-utils-add-bibtex-entry-from-doi
-        )))
+        (:prefix ("k" . "my commands")
+        :desc "header content" "y" #'my/visual-inside-org-header
+        :desc "kill all other windows" "o" 'delete-other-windows
+        :desc "kill buffer and window" "w" '+workspace/close-window-or-workspace
+        :desc "kill buffer" "d" 'kill-current-buffer
+        :desc "switch to previous buffer" "k" 'evil-switch-to-windows-last-buffer
+        :desc "search and replace vim style" "s" #'(lambda () (interactive) (evil-ex "%s/"))
+        :desc "search and replace vim style - in region" "S" #'my/search-replace-in-region
+        :desc "refile subtree" "r" 'org-refile
+        :desc "helm org rifle" "R" 'helm-org-rifle
+        :desc "run macro" "e" #'kmacro-end-and-call-macro
+        :desc "generate laTex previews" "l" #'org-latex-preview
+                (:prefix ("b" . "references")
+                :desc "crossref search for refernce" "r" 'doi-utils-add-entry-from-crossref-query
+                :desc "add refernce from doi" "d" 'doi-utils-add-bibtex-entry-from-doi)
+                )
+        )
 
 (setq
       avy-style 'at-full
@@ -280,17 +286,19 @@
          (windmove-down)) "split down")
   ("q" nil "quit" :color blue))
 
-(map! :leader "w." 'hydra-window/body)
+(map! :leader "w." 'hydra-window-resize/body)
 
 (define-key evil-normal-state-map (kbd "J") 'evil-join)
 (define-key evil-normal-state-map (kbd "K") 'join-line)
 
-(setq key-chord-two-keys-delay 0.1)
+(setq key-chord-two-keys-delay 0.5)
+(key-chord-define evil-insert-state-map "fj" #'evil-force-normal-state)
 (key-chord-define evil-insert-state-map "df" #'evil-force-normal-state)
 (key-chord-define evil-visual-state-map "df" #'evil-force-normal-state)
 (key-chord-define evil-insert-state-map "jk" #'evil-force-normal-state)
 (key-chord-define evil-visual-state-map "jk" #'evil-force-normal-state)
 (key-chord-define evil-insert-state-map "kk" #'evil-execute-in-normal-state)
+(key-chord-define evil-insert-state-map "fg" #'evil-execute-in-normal-state)
 
 ;; (key-chord-define-global  "zh" #'windmove-left)
 ;; (key-chord-define-global  "zl" #'windmove-right)
@@ -314,3 +322,12 @@
 (evil-define-key 'normal wordnut-mode-map (kbd "H") 'wordnut-history-lookup)
 (evil-define-key 'normal wordnut-mode-map (kbd "/") 'wordnut-search)
 (evil-define-key 'normal wordnut-mode-map (kbd "o") 'wordnut-show-overview)
+
+(map!
+   :nvi "C-c  c" #'org-capture
+   :nvi "C-c  m" #'my/evil-mc-make-vertical-cursors
+   :nvi "C-c  h" #'my/visual-inside-org-header
+   :nvi "C-c  a" #'(lambda () (interactive) (org-capture nil "a"))
+   :nvi "C-c  A" #'(lambda () (interactive) (org-capture nil "A"))
+   :nvi "C-c  o" #'(lambda () (interactive) (org-agenda nil "o"))
+ )

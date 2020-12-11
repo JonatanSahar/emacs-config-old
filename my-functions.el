@@ -18,6 +18,8 @@
       ;;; Because `evil-mc-resume-cursors` produces a cursor, we need to place it on on the
       ;;; same column as the others
   (move-to-column (evil-mc-column-number end))
+  ;; (evil-digit-argument-or-evil-beginning-of-line)
+  ;; (evil-beginning-of-visual-line)
       )
 
 (defun my/org-font ()
@@ -181,3 +183,17 @@
   (when (not (eolp))
     (forward-char))
   (insert (make-string count char)))
+
+(defun my/visual-inside-org-header()
+ (interactive)
+ (evil-middle-of-visual-line)
+ (evil-org-beginning-of-line)
+ (evil-visual-char)
+ (end-of-line))
+
+
+(defun my/fix-bibtex-file()
+  (interactive)
+  (evil-ex "%s/C\\:/\/mnt\/c/g")
+  (evil-ex "%s/\\\\/\//g")
+  )

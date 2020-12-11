@@ -28,3 +28,5 @@
                         `(org-level-2 ((t (,@headline ,@variable-tuple :height 1.01))))
                         `(org-level-1 ((t (,@headline ,@variable-tuple :height 1.01))))
                         `(org-document-title ((t (,@headline ,@variable-tuple :height 1.5 :underline nil)))))
+
+;; (face-remap-add-relative 'default :family "alef" :height 190)
