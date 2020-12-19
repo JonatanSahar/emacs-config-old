@@ -197,3 +197,9 @@
   (evil-ex "%s/C\\:/\/mnt\/c/g")
   (evil-ex "%s/\\\\/\//g")
   )
+
+(defun my/get-buffer-name()
+  "Copy and show the name of the current buffer."
+  (interactive)
+  (kill-new (buffer-name))
+  (message "%s" (buffer-name)))

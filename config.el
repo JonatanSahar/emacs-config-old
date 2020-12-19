@@ -278,3 +278,5 @@ truncate-string-ellipsis "…")               ; Unicode ellispis are nicer than 
 ;; (require 'writegood-mode)
 ;; (global-set-key "\C-cg" 'writegood-mode)
 (setq initial-major-mode 'org-mode)
+
+(setq helm-ff-fuzzy-matching t)

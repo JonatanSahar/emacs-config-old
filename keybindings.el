@@ -77,7 +77,7 @@
          (save-buffer)
          (evil-force-normal-state)
          )
- :nvi "C-m" (lambda ()
+ :nvi "C-M" (lambda ()
          (interactive)
          (org-switch-to-buffer-other-window "*MATLAB*")
          )
@@ -119,7 +119,12 @@
 
 (map! :leader
       :nv
-      :desc "B" "bb" nil
+      "bb" nil
+      "fc" nil)
+
+(map! :leader
+      :nv
+      :desc "copy buffer name"  "fc" #'my/get-buffer-name
       :desc "helm-bibtex"  "nb" #'helm-bibtex
       :desc "Org Noter"  "nN" #'org-noter
       (:when (featurep! :completion helm)

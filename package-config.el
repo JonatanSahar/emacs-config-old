@@ -432,7 +432,7 @@
 (setq olivetti-body-width 100)
 
 (set-company-backend! 'matlab-mode '(company-capf company-yasnippet company-dabbrev))
-(custom-set-variables '(matlab-shell-command-switches '("-nodesktop -nosplash")))
+(custom-set-variables '(matlab-shell-command-switches '("-nodesktop -nosplash -nodisplay")))
 
 (add-hook! matlab-mode #'doom/toggle-line-numbers)
 
