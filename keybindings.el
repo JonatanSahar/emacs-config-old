@@ -70,16 +70,19 @@
  :map pdf-view-mode-map
  :vin "gl" nil)
 
+(map! :map matlab-mode-map
+ :nv "C-S-m" (lambda ()
+         (interactive)
+         (org-switch-to-buffer-other-window "*MATLAB*")
+         )
+)
+
 (map!
  :nvi "C-\\" #'toggle-input-method
  :nvi "C-s" (lambda ()
          (interactive)
          (save-buffer)
          (evil-force-normal-state)
-         )
- :nvi "C-M" (lambda ()
-         (interactive)
-         (org-switch-to-buffer-other-window "*MATLAB*")
          )
  :i "S-SPC" #'evil-force-normal-state
  :map evil-org-mode-map

@@ -447,3 +447,20 @@
 ;;       ("\\chapter{%s}" . "\\chapter*{%s}")
 ;;       ("\\section{%s}" . "\\section*{%s}")
 ;;       ("\\subsection{%s}" . "\\subsection*{%s}")))))
+
+(use-package roam-block
+  :load-path "/home/jonathan/.emacs.d/manually-installed-packages/roam-block"
+  :hook (after-init . roam-block-mode)
+  :init (setq roam-block-home '("/home/jonathan/.emacs.d/manually-installed-packages/roam-block/home")
+              roam-block-ref-highlight t
+              roam-block-embed-highlight t)
+  :bind
+  (:map roam-block-mode-map
+        (("C-c b r s" . roam-block-ref-store)
+         ("C-c b r i" . roam-block-ref-insert)
+         ("C-c b r d" . roam-block-ref-delete)
+         ("C-c b r t" . roam-block-ref-highlight-toggle)
+         ("C-c b e s" . roam-block-embed-store)
+         ("C-c b e i" . roam-block-embed-insert)
+         ("C-c b e t" . roam-block-embed-highlight-toggle)
+         ("C-c b d" . roam-block-delete-block))))
