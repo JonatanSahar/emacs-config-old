@@ -220,8 +220,8 @@
 (require 'org-ref)
 (setq
  org-ref-bibliography-notes "~/google_drive/.notes/.bibliography/bibliography_notes.org"
- org-ref-default-bibliography "~/google_drive/.notes/.bibliography/references.bib"
- org-ref-pdf-directory "~/google_drive/.notes/.bibliography/bibtex_pdf"
+ org-ref-default-bibliography '("~/google_drive/.notes/.bibliography/references.bib")
+ org-ref-pdf-directory "~/google_drive/.notes/.bibliography/zotero_pdf"
  org-ref-get-pdf-filename-function 'org-ref-get-pdf-filename-helm-bibtex
  ;; org-ref-note-title-format "* TODO %y - %t\n :PROPERTIES:\n  :Custom_ID: %k\n  :NOTER_DOCUMENT: %F\n :ROAM_KEY: cite:%k\n  :AUTHOR: %9a\n  :JOURNAL: %j\n  :YEAR: %y\n  :VOLUME: %v\n  :PAGES: %p\n  :DOI: %D\n  :URL: %U\n :END:\n\n"
  org-ref-notes-directory "~/google_drive/.notes/literature-notes/"
@@ -464,3 +464,6 @@
          ("C-c b e i" . roam-block-embed-insert)
          ("C-c b e t" . roam-block-embed-highlight-toggle)
          ("C-c b d" . roam-block-delete-block))))
+
+(venv-initialize-interactive-shells) ;; if you want interactive shell support
+(venv-initialize-eshell) ;; if you want eshell support
