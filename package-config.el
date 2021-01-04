@@ -184,9 +184,12 @@
   (setq
    org-roam-db-location "~/org-roam/org-roam.db"
    org-roam-directory (file-truename org-roam-directory)
-   org-roam-link-title-format "§:%s"
+   ;; org-roam-link-title-format "§:%s"
    org-roam-completion-system 'helm
    org-roam-index-file (file-truename "~/google_drive/.notes/slip-box/index.org")
+   org-roam-completion-everywhere nil
+   org-roam-link-auto-replace nil
+
 
    org-roam-capture-templates
       '(("d" "default" plain (function org-roam-capture--get-point)
@@ -467,3 +470,4 @@
 
 (venv-initialize-interactive-shells) ;; if you want interactive shell support
 (venv-initialize-eshell) ;; if you want eshell support
+(setq completion-ignore-case t)

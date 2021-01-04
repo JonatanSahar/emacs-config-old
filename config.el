@@ -169,6 +169,7 @@ truncate-string-ellipsis "…")               ; Unicode ellispis are nicer than 
                             (flyspell-mode 1)
                             (visual-fill-column-mode 1)
                             (olivetti-mode 1)
+                            (my/set-faces)
                             (my/org-font)))
 (key-chord-mode 1)
 (evil-snipe-override-mode 1)

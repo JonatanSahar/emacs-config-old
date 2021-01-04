@@ -1,7 +1,8 @@
 ;;; ~/.doom.d/faces.el -*- lexical-binding: t; -*-
 
-
-(setq variable-tuple (cond
+(defun my/set-faces ()
+  (interactive)
+  (setq variable-tuple (cond
                             ((x-family-fonts "Alef")    '(:family "Alef"))
                             ((x-family-fonts "Fira Code Retina")    '(:family "Fira Code Retina"))
                             ((x-family-fonts "Source Sans Pro")    '(:family "Source Sans Pro"))
@@ -15,9 +16,11 @@
                         ;; `(line-number ((t (:inherit default :foreground "#9fa6b" :strike-through nil :underline nil :slant normal :weight normal :height 174 :width normal :foundry "ADBO" :family "Source Code Pro"))))
                         ;; `(line-number-current-line ((t (:inherit (hl-line default) :foreground "#bbc2cf" :strike-through nil :underline nil :slant normal :weight normal :height 174 :width normal :foundry "ADBO" :family "Source Code Pro"))))
 (custom-theme-set-faces 'user
-                        `(line-number ((t (:inherit default :foreground "#9fa6b" :strike-through nil :underline nil :slant normal :weight normal :height 174 :width normal :foundry "ADBO" :family "Source Code Pro"))))
+                        `(line-number ((t (:inherit default :foreground "#6599bf" :strike-through nil :underline nil :slant normal :weight normal :height 174 :width normal :foundry "ADBO" :family "Source Code Pro"))))
+                        ;; `(line-number ((t (:inherit default :foreground "#3f444a" :strike-through nil :underline nil :slant normal :weight normal :height 174 :width normal :foundry "ADBO" :family "Source Code Pro"))))
                         `(line-number-current-line ((t (:inherit (hl-line default) :foreground "#bbc2cf" :strike-through nil :underline nil :slant normal :weight normal :height 174 :width normal :foundry "ADBO" :family "Source Code Pro"))))
 )
+
 (custom-theme-set-faces 'user
                         `(org-level-8 ((t (,@headline ,@variable-tuple :height 1.01))))
                         `(org-level-7 ((t (,@headline ,@variable-tuple :height 1.01))))
@@ -30,3 +33,4 @@
                         `(org-document-title ((t (,@headline ,@variable-tuple :height 1.5 :underline nil)))))
 
 ;; (face-remap-add-relative 'default :family "alef" :height 190)
+)
