@@ -192,11 +192,19 @@
  (end-of-line))
 
 
-(defun my/fix-bibtex-file()
+(defun my/convert-windows-to-linux-paths()
   (interactive)
-  (evil-ex "%s/C\\:/\/mnt\/c/g")
-  (evil-ex "%s/\\\\/\//g")
-  )
+        (let ((case-fold-search t)) ; or nil
+                (goto-char (point-min))
+                (while (search-forward "C\\:" nil t)
+                (replace-match "\/mnt\/c"))
+
+                (goto-char (point-min))
+                (while (search-forward "\\\\" nil t)
+                (replace-match "\/"))
+                (save-buffer)
+  ;; repeat for other string pairs
+  ))
 
 (defun my/get-buffer-name()
   "Copy and show the name of the current buffer."

@@ -30,7 +30,11 @@
                         `(org-level-3 ((t (,@headline ,@variable-tuple :height 1.01))))
                         `(org-level-2 ((t (,@headline ,@variable-tuple :height 1.01))))
                         `(org-level-1 ((t (,@headline ,@variable-tuple :height 1.01))))
-                        `(org-document-title ((t (,@headline ,@variable-tuple :height 1.5 :underline nil)))))
+                        `(org-document-title ((t (,@headline ,@variable-tuple :height 1.1 :underline nil)))))
+
+(custom-theme-set-faces 'user
+                        `(org-roam-link ((t (:inherit default :foreground "#e8c24f" :strike-through nil :underline nil :slant normal :weight normal :height 174 :width normal :foundry "ADBO" :family "Source Code Pro"))))
+                        `(org-roam-link-current ((t (:inherit default :foreground "#e8c24f" :strike-through nil :underline nil :slant normal :weight normal :height 174 :width normal :foundry "ADBO" :family "Source Code Pro")))))
 
 ;; (face-remap-add-relative 'default :family "alef" :height 190)
 )

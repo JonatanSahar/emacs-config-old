@@ -63,6 +63,11 @@
  )
 
 (map! :map ivy-minibuffer-map
+      "ESC" nil
+      )
+
+(map! :map ivy-minibuffer-map
+      "ESC" 'minibuffer-keyboard-quit
       "C-j" 'ivy-next-line
       "C-k" 'ivy-previous-line)
 
@@ -94,9 +99,15 @@
  "C-j" #'helm-next-line
  "C-k" #'helm-previous-line
  [control-backspace] #'backward-kill-word
+ "ESC" #'helm-exit-minibuffer
  :map helm-find-files-map
  [control-backspace] #'backward-kill-word
  )
+
+
+(map!
+ :map ivy-mode-map
+ "ESC" #'minibuffer-keyboard-quit)
 
 
 (map! :nvi
@@ -260,6 +271,7 @@
         :desc "search and replace vim style" "s" #'(lambda () (interactive) (evil-ex "%s/"))
         :desc "search and replace vim style - in region" "S" #'my/search-replace-in-region
         :desc "refile subtree" "r" 'org-refile
+        :desc "paste from kill-ring" "p" 'helm-show-kill-ring
         :desc "helm org rifle" "R" 'helm-org-rifle
         :desc "run macro" "e" #'kmacro-end-and-call-macro
         :desc "generate laTex previews" "l" #'org-latex-preview
@@ -300,24 +312,30 @@
 (define-key evil-normal-state-map (kbd "K") 'join-line)
 
 (setq key-chord-two-keys-delay 0.5)
-(key-chord-define evil-insert-state-map "fj" #'evil-force-normal-state)
+(key-chord-define evil-insert-state-map "gj" #'evil-force-normal-state)
 (key-chord-define evil-insert-state-map "df" #'evil-force-normal-state)
 (key-chord-define evil-visual-state-map "df" #'evil-force-normal-state)
 (key-chord-define evil-insert-state-map "jk" #'evil-force-normal-state)
 (key-chord-define evil-visual-state-map "jk" #'evil-force-normal-state)
 (key-chord-define evil-insert-state-map "kk" #'evil-execute-in-normal-state)
 (key-chord-define evil-insert-state-map "fg" #'evil-execute-in-normal-state)
+(key-chord-define helm-map "jk" #'helm-exit-minibuffer)
 
+ "ESC" #'helm-exit-minibuffer
+;; (key-chord-define ivy-minibuffer-map "jk" #'minibuffer-keyboard-quit)
+(map! :map ivy-minibuffer-map :nvi "C-c k" #'minibuffer-keyboard-quit)
 ;; (key-chord-define-global  "zh" #'windmove-left)
 ;; (key-chord-define-global  "zl" #'windmove-right)
 ;;
 ;; (key-chord-define-global  "zk" #'windmove-up)
 ;; (key-chord-define-global  "zj" #'windmove-down)
 
-(define-key evil-normal-state-map (kbd "j") 'evil-next-visual-line)
-(define-key evil-normal-state-map (kbd "k") 'evil-previous-visual-line)
-(define-key evil-normal-state-map (kbd "'") 'evil-goto-mark)
-(define-key evil-normal-state-map (kbd "`") 'evil-goto-mark-line)
+(map!
+      :nv
+        "j" #'evil-next-visual-line
+        "k" #'evil-previous-visual-line
+        "'" #'evil-goto-mark
+        "`" #'evil-goto-mark-line)
 
 (global-set-key [f12] 'wordnut-search)
 (global-set-key [(control f12)] 'wordnut-lookup-current-word)

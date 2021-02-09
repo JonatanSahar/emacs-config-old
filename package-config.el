@@ -29,10 +29,11 @@
   )
 
 (use-package helm
-  :config
+  :init
   (setq helm-ff-fuzzy-matching t))
 
-(setq helm-ff-fuzzy-matching t)
+(after! helm
+  (setq helm-ff-fuzzy-matching t))
 
 (use-package! pdf-tools
   :config
@@ -51,8 +52,8 @@
    org-noter-hide-other nil
    ;; Everything is relative to the main notes file
    org-noter-notes-search-path (list  slip-box-dir)
-   )
-  )
+   org-noter-default-notes-file-names '("misc-literature-notes.org")
+   org-noter-separate-notes-from-heading t))
 
 (use-package! zoom
   :ensure t
@@ -72,6 +73,7 @@
     bidi-paragraph-direction nil
     org-id-link-to-org-use-id t ;;'create-if-interactive-and-no-custom-id
 
+    org-id-method 'ts
     org-outline-path-complete-in-steps nil
     org-goto-interface 'outline-path-completion
 
@@ -167,20 +169,50 @@
 
   )
 
-(use-package! org-roam
-  :hook (org-load . org-roam-mode)
-  :commands (org-roam-buffer-toggle-display
-             org-roam-find-file
-             org-roam-graph
-             org-roam-insert
-             org-roam-switch-to-buffer
-             org-roam-dailies-date
-             org-roam-dailies-today
-             org-roam-dailies-tomorrow
-             org-roam-dailies-yesterday)
-  :preface
-  :init
-  :config
+;; (use-package! org-roam
+;;   :hook (org-load . org-roam-mode)
+;;   :commands (org-roam-buffer-toggle-display
+;;              org-roam-find-file
+;;              org-roam-graph
+;;              org-roam-insert
+;;              org-roam-switch-to-buffer
+;;              org-roam-dailies-date
+;;              org-roam-dailies-today
+;;              org-roam-dailies-tomorrow
+;;              org-roam-dailies-yesterday)
+;;   :preface
+;;   :init
+;;   :config
+;;   (setq
+;;    org-roam-db-location "~/org-roam/org-roam.db"
+;;    org-roam-directory (file-truename org-roam-directory)
+;;    ;; org-roam-link-title-format "§:%s"
+;;    org-roam-completion-system 'helm
+;;    org-roam-index-file (file-truename "~/google_drive/.notes/slip-box/index.org")
+;;    org-roam-completion-everywhere nil
+;;    org-roam-link-auto-replace nil
+;;    org-roam-prefer-id-links t
+;;    org-roam-capture-templates
+;;       '(("d" "default" plain (function org-roam-capture--get-point)
+;;           "%?"
+;;           :file-name "%<%Y-%m-%d>-${slug}"
+;;           :head "#+TITLE: ${title}\n"
+;;           :unnarrowed t))
+
+;; ;;   org-roam-capture-ref-templates
+;; ;;       '(("r" "ref" plain (function org-roam-capture--get-point)
+;; ;;           "%?"
+;; ;;           :file-name "lit/${slug}"
+;; ;;           :head "#+setupfile:./hugo_setup.org
+;; ;; #+roam_key: ${ref}
+;; ;; #+hugo_slug: ${slug}
+;; ;; #+roam_tags: website
+;; ;; #+title: ${title}\n"))
+;;         )
+;;         (set-company-backend! 'org-mode '(company-capf company-yasnippet company-dabbrev))
+;;   )
+
+(after! org-roam
   (setq
    org-roam-db-location "~/org-roam/org-roam.db"
    org-roam-directory (file-truename org-roam-directory)
@@ -189,27 +221,16 @@
    org-roam-index-file (file-truename "~/google_drive/.notes/slip-box/index.org")
    org-roam-completion-everywhere nil
    org-roam-link-auto-replace nil
-
-
+   org-roam-prefer-id-links t
    org-roam-capture-templates
       '(("d" "default" plain (function org-roam-capture--get-point)
           "%?"
           :file-name "%<%Y-%m-%d>-${slug}"
           :head "#+TITLE: ${title}\n"
           :unnarrowed t))
-
-;;   org-roam-capture-ref-templates
-;;       '(("r" "ref" plain (function org-roam-capture--get-point)
-;;           "%?"
-;;           :file-name "lit/${slug}"
-;;           :head "#+setupfile:./hugo_setup.org
-;; #+roam_key: ${ref}
-;; #+hugo_slug: ${slug}
-;; #+roam_tags: website
-;; #+title: ${title}\n"))
         )
-        (set-company-backend! 'org-mode '(company-capf company-yasnippet company-dabbrev))
-  )
+  (set-company-backend! 'org-mode '(company-capf company-yasnippet company-dabbrev)))
+
 
 (add-hook 'org-roam-buffer-prepare-hook #'hide-mode-line-mode)
 
@@ -257,7 +278,7 @@
   :hook (org-roam-mode . org-roam-bibtex-mode)
   :config
   (setq orb-preformat-keywords '("=key=" "title" "url" "file" "author-or-editor" "keywords")
-        orb-templates'(("r" "ref" plain #'org-roam-capture--get-point "" :file-name "Notes: ${title}" :head "#+TITLE: ${title}\n#+ROAM_KEY: ${ref}\n- tags ::\n- keywords :: ${keywords}\n\n:PROPERTIES:\n:Custom_ID: ${=key=}\n:URL: ${url}\n:AUTHOR: ${author-or-editor}\n" :unnarrowed t)))
+        orb-templates'(("r" "ref" plain #'org-roam-capture--get-point "" :file-name "Notes: ${title}" :head "#+TITLE: Notes on ${title}\n#+ROAM_KEY: ${ref}\n- tags ::\n- keywords :: ${keywords}\n\n:PROPERTIES:\n:Custom_ID: ${=key=}\n:URL: ${url}\n:AUTHOR: ${author-or-editor}\n" :unnarrowed t)))
             ;; "- tags ::\n- keywords :: ${keywords}\n\n* ${title}\n:PROPERTIES:\n:Custom_ID: ${=key=}\n:URL: ${url}\n:AUTHOR: ${author-or-editor}\n:NOTER_DOCUMENT: %(orb-process-file-field \"${=key=}\")\n:NOTER_PAGE: \n:END:\n\n * Notes"
   )
 
@@ -340,26 +361,26 @@
     "Resize a window downwards."
     (interactive)
     (if (window-in-direction 'below)
-        (enlarge-window 1)
-      (shrink-window 1)))
+        (enlarge-window 10)
+      (shrink-window 10)))
   (defun my-funcs/resize-window-up ()
-    "Resize a window upwards."
+    "resize a window upwards."
     (interactive)
     (if (window-in-direction 'above)
-        (enlarge-window 1)
-      (shrink-window 1)))
+        (enlarge-window 10)
+      (shrink-window 10)))
   (defun my-funcs/resize-window-left ()
-    "Resize a window leftwards."
+    "resize a window leftwards."
     (interactive)
     (if (window-in-direction 'left)
-        (enlarge-window-horizontally 1)
-      (shrink-window-horizontally 1)))
+        (enlarge-window-horizontally 10)
+      (shrink-window-horizontally 10)))
   (defun my-funcs/resize-window-right ()
-    "Resize a window rightwards."
+    "resize a window rightwards."
     (interactive)
     (if (window-in-direction 'right)
-        (enlarge-window-horizontally 1)
-      (shrink-window-horizontally 1)))
+        (enlarge-window-horizontally 10)
+      (shrink-window-horizontally 10)))
   (defhydra hydra-window-resize (global-map "C-c w")
     "Window resizing"
     ("j" my-funcs/resize-window-down "down")
@@ -435,8 +456,9 @@
 (setq olivetti-body-width 100)
 
 (set-company-backend! 'matlab-mode '(company-capf company-yasnippet company-dabbrev))
+(set-company-backend! 'matlab-shell-mode '(company-capf company-matlab-shell company-dabbrev))
 (custom-set-variables '(matlab-shell-command-switches '("-nodesktop -nosplash -nodisplay")))
-
+(setq matlab-verify-on-save-flag nil)
 (add-hook! matlab-mode #'doom/toggle-line-numbers)
 
 ;; add at top of org file: #+LATEX_CLASS: tufte-book
@@ -471,3 +493,18 @@
 (venv-initialize-interactive-shells) ;; if you want interactive shell support
 (venv-initialize-eshell) ;; if you want eshell support
 (setq completion-ignore-case t)
+
+(use-package define-word
+  :config
+  (setq define-word-offline-dict-directory "/mnt/c/Users/Jonathan/Google Drive/wiktionary-en-en/ding/en-en-withforms-enwiktionary.txt")
+  (map! :ni
+                "M-#" #'define-word
+                "M-$" #'define-word-at-point
+                )
+  )
+
+
+
+;; (use-package olivetti
+;;   :hook (python-mode matlab-mode org-mode)
+;;   )

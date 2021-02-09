@@ -168,9 +168,24 @@ truncate-string-ellipsis "…")               ; Unicode ellispis are nicer than 
                             (setq bidi-paragraph-direction nil)
                             (flyspell-mode 1)
                             (visual-fill-column-mode 1)
-                            (olivetti-mode 1)
+                            ;; (olivetti-mode 1)
+                            (setq helm-ff-fuzzy-matching t)
                             (my/set-faces)
                             (my/org-font)))
+
+(add-hook 'prog-mode-hook (lambda ()
+                            ;; (olivetti-mode 1)
+                            (setq helm-ff-fuzzy-matching t)
+                            ))
+
+(add-hook!
+ '(org-mode-hook python-mode-hook matlab-mode-hook emacs-lisp-mode-hook)
+ #'(olivetti-mode display-line-numbers-mode))
+
+(add-hook!
+ '(helm-buffer)
+ #'(olivetti-mode))
+
 (key-chord-mode 1)
 (evil-snipe-override-mode 1)
 
@@ -243,7 +258,11 @@ truncate-string-ellipsis "…")               ; Unicode ellispis are nicer than 
       company-show-numbers t)
 (setq-default history-length 1000)
 (setq-default prescient-history-length 1000)
+(map! :map org-mode-map :i
+      "C-;" #'+company/complete
+      "M-;" #'+company/complete)
 
+(set-company-backend! 'text-mode '(company-ispell))
 (set-company-backend! 'prog-mode '(company-files))
 (set-company-backend! 'emacs-lisp-mode '(company-files))
 
@@ -281,3 +300,5 @@ truncate-string-ellipsis "…")               ; Unicode ellispis are nicer than 
 (setq initial-major-mode 'org-mode)
 
 (setq helm-ff-fuzzy-matching t)
+
+(add-hook 'bibtex-mode-hook 'my/convert-windows-to-linux-paths)
