@@ -1,5 +1,6 @@
 ;;; ~/.doom.d/keybindings.el -*- lexical-binding: t; -*-
 
+(map! :map org-mode-map :nv "j" nil)
 (map!
     :nv "E" nil
     :nv "W" nil
@@ -86,8 +87,8 @@
  :nvi "C-\\" #'toggle-input-method
  :nvi "C-s" (lambda ()
          (interactive)
+         (evil-normal-state)
          (save-buffer)
-         (evil-force-normal-state)
          )
  :i "S-SPC" #'evil-force-normal-state
  :map evil-org-mode-map
@@ -109,6 +110,11 @@
  :map ivy-mode-map
  "ESC" #'minibuffer-keyboard-quit)
 
+(map! :map evil-org-mode-map :localleader :n
+      "E" #'my/export-org-to-docx
+      "n" #'org-narrow-to-subtree
+      "N" #'widen
+      )
 
 (map! :nvi
       [C-o] #'better-jumper-jump-backward
@@ -135,6 +141,9 @@
       :nv
       "bb" nil
       "fc" nil)
+
+
+(map! :map evil-motion-state-map :nv "j" #'evil-next-visual-line)
 
 (map! :leader
       :nv
@@ -232,8 +241,8 @@
 
 (map! :leader
   :nv
-  "sp" #'counsel-ag
-  "sd" #'counsel-ag
+  "sp" #'counsel-rg
+  "sd" #'counsel-rg
   "ss" #'swiper
   :desc "equate window sizes" "we" #'balance-windows
   :desc "minimize window" "wmm" #'minimize-window
@@ -319,7 +328,6 @@
 (key-chord-define evil-visual-state-map "jk" #'evil-force-normal-state)
 (key-chord-define evil-insert-state-map "kk" #'evil-execute-in-normal-state)
 (key-chord-define evil-insert-state-map "fg" #'evil-execute-in-normal-state)
-(key-chord-define helm-map "jk" #'helm-exit-minibuffer)
 
  "ESC" #'helm-exit-minibuffer
 ;; (key-chord-define ivy-minibuffer-map "jk" #'minibuffer-keyboard-quit)
@@ -331,11 +339,26 @@
 ;; (key-chord-define-global  "zj" #'windmove-down)
 
 (map!
-      :nv
+ (:map evil-visual-state-map
+         :nv
         "j" #'evil-next-visual-line
         "k" #'evil-previous-visual-line
         "'" #'evil-goto-mark
         "`" #'evil-goto-mark-line)
+        (:map evil-normal-state-map
+         :nv
+        "j" #'evil-next-visual-line
+        "k" #'evil-previous-visual-line
+        "'" #'evil-goto-mark
+        "`" #'evil-goto-mark-line)
+        (:map evil-org-mode-map
+        :nv
+        "j" #'evil-next-visual-line
+        "k" #'evil-previous-visual-line
+        "'" #'evil-goto-mark
+        "`" #'evil-goto-mark-line)
+
+        )
 
 (global-set-key [f12] 'wordnut-search)
 (global-set-key [(control f12)] 'wordnut-lookup-current-word)

@@ -1,5 +1,4 @@
 ;;; ~/.doom.d/my-functions.el -*- lexical-binding: t; -*-
-
 (defun evil--mc-make-cursor-at-col (_startcol endcol orig-line)
   (move-to-column endcol)
   (unless (= (line-number-at-pos) orig-line)
@@ -234,3 +233,33 @@ Org-mode properties drawer already, keep the headline and don’t insert
     (when has-properties
       (kill-line)
       (kill-line))))
+
+(defun my/export-org-to-docx ()
+ "Export the current org file as a docx via markdown."
+ (interactive)
+ (let* ((bibfile (expand-file-name (car (org-ref-find-bibliography))))
+        ;; this is probably a full path
+        (current-file (buffer-file-name))
+        (basename (file-name-sans-extension current-file))
+        (docx-file (concat basename ".docx")))
+   (save-buffer)
+   (when (file-exists-p docx-file) (delete-file docx-file))
+   (shell-command (format
+                   ;; "pandoc -s -S %s -o %s"
+                   ;; (shell-quote-argument current-file) (shell-quote-argument docx-file)))
+                   "pandoc -s -S --bibliography=%s %s -o %s"
+                   (shell-quote-argument bibfile) (shell-quote-argument current-file) (shell-quote-argument docx-file)))
+   ))
+
+(defun helm-bibtex-format-pandoc-citation (keys)
+  (concat "[" (mapconcat (lambda (key) (concat "@" key)) keys "; ") "]"))
+
+;; inform helm-bibtex how to format the citation in org-mode
+;; (setf (cdr (assoc 'org-mode bibtex-completion-format-citation-functions))
+;;   'helm-bibtex-format-pandoc-citation)
+
+(setq bibtex-completion-format-citation-functions
+  '((org-mode      . helm-bibtex-format-pandoc-citation)
+    (latex-mode    . bibtex-completion-format-citation-cite)
+    (markdown-mode . bibtex-completion-format-citation-pandoc-citeproc)
+    (default       . bibtex-completion-format-citation-default)))

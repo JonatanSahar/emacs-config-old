@@ -81,6 +81,7 @@
 (package! promise)
 (package! virtualenvwrapper)
 (package! define-word)
+;; (package! org-reveal)
 (package! org-roam-bibtex
   :recipe (:host github :repo "org-roam/org-roam-bibtex"))
 (package! org-similarity

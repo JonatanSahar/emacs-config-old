@@ -118,9 +118,6 @@ truncate-string-ellipsis "…")               ; Unicode ellispis are nicer than 
 (load-file "~/.doom.d/faces.el")
 (load-file "~/.doom.d/package-config.el")
 
-                        ;; `(line-number ((t (:inherit default :foreground "#9fa6b" :strike-through nil :underline nil :slant normal :weight normal :height 174 :width normal :foundry "ADBO" :family "Source Code Pro"))))
-                        ;; `(line-number-current-line ((t (:inherit (hl-line default) :foreground "#bbc2cf" :strike-through nil :underline nil :slant normal :weight normal :height 174 :width normal :foundry "ADBO" :family "Source Code Pro"))))
-
 (setq text-scale-mode-step 1.05)
 
 (setq
@@ -137,6 +134,7 @@ truncate-string-ellipsis "…")               ; Unicode ellispis are nicer than 
 (remove-hook 'text-mode-hook #'auto-fill-mode)
 
 (add-hook 'pdf-tools-enabled-hook 'pdf-view-midnight-minor-mode)
+
 (defun my/snipe_ivy ()
   (evilem-create (list 'evil-snipe-repeat
                        'evil-snipe-repeat-reverse)
@@ -162,29 +160,30 @@ truncate-string-ellipsis "…")               ; Unicode ellispis are nicer than 
 ;; set the browser location
 (setq browse-url-browser-function 'browse-url-generic browse-url-generic-program "/mnt/c/Program Files (x86)/Google/Chrome/Application/chrome.exe")
 
-(add-hook! org-mode #'flyspell-mode #'org-superstar-mode)
+(defun my/org-mode-hook()
+          (interactive)
+          (setq after-save-hook '(org-roam-db-update org-roam--handle-title-change flycheck-handle-save t ))
+
+          )
+
+
+(add-hook! org-mode #'flyspell-mode #'org-superstar-mode #'my/org-mode-hook)
 ;; (add-hook! 'org-mode-hook #'my/org-font)
 (add-hook 'text-mode-hook (lambda ()
                             (setq bidi-paragraph-direction nil)
                             (flyspell-mode 1)
                             (visual-fill-column-mode 1)
-                            ;; (olivetti-mode 1)
                             (setq helm-ff-fuzzy-matching t)
                             (my/set-faces)
                             (my/org-font)))
 
 (add-hook 'prog-mode-hook (lambda ()
-                            ;; (olivetti-mode 1)
                             (setq helm-ff-fuzzy-matching t)
                             ))
 
 (add-hook!
  '(org-mode-hook python-mode-hook matlab-mode-hook emacs-lisp-mode-hook)
  #'(olivetti-mode display-line-numbers-mode))
-
-(add-hook!
- '(helm-buffer)
- #'(olivetti-mode))
 
 (key-chord-mode 1)
 (evil-snipe-override-mode 1)

@@ -344,13 +344,14 @@
          ("C-x  C-m " . multiple-cursors-hydra/body)
          ("C-x  C-'" . hydra-fold/body))
   :config
-  (defhydra hydra-expand-region ()
-    "region: "
-    ("k" er/expand-region "expand")
-    ("j" er/contract-region "contract"))
-  (general-def 'visual 'global "v" 'hydra-expand-region/body)
+  ;; (defhydra hydra-expand-region ()
+  ;;   "region: "
+  ;;   ("k" er/expand-region "expand")
+  ;;   ("j" er/contract-region "contract"))
+  ;; (general-def 'visual 'global "v" 'hydra-expand-region/body)
 
   (defhydra hydra-fold (:pre (hs-minor-mode 1))
+
     "fold"
     ("t" fold-dwim-toggle "toggle")
     ("h" fold-dwim-hide-all "hide-all")
@@ -508,3 +509,6 @@
 ;; (use-package olivetti
 ;;   :hook (python-mode matlab-mode org-mode)
 ;;   )
+
+(after! org-reveal
+  (setq org-reveal-root "file:/home/jonathan/reveal/reveal.js"))
