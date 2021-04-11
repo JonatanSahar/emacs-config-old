@@ -67,6 +67,27 @@
       "ESC" nil
       )
 
+(map!
+ (:map evil-visual-state-map
+         :nv
+        "j" nil
+        "k" nil
+        "'" nil
+        "`" nil)
+        (:map evil-normal-state-map
+         :nv
+        "j" nil
+        "k" nil
+        "'" nil
+        "`" nil)
+        (:map evil-org-mode-map
+        :nv
+        "j" nil
+        "k" nil
+        "'" nil
+        "`" nil)
+        )
+
 (map! :map ivy-minibuffer-map
       "ESC" 'minibuffer-keyboard-quit
       "C-j" 'ivy-next-line
@@ -327,7 +348,7 @@
 (key-chord-define evil-insert-state-map "jk" #'evil-force-normal-state)
 (key-chord-define evil-visual-state-map "jk" #'evil-force-normal-state)
 (key-chord-define evil-insert-state-map "kk" #'evil-execute-in-normal-state)
-(key-chord-define evil-insert-state-map "fg" #'evil-execute-in-normal-state)
+;; (key-chord-define evil-insert-state-map "fg" #'evil-execute-in-normal-state)
 
  "ESC" #'helm-exit-minibuffer
 ;; (key-chord-define ivy-minibuffer-map "jk" #'minibuffer-keyboard-quit)
@@ -357,7 +378,6 @@
         "k" #'evil-previous-visual-line
         "'" #'evil-goto-mark
         "`" #'evil-goto-mark-line)
-
         )
 
 (global-set-key [f12] 'wordnut-search)

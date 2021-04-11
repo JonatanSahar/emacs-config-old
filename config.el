@@ -78,19 +78,19 @@
  org-capture-someday-file (concat gtd-dir "someday.org")
  org-capture-writing-inbox-file (concat slip-box-dir "writing_inbox.org")
  org-directory notes-dir
- org-roam-directory notes-dir
+ org-roam-directory slip-box-dir
 
-delete-by-moving-to-trash t                      ; Delete files to trash
-uniquify-buffer-name-style nil              ; Uniquify buffer names
-window-combination-resize t                      ; take new window space from all other windows (not just current)
-x-stretch-cursor t                              ; Stretch cursor to the glyph width
+ delete-by-moving-to-trash t                      ; Delete files to trash
+ uniquify-buffer-name-style nil              ; Uniquify buffer names
+ window-combination-resize t                      ; take new window space from all other        windows (not just current)
+ x-stretch-cursor t                              ; Stretch cursor to the glyph width
 
-undo-limit 80000000                         ; Raise undo-limit to 80Mb
-evil-want-fine-undo t                       ; By default while in insert all changes are one big blob. Be more granular
-auto-save-default nil                         ; Nobody likes to loose work, I certainly don't
-inhibit-compacting-font-caches t            ; When there are lots of glyphs, keep them in memory
-backup-directory-alist `(("." . ,(concat user-emacs-directory "autosaved_files")))
-truncate-string-ellipsis "…")               ; Unicode ellispis are nicer than "...", and also save /precious/ space
+ undo-limit 80000000                         ; Raise undo-limit to 80Mb
+ evil-want-fine-undo t                       ; By default while in insert all changes are one big blob. Be more granular
+ auto-save-default t                         ; Nobody likes to loose work, I certainly don't
+ inhibit-compacting-font-caches t            ; When there are lots of glyphs, keep them in memory
+ backup-directory-alist `(("." . ,(concat user-emacs-directory "autosaved_files")))
+ truncate-string-ellipsis "…")               ; Unicode ellispis are nicer than "...", and also save /precious/ space
 
 (delete-selection-mode 1)                         ; Replace selection when inserting text
 (display-time-mode 1)                             ; Enable time in the mode-line
