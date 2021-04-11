@@ -512,3 +512,124 @@
 
 (after! org-reveal
   (setq org-reveal-root "file:/home/jonathan/reveal/reveal.js"))
+
+  (use-package selectrum
+    :demand
+    :general
+    (selectrum-minibuffer-map "C-j" 'selectrum-next-candidate
+                              "C-k" 'selectrum-previous-candidate)
+    :config
+    (selectrum-mode t)
+    )
+
+  (use-package selectrum-prescient
+    :after selectrum
+    :demand
+    :config
+    (prescient-persist-mode t)
+    (selectrum-prescient-mode t)
+    )
+
+  (use-package company-prescient
+    :after company
+    :demand
+    :config
+    (company-prescient-mode t))
+
+(use-package embark-consult
+  :ensure t
+  :after (embark consult)
+  :demand t ; only necessary if you have the hook below
+  ;; if you want to have consult previews as you move around an
+  ;; auto-updating embark collect buffer
+  :hook
+  (embark-collect-mode . embark-consult-preview-minor-mode))
+
+;; Enable richer annotations using the Marginalia package
+(use-package marginalia
+  ;; Either bind `marginalia-cycle` globally or only in the minibuffer
+  :after selectrum
+  :bind (("M-A" . marginalia-cycle)
+         :map minibuffer-local-map
+         ("M-A" . marginalia-cycle))
+
+  ;; The :init configuration is always executed (Not lazy!)
+  :init
+
+  ;; Must be in the :init section of use-package such that the mode gets
+  ;; enabled right away. Note that this forces loading the package.
+  (marginalia-mode)
+
+  ;; When using Selectrum, ensure that Selectrum is refreshed when cycling annotations.
+  (advice-add #'marginalia-cycle :after
+              (lambda () (when (bound-and-true-p selectrum-mode) (selectrum-exhibit 'keep-selected))))
+
+  ;; Prefer richer, more heavy, annotations over the lighter default variant.
+  ;; E.g. M-x will show the documentation string additional to the keybinding.
+  ;; By default only the keybinding is shown as annotation.
+  ;; Note that there is the command `marginalia-cycle' to
+  ;; switch between the annotators.
+  (setq marginalia-annotators '(marginalia-annotators-heavy marginalia-annotators-light nil))
+)
+
+(use-package embark
+  :general
+  (general-nmap "C-l" 'embark-act)
+  (selectrum-minibuffer-map "C-l" #'embark-act)
+  (embark-file-map "o" 'find-file-other-window)
+  :config
+  ;; For Selectrum users:
+  (defun current-candidate+category ()
+    (when selectrum-active-p
+      (cons (selectrum--get-meta 'category)
+            (selectrum-get-current-candidate))))
+
+  (add-hook 'embark-target-finders #'current-candidate+category)
+
+  (defun current-candidates+category ()
+    (when selectrum-active-p
+      (cons (selectrum--get-meta 'category)
+            (selectrum-get-current-candidates
+             ;; Pass relative file names for dired.
+             minibuffer-completing-file-name))))
+
+  (add-hook 'embark-candidate-collectors #'current-candidates+category)
+
+  ;; No unnecessary computation delay after injection.
+  (add-hook 'embark-setup-hook 'selectrum-set-selected-candidate)
+  )
+
+(use-package embark-consult
+  :after (embark consult)
+  :demand t ; only necessary if you have the hook below
+  ;; if you want to have consult previews as you move around an
+  ;; auto-updating embark collect buffer
+  :hook
+  (embark-collect-mode . embark-consult-preview-minor-mode))
+
+(use-package consult
+  :commands (consult-ripgrep)
+  :general
+  (general-nmap
+    :states '(normal insert)
+    "C-p" 'consult-yank-pop)
+  (lc/leader-keys
+    "s i" '(consult-isearch :wk "isearch")
+    "s o" '(consult-outline :which-key "outline")
+    "s s" 'consult-line
+    "s p" '(consult-ripgrep :wk "ripgrep project")
+    "b b" 'consult-buffer
+    ;; TODO consult mark
+    "f r" 'consult-recent-file
+    "s !" '(consult-flymake :wk "flymake"))
+  ;; (with-eval-after-load 'projectile
+  ;;   (lc/leader-keys
+  ;;     "s p" '((lambda () (interactive) (consult-ripgrep (projectile-project-root))) :wk "ripgrep")))
+  :config
+  (autoload 'projectile-project-root "projectile")
+  (setq consult-project-root-function #'projectile-project-root)
+  ;; :init
+  ;; (setq consult-preview-key "C-l")
+  ;; (setq consult-narrow-key ">")
+  )
+

@@ -87,5 +87,12 @@
 (package! org-similarity
   :recipe (:host github :repo "soldeace/org-similarity"))
 
+(package! embark)
+(package! selectrum)
+(package! consult)
+(package! embark-consult)
+(package! marginalia)
+(package! selectrum-prescient)
+(package! company-prescient)
 ;; When using org-roam via the `+roam` flag
 (unpin! org-roam company-org-roam)
