@@ -263,3 +263,9 @@ Org-mode properties drawer already, keep the headline and don’t insert
     (latex-mode    . bibtex-completion-format-citation-cite)
     (markdown-mode . bibtex-completion-format-citation-pandoc-citeproc)
     (default       . bibtex-completion-format-citation-default)))
+
+(defun my/yank-org-headline ()
+  (interactive)
+  (let
+      ((text (nth 4 (org-heading-components))))
+      (kill-new text)))

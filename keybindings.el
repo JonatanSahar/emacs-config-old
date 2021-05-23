@@ -174,12 +174,14 @@
       (:when (featurep! :completion helm)
         :desc "M-x" :n "SPC" #'helm-M-x))
 
+
 (map!
  :n "gO" #'+evil/insert-newline-above
  :n "go" #'+evil/insert-newline-below
  :n "gK" #'+evil/insert-newline-above
  :n "gJ" #'+evil/insert-newline-below
 
+ :ni "g[" #'org-roam-insert
  :n "g]" #'kmacro-end-and-call-macro
  :n "g." #'er/expand-region
 
@@ -293,7 +295,8 @@
         ;;  :desc "header content" "y" #'my/visual-inside-org-header)
 
         (:prefix ("k" . "my commands")
-        :desc "header content" "y" #'my/visual-inside-org-header
+        :desc "select header content" "y" #'my/visual-inside-org-header
+        :desc "copy header content" "h" #'my/yank-org-headline
         :desc "kill all other windows" "o" 'delete-other-windows
         :desc "kill buffer and window" "w" '+workspace/close-window-or-workspace
         :desc "kill buffer" "d" 'kill-current-buffer
@@ -400,3 +403,4 @@
    :nvi "C-c  A" #'(lambda () (interactive) (org-capture nil "A"))
    :nvi "C-c  o" #'(lambda () (interactive) (org-agenda nil "o"))
  )
+

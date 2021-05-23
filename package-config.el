@@ -169,48 +169,48 @@
 
   )
 
-;; (use-package! org-roam
-;;   :hook (org-load . org-roam-mode)
-;;   :commands (org-roam-buffer-toggle-display
-;;              org-roam-find-file
-;;              org-roam-graph
-;;              org-roam-insert
-;;              org-roam-switch-to-buffer
-;;              org-roam-dailies-date
-;;              org-roam-dailies-today
-;;              org-roam-dailies-tomorrow
-;;              org-roam-dailies-yesterday)
-;;   :preface
-;;   :init
-;;   :config
-;;   (setq
-;;    org-roam-db-location "~/org-roam/org-roam.db"
-;;    org-roam-directory (file-truename org-roam-directory)
-;;    ;; org-roam-link-title-format "§:%s"
-;;    org-roam-completion-system 'helm
-;;    org-roam-index-file (file-truename "~/google_drive/.notes/slip-box/index.org")
-;;    org-roam-completion-everywhere nil
-;;    org-roam-link-auto-replace nil
-;;    org-roam-prefer-id-links t
-;;    org-roam-capture-templates
-;;       '(("d" "default" plain (function org-roam-capture--get-point)
-;;           "%?"
-;;           :file-name "%<%Y-%m-%d>-${slug}"
-;;           :head "#+TITLE: ${title}\n"
-;;           :unnarrowed t))
+(use-package! org-roam
+  :hook (org-load . org-roam-mode)
+  :commands (org-roam-buffer-toggle-display
+             org-roam-find-file
+             org-roam-graph
+             org-roam-insert
+             org-roam-switch-to-buffer
+             org-roam-dailies-date
+             org-roam-dailies-today
+             org-roam-dailies-tomorrow
+             org-roam-dailies-yesterday)
+  :preface
+  :init
+  :config
+  (setq
+   org-roam-db-location "~/org-roam/org-roam.db"
+   org-roam-directory (file-truename org-roam-directory)
+   ;; org-roam-link-title-format "§:%s"
+   org-roam-completion-system 'helm
+   org-roam-index-file (file-truename "~/google_drive/.notes/slip-box/index.org")
+   org-roam-completion-everywhere nil
+   org-roam-link-auto-replace nil
+   org-roam-prefer-id-links t
+   org-roam-capture-templates
+      '(("d" "default" plain (function org-roam-capture--get-point)
+          "%?"
+          :file-name "%<%Y-%m-%d>-${slug}"
+          :head "#+TITLE: ${title}\n"
+          :unnarrowed t))
 
-;; ;;   org-roam-capture-ref-templates
-;; ;;       '(("r" "ref" plain (function org-roam-capture--get-point)
-;; ;;           "%?"
-;; ;;           :file-name "lit/${slug}"
-;; ;;           :head "#+setupfile:./hugo_setup.org
-;; ;; #+roam_key: ${ref}
-;; ;; #+hugo_slug: ${slug}
-;; ;; #+roam_tags: website
-;; ;; #+title: ${title}\n"))
-;;         )
-;;         (set-company-backend! 'org-mode '(company-capf company-yasnippet company-dabbrev))
-;;   )
+;;   org-roam-capture-ref-templates
+;;       '(("r" "ref" plain (function org-roam-capture--get-point)
+;;           "%?"
+;;           :file-name "lit/${slug}"
+;;           :head "#+setupfile:./hugo_setup.org
+;; #+roam_key: ${ref}
+;; #+hugo_slug: ${slug}
+;; #+roam_tags: website
+;; #+title: ${title}\n"))
+        )
+        (set-company-backend! 'org-mode '(company-capf company-yasnippet company-dabbrev))
+  )
 
 (after! org-roam
   (setq
@@ -241,6 +241,39 @@
 
 
 
+(setq
+    bibtex-completion-bibliography "~/google_drive/.notes/.bibliography/references.bib"
+    bibtex-completion-library-path '( "~/google_drive/.notes/.bibliography/bibtex_pdf")
+    bibtex-completion-notes-path "~/google_drive/.notes/literature-notes"
+    bibtex-completion-pdf-field "File"
+    ;; bibtex-completion-notes-template-multiple-files
+    ;; (concat
+    ;; "#${title} \n"
+    ;; "#+ROAM_KEY: cite:${=key=}\n"
+    ;; ":PROPERTIES:\n"
+    ;; ":Custom_ID: ${=key=}\n"
+    ;; ":NOTER_DOCUMENT: %(orb-process-file-field \"${=key=}\")\n"
+    ;; ":AUTHOR: ${author-abbrev}\n"
+    ;; ":JOURNAL: ${journaltitle}\n"
+    ;; ":DATE: ${date}\n"
+    ;; ":YEAR: ${year}\n"
+    ;; ":DOI: ${doi}\n"
+    ;; ":URL: ${url}\n"
+    ;; ":END:\n\n"
+    ;; "* Notes\n")
+    bibtex-completion-find-additional-pdfs t)
+
+(use-package org-roam-bibtex
+  :after (org-roam)
+  :hook (org-roam-mode . org-roam-bibtex-mode)
+  :config
+  (setq orb-preformat-keywords '("=key=" "title" "url" "file" "author-or-editor" "keywords")
+        orb-templates'(("r" "ref" plain #'org-roam-capture--get-point ""
+                        :file-name "Notes: ${title}"
+                        :head "#+TITLE: Notes: ${title}\n#+ROAM_KEY: ${ref}\n- tags ::\n- keywords :: ${keywords}\n\n:PROPERTIES:\n:Custom_ID: ${=key=}\n:URL: ${url}\n:AUTHOR: ${author-or-editor}\n" :unnarrowed t)))
+            ;; "- tags ::\n- keywords :: ${keywords}\n\n* ${title}\n:PROPERTIES:\n:Custom_ID: ${=key=}\n:URL: ${url}\n:AUTHOR: ${author-or-editor}\n:NOTER_DOCUMENT: %(orb-process-file-field \"${=key=}\")\n:NOTER_PAGE: \n:END:\n\n * Notes"
+  )
+
 (require 'org-ref)
 (setq
  org-ref-bibliography-notes "~/google_drive/.notes/.bibliography/bibliography_notes.org"
@@ -250,37 +283,6 @@
  ;; org-ref-note-title-format "* TODO %y - %t\n :PROPERTIES:\n  :Custom_ID: %k\n  :NOTER_DOCUMENT: %F\n :ROAM_KEY: cite:%k\n  :AUTHOR: %9a\n  :JOURNAL: %j\n  :YEAR: %y\n  :VOLUME: %v\n  :PAGES: %p\n  :DOI: %D\n  :URL: %U\n :END:\n\n"
  org-ref-notes-directory "~/google_drive/.notes/literature-notes/"
  org-ref-notes-function 'orb-edit-notes)
-
-(setq
-    bibtex-completion-bibliography "~/google_drive/.notes/.bibliography/references.bib"
-    bibtex-completion-library-path '( "~/google_drive/.notes/.bibliography/bibtex_pdf")
-    bibtex-completion-notes-path "~/google_drive/.notes/literature-notes"
-    bibtex-completion-pdf-field "File"
-    bibtex-completion-notes-template-multiple-files
-    (concat
-    "#${title} \n"
-    "#+ROAM_KEY: cite:${=key=}\n"
-    ":PROPERTIES:\n"
-    ":Custom_ID: ${=key=}\n"
-    ":NOTER_DOCUMENT: %(orb-process-file-field \"${=key=}\")\n"
-    ":AUTHOR: ${author-abbrev}\n"
-    ":JOURNAL: ${journaltitle}\n"
-    ":DATE: ${date}\n"
-    ":YEAR: ${year}\n"
-    ":DOI: ${doi}\n"
-    ":URL: ${url}\n"
-    ":END:\n\n"
-    "* Notes\n")
-    bibtex-completion-find-additional-pdfs t)
-
-(use-package org-roam-bibtex
-  :after (org-roam)
-  :hook (org-roam-mode . org-roam-bibtex-mode)
-  :config
-  (setq orb-preformat-keywords '("=key=" "title" "url" "file" "author-or-editor" "keywords")
-        orb-templates'(("r" "ref" plain #'org-roam-capture--get-point "" :file-name "Notes: ${title}" :head "#+TITLE: Notes on ${title}\n#+ROAM_KEY: ${ref}\n- tags ::\n- keywords :: ${keywords}\n\n:PROPERTIES:\n:Custom_ID: ${=key=}\n:URL: ${url}\n:AUTHOR: ${author-or-editor}\n" :unnarrowed t)))
-            ;; "- tags ::\n- keywords :: ${keywords}\n\n* ${title}\n:PROPERTIES:\n:Custom_ID: ${=key=}\n:URL: ${url}\n:AUTHOR: ${author-or-editor}\n:NOTER_DOCUMENT: %(orb-process-file-field \"${=key=}\")\n:NOTER_PAGE: \n:END:\n\n * Notes"
-  )
 
 ;; Anki configuration
 (use-package anki-editor
