@@ -253,8 +253,9 @@
   :config
   (setq orb-preformat-keywords '("=key=" "title" "url" "file" "author-or-editor" "keywords")
         orb-templates'(("r" "ref" plain #'org-roam-capture--get-point ""
-                        :file-name "Notes: ${title}"
-                        :head "#+TITLE: Notes: ${title}\n#+ROAM_KEY: ${ref}\n\n- tags ::\n- keywords :: ${keywords}\n\n:PROPERTIES:\n:Custom_ID: ${=key=}\n:AUTHOR: ${author-or-editor}\n\n\n\n*Notes:" :unnarrowed t)))
+        ;; org-roam-capture-templates'(("r" "ref" plain #'org-roam-capture--get-point ""
+                        :file-name "literature-notes/Notes: ${title}"
+                        :head "#+TITLE: Notes: ${title}\n#+ROAM_KEY: ${ref}\n\n- tags ::\n- keywords :: ${keywords}\n\n:PROPERTIES:\n:Custom_ID: ${=key=}\n:AUTHOR: ${author-or-editor}\n\n* Notes:\n*** %?" :unnarrowed t)))
   )
 
 (require 'org-ref)
