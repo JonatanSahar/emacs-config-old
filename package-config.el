@@ -56,7 +56,6 @@
    org-noter-separate-notes-from-heading t))
 
 (use-package! zoom
-  :ensure t
   :config
   (setq
    zoom-mode t
@@ -67,7 +66,6 @@
    ))
 
 (use-package org
-  :ensure t
   :config
   (setq
     bidi-paragraph-direction nil
@@ -242,25 +240,11 @@
 
 
 (setq
-    bibtex-completion-bibliography "~/google_drive/.notes/.bibliography/references.bib"
-    bibtex-completion-library-path '( "~/google_drive/.notes/.bibliography/bibtex_pdf")
-    bibtex-completion-notes-path "~/google_drive/.notes/literature-notes"
+    bibtex-completion-bibliography bibliography-file
+    bibtex-completion-library-path '( "~/google_drive/.bibliography/zotero-pdf")
+    bibtex-completion-notes-path "/home/jonathan/google_drive/.notes/slip-box/literature-notes/"
+
     bibtex-completion-pdf-field "File"
-    ;; bibtex-completion-notes-template-multiple-files
-    ;; (concat
-    ;; "#${title} \n"
-    ;; "#+ROAM_KEY: cite:${=key=}\n"
-    ;; ":PROPERTIES:\n"
-    ;; ":Custom_ID: ${=key=}\n"
-    ;; ":NOTER_DOCUMENT: %(orb-process-file-field \"${=key=}\")\n"
-    ;; ":AUTHOR: ${author-abbrev}\n"
-    ;; ":JOURNAL: ${journaltitle}\n"
-    ;; ":DATE: ${date}\n"
-    ;; ":YEAR: ${year}\n"
-    ;; ":DOI: ${doi}\n"
-    ;; ":URL: ${url}\n"
-    ;; ":END:\n\n"
-    ;; "* Notes\n")
     bibtex-completion-find-additional-pdfs t)
 
 (use-package org-roam-bibtex
@@ -270,18 +254,15 @@
   (setq orb-preformat-keywords '("=key=" "title" "url" "file" "author-or-editor" "keywords")
         orb-templates'(("r" "ref" plain #'org-roam-capture--get-point ""
                         :file-name "Notes: ${title}"
-                        :head "#+TITLE: Notes: ${title}\n#+ROAM_KEY: ${ref}\n- tags ::\n- keywords :: ${keywords}\n\n:PROPERTIES:\n:Custom_ID: ${=key=}\n:URL: ${url}\n:AUTHOR: ${author-or-editor}\n" :unnarrowed t)))
-            ;; "- tags ::\n- keywords :: ${keywords}\n\n* ${title}\n:PROPERTIES:\n:Custom_ID: ${=key=}\n:URL: ${url}\n:AUTHOR: ${author-or-editor}\n:NOTER_DOCUMENT: %(orb-process-file-field \"${=key=}\")\n:NOTER_PAGE: \n:END:\n\n * Notes"
+                        :head "#+TITLE: Notes: ${title}\n#+ROAM_KEY: ${ref}\n\n- tags ::\n- keywords :: ${keywords}\n\n:PROPERTIES:\n:Custom_ID: ${=key=}\n:AUTHOR: ${author-or-editor}\n\n\n\n*Notes:" :unnarrowed t)))
   )
 
 (require 'org-ref)
 (setq
- org-ref-bibliography-notes "~/google_drive/.notes/.bibliography/bibliography_notes.org"
- org-ref-default-bibliography '("~/google_drive/.notes/.bibliography/references.bib")
- org-ref-pdf-directory "~/google_drive/.notes/.bibliography/zotero_pdf"
- org-ref-get-pdf-filename-function 'org-ref-get-pdf-filename-helm-bibtex
- ;; org-ref-note-title-format "* TODO %y - %t\n :PROPERTIES:\n  :Custom_ID: %k\n  :NOTER_DOCUMENT: %F\n :ROAM_KEY: cite:%k\n  :AUTHOR: %9a\n  :JOURNAL: %j\n  :YEAR: %y\n  :VOLUME: %v\n  :PAGES: %p\n  :DOI: %D\n  :URL: %U\n :END:\n\n"
- org-ref-notes-directory "~/google_drive/.notes/literature-notes/"
+ org-ref-bibliography-notes "/home/jonathan/google_drive/.notes/slip-box/literature-notes/"
+ org-ref-default-bibliography '("/home/jonathan/google_drive/.bibliography/references.bib")
+ org-ref-pdf-directory "~/google_drive/.bibliography/zotero-pdf"
+ org-ref-notes-directory "/home/jonathan/google_drive/.notes/slip-box/literature-notes/"
  org-ref-notes-function 'orb-edit-notes)
 
 ;; Anki configuration
@@ -464,37 +445,25 @@
 (setq matlab-verify-on-save-flag nil)
 (add-hook! matlab-mode #'doom/toggle-line-numbers)
 
-;; add at top of org file: #+LATEX_CLASS: tufte-book
-;; (with-eval-after-load 'ox-latex
-;;   (append-to-list
-;;    'org-latex-classes
-;;    '(("tufte-book"
-;;       "\\documentclass[a4paper, sfsidenotes, justified, notitlepage]{tufte-book}
-;;      \\input{~/google_drive/laTex_templates/tufte-book.tex}"
-;;       ("\\part{%s}" . "\\part*{%s}")
-;;       ("\\chapter{%s}" . "\\chapter*{%s}")
-;;       ("\\section{%s}" . "\\section*{%s}")
-;;       ("\\subsection{%s}" . "\\subsection*{%s}")))))
+;;(use-package roam-block
+;;  :load-path "/home/jonathan/.emacs.d/manually-installed-packages/roam-block"
+;;  :hook (after-init . roam-block-mode)
+;;  :init (setq roam-block-home '("/home/jonathan/.emacs.d/manually-installed-packages/roam-block/home")
+;;              roam-block-ref-highlight t
+;;              roam-block-embed-highlight t)
+;;  :bind
+;;  (:map roam-block-mode-map
+;;        (("C-c b r s" . roam-block-ref-store)
+;;         ("C-c b r i" . roam-block-ref-insert)
+;;         ("C-c b r d" . roam-block-ref-delete)
+;;         ("C-c b r t" . roam-block-ref-highlight-toggle)
+;;         ("C-c b e s" . roam-block-embed-store)
+;;         ("C-c b e i" . roam-block-embed-insert)
+;;         ("C-c b e t" . roam-block-embed-highlight-toggle)
+;;         ("C-c b d" . roam-block-delete-block))))
 
-(use-package roam-block
-  :load-path "/home/jonathan/.emacs.d/manually-installed-packages/roam-block"
-  :hook (after-init . roam-block-mode)
-  :init (setq roam-block-home '("/home/jonathan/.emacs.d/manually-installed-packages/roam-block/home")
-              roam-block-ref-highlight t
-              roam-block-embed-highlight t)
-  :bind
-  (:map roam-block-mode-map
-        (("C-c b r s" . roam-block-ref-store)
-         ("C-c b r i" . roam-block-ref-insert)
-         ("C-c b r d" . roam-block-ref-delete)
-         ("C-c b r t" . roam-block-ref-highlight-toggle)
-         ("C-c b e s" . roam-block-embed-store)
-         ("C-c b e i" . roam-block-embed-insert)
-         ("C-c b e t" . roam-block-embed-highlight-toggle)
-         ("C-c b d" . roam-block-delete-block))))
-
-(venv-initialize-interactive-shells) ;; if you want interactive shell support
-(venv-initialize-eshell) ;; if you want eshell support
+;; (venv-initialize-interactive-shells) ;; if you want interactive shell support
+;; (venv-initialize-eshell) ;; if you want eshell support
 (setq completion-ignore-case t)
 
 (use-package define-word
@@ -507,10 +476,7 @@
   )
 
 
-
-;; (use-package olivetti
-;;   :hook (python-mode matlab-mode org-mode)
-;;   )
-
 (after! org-reveal
   (setq org-reveal-root "file:/home/jonathan/reveal/reveal.js"))
+
+(setq darkroom-margins 0.25)

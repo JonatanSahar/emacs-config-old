@@ -63,10 +63,6 @@
  :nvi "C-L" nil
  )
 
-(map! :map ivy-minibuffer-map
-      "ESC" nil
-      )
-
 (map!
  (:map evil-visual-state-map
          :nv
@@ -113,7 +109,8 @@
          )
  :i "S-SPC" #'evil-force-normal-state
  :map evil-org-mode-map
- :i "C-S-l" #'org-roam-insert)
+ :i "C-S-l" #'org-roam-insert
+ :i "C-{" #'org-roam-insert)
  ;; :i "C-S-L" #'org-ref-insert-link)
 
 (map!
@@ -181,7 +178,7 @@
  :n "gK" #'+evil/insert-newline-above
  :n "gJ" #'+evil/insert-newline-below
 
- :ni "g[" #'org-roam-insert
+ :n "g[" #'org-roam-insert
  :n "g]" #'kmacro-end-and-call-macro
  :n "g." #'er/expand-region
 
@@ -346,12 +343,14 @@
 
 (setq key-chord-two-keys-delay 0.5)
 (key-chord-define evil-insert-state-map "gj" #'evil-force-normal-state)
-(key-chord-define evil-insert-state-map "df" #'evil-force-normal-state)
-(key-chord-define evil-visual-state-map "df" #'evil-force-normal-state)
+;; (key-chord-define evil-insert-state-map "df" #'evil-force-normal-state)
+;; (key-chord-define evil-visual-state-map "df" #'evil-force-normal-state)
 (key-chord-define evil-insert-state-map "jk" #'evil-force-normal-state)
 (key-chord-define evil-visual-state-map "jk" #'evil-force-normal-state)
-(key-chord-define evil-insert-state-map "kk" #'evil-execute-in-normal-state)
+;; (key-chord-define evil-insert-state-map "kk" #'evil-execute-in-normal-state)
 ;; (key-chord-define evil-insert-state-map "fg" #'evil-execute-in-normal-state)
+
+;; (key-chord-define org-mode-map "[[" #'org-roam-insert)
 
  "ESC" #'helm-exit-minibuffer
 ;; (key-chord-define ivy-minibuffer-map "jk" #'minibuffer-keyboard-quit)

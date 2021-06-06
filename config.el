@@ -64,19 +64,24 @@
 ;;
 ;; You can also try 'gd' (or 'C-c c d') to jump to their definition and see how
 ;; they are implemented.
-
 ;; various settings
 (setq
+ bibliography-dir (concat (getenv "HOME") "/google_drive/.bibliography/")
+ bibliography-pdf-dir (concat  bibliography-dir "zotero-pdf")
+ bibliography-file (concat  bibliography-dir "references.bib")
+
  notes-dir (concat (getenv "HOME") "/google_drive/.notes/")
  gtd-dir (concat notes-dir  "gtd/")
  slip-box-dir (concat notes-dir "slip-box/")
- literature-notes-dir (concat notes-dir "literature-notes/")
+ literature-notes-dir (concat slip-box-dir "literature-notes/")
+
  org-my-anki-file (concat slip-box-dir "anki.org")
  org-capture-inbox-file (concat gtd-dir "inbox.org")
  org-capture-reminders-file (concat gtd-dir "reminders.org")
  org-capture-projects-file (concat gtd-dir "projects.org")
  org-capture-someday-file (concat gtd-dir "someday.org")
  org-capture-writing-inbox-file (concat slip-box-dir "writing_inbox.org")
+
  org-directory notes-dir
  org-roam-directory slip-box-dir
 
@@ -171,14 +176,19 @@
 ;; (add-hook! 'org-mode-hook #'my/org-font)
 (add-hook 'text-mode-hook (lambda ()
                             (setq bidi-paragraph-direction nil)
-                            (flyspell-mode 1)
-                            (visual-fill-column-mode 1)
                             (setq helm-ff-fuzzy-matching t)
+                            (setq captain-predicate (lambda () t))
+
+                            (visual-fill-column-mode 1)
+                            (flyspell-mode 1)
+                            (captain-mode 1)
                             (my/set-faces)
-                            (my/org-font)))
+                            (my/org-font)
+                            ))
 
 (add-hook 'prog-mode-hook (lambda ()
                             (setq helm-ff-fuzzy-matching t)
+                            (setq captain-predicate (lambda () (nth 8 (syntax-ppss (point)))))
                             ))
 
 (add-hook!
@@ -265,6 +275,10 @@
 (set-company-backend! 'prog-mode '(company-files))
 (set-company-backend! 'emacs-lisp-mode '(company-files))
 
+(add-hook 'text-mode-hook (lambda ()
+                            (setq-local company-backends '(company-wordfreq))
+                            (setq-local company-transformers nil)))
+
 (setq which-key-idle-delay 0.2)
 (setq which-key-idle-secondary-delay 0.1)
 (setq which-key-allow-multiple-replacements t)
@@ -301,3 +315,4 @@
 (setq helm-ff-fuzzy-matching t)
 
 (add-hook 'bibtex-mode-hook 'my/convert-windows-to-linux-paths)
+(set-input-method 'hebrew-full)

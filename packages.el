@@ -48,44 +48,63 @@
 ;(unpin! pinned-package another-pinned-package)
 ;; ...Or *all* packages (NOT RECOMMENDED; will likely break things)
 ;(unpin! t)
-(package! flyspell-lazy :pin "3ebf68cc9e...")
+
+;; org
 (package! org-super-agenda :pin "dd0d104c26...")
-(package! doct
-  :recipe (:host github :repo "progfolio/doct")
-  :pin "1bcec209e1...")
+(package! helm-org-rifle)
+(package! org-download)
 (package! org-pretty-table-mode
   :recipe (:host github :repo "Fuco1/org-pretty-table") :pin "88380f865a...")
 (package! org-fragtog :pin "8eca8084cc...")
 (package! org-pretty-tags :pin "40fd72f3e7...")
-(package! org-ref)
-(package! general)
-(package! helm-org-rifle)
-(package! org-download)
-(package! emms)
-(package! anki-editor)
-(package! olivetti)
-(package! zoom)
 (package! org-pomodoro)
-(package! visual-fill-column)
-(package! centered-window)
-(package! ivy-bibtex)
-(package! helm-flyspell)
-(package! wgrep)
-(package! company-statistics)
-(package! multiple-cursors)
-(package! helm-ag)
-(package! counsel)
 (package! org-superstar)
-(package! matlab-mode)
-(package! ov)
-(package! promise)
-(package! virtualenvwrapper)
-(package! define-word)
-;; (package! org-reveal)
+
+;; org roam, and bibtex management
+;; When using org-roam via the `+roam` flag
+(unpin! org-roam company-org-roam)
+(package! org-ref)
+(package! ivy-bibtex)
 (package! org-roam-bibtex
   :recipe (:host github :repo "org-roam/org-roam-bibtex"))
 (package! org-similarity
   :recipe (:host github :repo "soldeace/org-similarity"))
 
-;; When using org-roam via the `+roam` flag
-(unpin! org-roam company-org-roam)
+;; spaced repetition
+(package! anki-editor)
+
+;; writing experience
+(package! olivetti)
+(package! darkroom)
+(package! writeroom-mode)
+(package! poet-theme)
+(package! zoom)
+(package! visual-fill-column)
+(package! centered-window)
+
+;; words words
+(package! captain) ;; auto capitalize words
+(package! helm-flyspell)
+(package! define-word)
+(package! company-statistics)
+(package! company-wordfreq)
+(package! flyspell-lazy :pin "3ebf68cc9e...")
+(package! doct
+  :recipe (:host github :repo "progfolio/doct")
+  :pin "1bcec209e1...")
+
+;; general utils
+(package! wgrep)
+(package! helm-ag)
+(package! multiple-cursors)
+(package! counsel)
+(package! general)
+(package! emms)
+(package! ov)
+(package! promise)
+
+;; code related
+(package! matlab-mode)
+(package! virtualenvwrapper)
+
+;; (package! org-reveal)
