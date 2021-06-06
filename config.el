@@ -168,12 +168,10 @@
 (defun my/org-mode-hook()
           (interactive)
           (setq after-save-hook '(org-roam-db-update org-roam--handle-title-change flycheck-handle-save t ))
-
           )
 
 
 (add-hook! org-mode #'flyspell-mode #'org-superstar-mode #'my/org-mode-hook)
-;; (add-hook! 'org-mode-hook #'my/org-font)
 (add-hook 'text-mode-hook (lambda ()
                             (setq bidi-paragraph-direction nil)
                             (setq helm-ff-fuzzy-matching t)
@@ -316,3 +314,5 @@
 
 (add-hook 'bibtex-mode-hook 'my/convert-windows-to-linux-paths)
 (set-input-method 'hebrew-full)
+
+(remove-hook 'after-save-hook #'ws-butler-after-save)   ;

@@ -152,6 +152,18 @@
 (map! :map org-roam-backlinks-mode-map "return" #'org-open-at-point)
 (map! :map pdf-view-mode-map
       :nvi "gl" nil
+      :nvi "k" (lambda ()
+         (interactive)
+         (evil-collection-pdf-view-previous-line-or-previous-page  10))
+      :nvi "j" (lambda ()
+         (interactive)
+         (evil-collection-pdf-view-next-line-or-next-page 10))
+      :nvi "h" (lambda ()
+         (interactive)
+         (image-backward-hscroll 20))
+      :nvi "l" (lambda ()
+         (interactive)
+         (image-forward-hscroll 20))
       :nvi "i" #'org-noter-insert-precise-note
       :nvi "I" #'org-noter-insert-note)
 
