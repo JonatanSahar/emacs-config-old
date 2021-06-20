@@ -76,11 +76,12 @@
  literature-notes-dir (concat slip-box-dir "literature-notes/")
 
  org-my-anki-file (concat slip-box-dir "anki.org")
+ org-capture-papers-file (concat slip-box-dir "2021-06-17-papers_by_subject.org")
  org-capture-inbox-file (concat gtd-dir "inbox.org")
  org-capture-reminders-file (concat gtd-dir "reminders.org")
  org-capture-projects-file (concat gtd-dir "projects.org")
  org-capture-someday-file (concat gtd-dir "someday.org")
- org-capture-writing-inbox-file (concat slip-box-dir "writing_inbox.org")
+ org-capture-writing-inbox-file (concat slip-box-dir "writing-inbox.org")
 
  org-directory notes-dir
  org-roam-directory slip-box-dir

@@ -101,6 +101,7 @@
 (package! general)
 (package! emms)
 (package! ov)
+(package! s)
 (package! promise)
 
 ;; code related

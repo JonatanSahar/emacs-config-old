@@ -7,7 +7,8 @@
  '(helm-ag-success-exit-status '(0 2))
  '(matlab-shell-command-switches '("-nodesktop -nosplash -nodisplay"))
  '(org-agenda-files
-   '("/mnt/c/Users/Jonathan/Google Drive/.notes/slip-box/Notes: Understanding the Higher-Order Approach to Consciousness.org" "~/google_drive/.notes/gtd/inbox.org" "~/google_drive/.notes/gtd/reminders.org" "~/google_drive/.notes/gtd/projects.org" "~/google_drive/.notes/gtd/someday.org" "~/google_drive/.notes/gtd/writing_inbox.org")))
+   '("/mnt/c/Users/Jonathan/Google Drive/.notes/slip-box/2021-06-17-papers_by_subject.org" "/mnt/c/Users/Jonathan/Google Drive/.notes/slip-box/Notes: Understanding the Higher-Order Approach to Consciousness.org" "~/google_drive/.notes/gtd/inbox.org" "~/google_drive/.notes/gtd/reminders.org" "~/google_drive/.notes/gtd/projects.org" "~/google_drive/.notes/gtd/someday.org" "~/google_drive/.notes/gtd/writing_inbox.org"))
+ '(package-selected-packages '(s)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.

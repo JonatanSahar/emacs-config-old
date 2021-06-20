@@ -69,8 +69,7 @@
   :config
   (setq
     bidi-paragraph-direction nil
-    org-id-link-to-org-use-id t ;;'create-if-interactive-and-no-custom-id
-
+    org-id-link-to-org-use-id 'create-if-interactive
     org-id-method 'ts
     org-outline-path-complete-in-steps nil
     org-goto-interface 'outline-path-completion
@@ -134,7 +133,12 @@
                              (file+headline org-capture-inbox-file "Tasks")
                              "* TODO %? %i\n** source: %l")
 
-                              ("n" "Note"
+                            ("p" "Paper ref to read "
+                             entry
+                             (file+headline org-capture-papers-file "Misc")
+                             "* TODO %? %i")
+
+                            ("n" "Note"
                                entry
                                (file+headline org-capture-writing-inbox-file "Notes")
                                "* NOTE %? \n")
@@ -481,3 +485,13 @@
   (setq org-reveal-root "file:/home/jonathan/reveal/reveal.js"))
 
 (setq darkroom-margins 0.25)
+
+(use-package writeroom-mode
+  :config
+  (setq
+   writeroom-major-modes '(org-mode)
+   writeroom-mode-line t
+   writeroom-use-derived-modes t)
+  (global-writeroom-mode)
+
+)

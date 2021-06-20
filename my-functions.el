@@ -269,3 +269,54 @@ Org-mode properties drawer already, keep the headline and don’t insert
   (let
       ((text (nth 4 (org-heading-components))))
       (kill-new text)))
+
+           ;; (make-temp-name
+           ;;  (concat (s-replace  "/mnt/c/Users/Jonathan/Google Drive/" "/home/jonathan/google_drive/" (buffer-file-name))
+           ;;          "_"
+           ;;          (format-time-string "%Y%m%d_%H%M%S_"))) ".png"))
+(defun my/org-paste-image ()
+  "Paste an image into a time stamped unique-named file in the
+same directory as the org-buffer and insert a link to this file."
+  (interactive)
+  (let* ((target-file
+          (concat
+           (make-temp-name
+            (concat "/home/jonathan/google_drive/.notes/associated_images/" (buffer-name)
+                    "_"
+                    (format-time-string "%Y%m%d_%H%M%S_"))) ".jpeg"))
+         (wsl-path
+          (concat (as-windows-path(file-name-directory target-file))
+                  "\\"
+                  (file-name-nondirectory target-file)))
+         (ps-script
+          (concat "(Get-Clipboard -Format image).Save('" wsl-path "')")))
+
+    (powershell ps-script)
+
+    (if (file-exists-p target-file)
+        (progn (insert (concat "[[" target-file "]]"))
+               (org-display-inline-images))
+      (user-error wsl-path)
+      (user-error
+       "Error pasting the image, make sure you have an image in the clipboard!"))
+    ))
+
+(defun my/capture-screen ()
+(interactive)
+  (let* ((ps-script "[system.windows.forms.sendkeys]::sendwait('{PRTSC}')"))
+  (powershell ps-script)
+  )
+)
+
+(defun as-windows-path (unix-path)
+   ;; "Takes a unix path and returns a matching WSL path
+;; (e.g. \\wsl$\Ubuntu-20.04\tmp)"
+  ;; substring removes the trailing \n
+  (substring
+   (shell-command-to-string
+    (concat "wslpath -w " unix-path)) 0 -1))
+
+(defun powershell (script)
+  "executes the given script within a powershell and returns its return value"
+  (call-process "powershell.exe" nil nil nil
+                "-Command" (concat "& {" script "}")))
