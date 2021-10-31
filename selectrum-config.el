@@ -12,7 +12,7 @@
         "C-." #'embark-act
         "C-," #'embark-become
         "C-/" #'embark-export
-        "C-a" #'embark-act
+        "C-a" #'my/embark-ace-action
         "C-b" #'embark-become
         "C-e" #'embark-export
         "C-j" #'selectrum-previous-candidate
@@ -221,28 +221,67 @@ the directory.  `REST' is passed to the `CONSULT-RIPGREP-FUNCTION'."
   ;; Optionally replace the key help with a completing-read interface
   (setq prefix-help-command #'embark-prefix-help-command)
   :config
-  (map! :map jonathanctrum-minibuffer-map
-   ("C-a" #'embark-act)       ;; pick some comfortable binding
-   ("C-e" #'embark-export)
-   ("C-b" #'embark-bindings)
-   )
-  (setq embark-action-indicator
-      (lambda (map &optional _target)
-        (which-key--show-keymap "Embark" map nil nil 'no-paging)
-        #'which-key--hide-popup-ignore-command)
-      embark-become-indicator embark-action-indicator)
-  ;; Hide the mode line of the Embark live/completions buffers
-  (add-to-list 'display-buffer-alist
-               '("\\`\\*Embark Collect \\(Live\\|Completions\\)\\*"
-                 nil
-                 (window-parameters (mode-line-format . none))))
-  (defun pause-selectrum ()
-    (when (eq embark-collect--kind :live)
-      (with-selected-window (active-minibuffer-window)
-        (shrink-window selectrum-num-candidates-displayed)
-        (setq-local selectrum-num-candidates-displayed 0))))
+        (map! :map selectrum-minibuffer-map
+        ("C-a" #'embark-act)       ;; pick some comfortable binding
+        ("C-e" #'embark-export)
+        ("C-b" #'embark-bindings)
+        )
+        (setq embark-action-indicator
+        (lambda (map &optional _target)
+                (which-key--show-keymap "Embark" map nil nil 'no-paging)
+                #'which-key--hide-popup-ignore-command)
+        embark-become-indicator embark-action-indicator)
+        ;; Hide the mode line of the Embark live/completions buffers
+        (add-to-list 'display-buffer-alist
+                '("\\`\\*Embark Collect \\(Live\\|Completions\\)\\*"
+                        nil
+                        (window-parameters (mode-line-format . none))))
+        (defun pause-selectrum ()
+        (when (eq embark-collect--kind :live)
+        (with-selected-window (active-minibuffer-window)
+                (shrink-window selectrum-num-candidates-displayed)
+                (setq-local selectrum-num-candidates-displayed 0))))
 
-  (add-hook 'embark-collect-mode-hook #'pause-selectrum)
+        (add-hook 'embark-collect-mode-hook #'pause-selectrum)
+
+        (defun embark-which-key-indicator ()
+        "An embark indicator that displays keymaps using which-key.
+        The which-key help message will show the type and value of the
+        current target followed by an ellipsis if there are further
+        targets."
+        (lambda (&optional keymap targets prefix)
+        (if (null keymap)
+                (which-key--hide-popup-ignore-command)
+        (which-key--show-keymap
+        (if (eq (plist-get (car targets) :type) 'embark-become)
+                "Become"
+                (format "Act on %s '%s'%s"
+                        (plist-get (car targets) :type)
+                        (embark--truncate-target (plist-get (car targets) :target))
+                        (if (cdr targets) "…" "")))
+        (if prefix
+                (pcase (lookup-key keymap prefix 'accept-default)
+                ((and (pred keymapp) km) km)
+                (_ (key-binding prefix 'accept-default)))
+                keymap)
+        nil nil t (lambda (binding)
+                        (not (string-suffix-p "-argument" (cdr binding))))))))
+
+        (setq embark-indicators
+        '(embark-which-key-indicator
+        embark-highlight-indicator
+        embark-isearch-highlight-indicator))
+
+        (defun embark-hide-which-key-indicator (fn &rest args)
+        "Hide the which-key indicator immediately when using the completing-read prompter."
+        (when-let ((win (get-buffer-window which-key--buffer
+                                        'visible)))
+        (quit-window 'kill-buffer win)
+        (let ((embark-indicators (delq #'embark-which-key-indicator embark-indicators)))
+        (apply fn args))))
+
+        (advice-add #'embark-completing-read-prompter
+                :around #'embark-hide-which-key-indicator)
   )
 
 
@@ -331,5 +370,53 @@ the directory.  `REST' is passed to the `CONSULT-RIPGREP-FUNCTION'."
     				   (minibuffer . (initials))))
   (orderless-style-dispatchers '(dm/orderless-dispatch)))
 
+(defvar my/bibs '("/home/jonathan/google_drive/.bibliography/motor-cognition.bib"))
+
+(use-package bibtex-actions
+  :after (embark oc)
+  :config
+  (setq bibtex-actions-bibliography my/bibs
+        org-cite-global-bibliography my/bibs
+        org-cite-insert-processor 'oc-bibtex-actions
+        org-cite-follow-processor 'oc-bibtex-actions
+        org-cite-activate-processor 'oc-bibtex-actions)
+  (setq bibtex-actions-at-point-function 'embark-act)
+  (add-to-list 'embark-target-finders 'bibtex-actions-citation-key-at-point)
+  (add-to-list 'embark-keymap-alist '(bib-reference . bibtex-actions-map))
+  (add-to-list 'embark-keymap-alist '(citation-key . bibtex-actions-buffer-map))
+
+  (setq bibtex-actions-file-note-org-include '(org-id org-roam-ref))
+  ;; (setq bibtex-actions-file-open-note-function 'orb-bibtex-actions-edit-note)
+;; use consult-completing-read for enhanced interface
+  (setq bibtex-actions-templates '((main . "${author editor:30}     ${date year issued:4}     ${title:48}")
+                                   (suffix . "${tags keywords keywords:*}   ${=key= id:15}    ${=type=:12}")
+                                   (note . "#+title: Notes on ${author editor}, ${title}
+* main points
+* findings
+* methods
+* summary and short reference
+* general notes
+* see also (notes, tags/ other papers):
+")))
+
+  (setq bibtex-actions-symbols
+        `((file . (,(all-the-icons-icon-for-file "foo.pdf" :face 'all-the-icons-dred) .
+                ,(all-the-icons-icon-for-file "foo.pdf" :face 'bibtex-actions-icon-dim)))
+        (note . (,(all-the-icons-icon-for-file "foo.txt") .
+                ,(all-the-icons-icon-for-file "foo.txt" :face 'bibtex-actions-icon-dim)))
+        (link .
+              (,(all-the-icons-faicon "external-link-square" :v-adjust 0.02 :face 'all-the-icons-dpurple) .
+         ,(all-the-icons-faicon "external-link-square" :v-adjust 0.02 :face 'bibtex-actions-icon-dim)))))
+  ;; Here we define a face to dim non 'active' icons, but preserve alignment
+  (defface bibtex-actions-icon-dim
+    '((((background dark)) :foreground "#282c34")
+      (((background light)) :foreground "#fafafa"))
+    "Face for obscuring/dimming icons"
+    :group 'all-the-icons-faces)
+
+)
+
+  ;; (load "~/.emacs.d/.local/straight/repos/bibtex-actions/oc-bibtex-actions.el")
+(advice-add #'completing-read-multiple :override #'consult-completing-read-multiple)
 (provide 'selectrum-config.el)
 ;;; jnf-selectrum.el ends here

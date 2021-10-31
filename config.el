@@ -104,9 +104,9 @@
 ;; (add-to-list browse-url-filename-alist (quote("mnt/g" . "G:")))
 (load! "package-config.el")
 (load! "my-functions.el")
-(load! "keybindings.el")
 (load! "selectrum-config.el")
 (load! "faces.el")
+(load! "keybindings.el")
 
 (setq which-key-idle-delay 0.2
       which-key-idle-secondary-delay 0.1
@@ -167,7 +167,7 @@
           )
 
 
-(add-hook! org-mode #'flyspell-mode #'org-superstar-mode #'writeroom-mode #'my/org-mode-hook) ;; #'org-hide-properties)
+(add-hook! org-mode #'flyspell-mode #'org-superstar-mode #'my/org-mode-hook) ;; #'org-hide-properties)
 (add-hook 'text-mode-hook (lambda ()
                             (setq bidi-paragraph-direction nil)
                             (setq helm-ff-fuzzy-matching t)

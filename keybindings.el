@@ -314,6 +314,7 @@
         ;;  :desc "header content" "y" #'my/visual-inside-org-header)
 
         (:prefix ("k" . "my commands")
+        :desc "embark act" "a" #'embark-act
         :desc "select header content" "y" #'my/visual-inside-org-header
         :desc "copy header content" "h" #'my/yank-org-headline
         :desc "kill all other windows" "o" 'delete-other-windows
