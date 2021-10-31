@@ -12,6 +12,9 @@
         "C-." #'embark-act
         "C-," #'embark-become
         "C-/" #'embark-export
+        "C-a" #'embark-act
+        "C-b" #'embark-become
+        "C-e" #'embark-export
         "C-j" #'selectrum-previous-candidate
         "C-j" #'selectrum-next-candidate)
   :bind ("C-x C-z" . selectrum-repeat))

@@ -101,7 +101,12 @@
 (package! orderless)
 (package! consult-dir)
 (package!       evil-better-visual-line)
-
+(package!  helm-bibtex)
+(package!  bibtex-completion)
+(package!  bibtex-actions)
+(package!  consult-bibtex
+ :recipe (:host github
+          :repo "mohkale/consult-bibtex"))
 
 ;; code related
 (package! matlab-mode)

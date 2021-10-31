@@ -201,9 +201,12 @@
                 (goto-char (point-min))
                 (while (search-forward "\\\\" nil t)
                 (replace-match "\/"))
-                (save-buffer)
-  ;; repeat for other string pairs
-  ))
+                (save-buffer) ;; repeat for other string pairs
+
+                (goto-char (point-min))
+                (while (search-forward "G\\:" nil t)
+                (replace-match "\/mnt\/g")
+)))
 
 (defun my/get-buffer-name()
   "Copy and show the name of the current buffer."
@@ -263,7 +266,7 @@ Org-mode properties drawer already, keep the headline and don’t insert
     (latex-mode    . bibtex-completion-format-citation-cite)
     (markdown-mode . bibtex-completion-format-citation-pandoc-citeproc)
     (default       . bibtex-completion-format-citation-default)))
-
+(setq bibtex-completion-additional-search-fields '(keywords))
 (defun my/yank-org-headline ()
   (interactive)
   (let
@@ -361,14 +364,6 @@ https://org-roam.discourse.group/t/org-roam-major-redesign/1198/34."
         ;; Back to the default
         ((keyboard-quit))))
 
-(defun my-minibuffer-setup-hook ()
-  (setq gc-cons-threshold most-positive-fixnum))
-
-(defun my-minibuffer-exit-hook ()
-  (setq gc-cons-threshold 1677721))
-
-(add-hook 'minibuffer-setup-hook #'my-minibuffer-setup-hook)
-(add-hook 'minibuffer-exit-hook #'my-minibuffer-exit-hook)
 
 ; alternate whitespace-mode with whitespace.el defaults, doom defaults and off:
 
@@ -410,3 +405,9 @@ https://org-roam.discourse.group/t/org-roam-major-redesign/1198/34."
               (whitespace-mode))))
 
 (global-set-key (kbd "C-<f4>")          'my/toggle-whitespace)
+
+(defun my/org-toggle-item
+    (interactive)
+  (org-toggle-item)
+  (org-end-of-line)
+  )

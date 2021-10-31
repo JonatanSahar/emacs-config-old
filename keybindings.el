@@ -23,6 +23,7 @@
     :nvi "C-s-a" nil
     :nvi "C-s-e" nil
     :nvi "M-`" nil
+    :i "C-c p" nil
     )
 
 (map!
@@ -48,6 +49,7 @@
     :n "zl" nil
     :n "zl" nil
 
+    :nvi "C-c p" nil
     :nvi "C-i" nil
     :nvi "C-h" nil
     :nvi "C-j" nil
@@ -64,6 +66,9 @@
     (:map helm-find-files-map
      [control-backspace] nil)
     )
+
+(map!
+   :i "C-v" nil)
 
 (map!
  :ni "C-{" #'org-roam-node-insert
@@ -98,13 +103,9 @@
          )
  :i "S-SPC" #'evil-force-normal-state
  :map evil-org-mode-map
- :ni "C-{" #'org-roam-node-insert)
+        :i "C-SPC" #'counsel-company
+        :ni "C-{" #'org-roam-node-insert)
  ;; :i "C-S-L" #'org-ref-insert-link)
-
-(map! :map ivy-minibuffer-map
-      "ESC" 'minibuffer-keyboard-quit
-      "C-j" 'ivy-next-line
-      "C-k" 'ivy-previous-line)
 
 (map!
  :map pdf-view-mode-map
@@ -187,7 +188,8 @@
 (map! :leader
       :nv
       :desc "copy buffer name"  "fc" #'my/get-buffer-name
-      :desc "helm-bibtex"  "nb" #'helm-bibtex
+      :desc "helm-bibtex"  "nB" #'helm-bibtex
+      :desc "bibtex-actions"  "nb" #'bibtex-actions-open
       :desc "Org Noter"  "nN" #'org-noter
       :desc "M-x" :n "SPC" #'execute-extended-command)
 
@@ -321,14 +323,15 @@
         :desc "search and replace vim style" "s" #'(lambda () (interactive) (evil-ex "%s/"))
         :desc "search and replace vim style - in region" "S" #'my/search-replace-in-region
         :desc "refile subtree" "r" 'org-refile
-        :desc "paste from kill-ring" "p" 'helm-show-kill-ring
+        :desc "paste from kill-ring" "p" 'consult-yank-from-kill-ring
+        ;; :desc "paste from kill-ring" "p" 'helm-show-kill-ring
         :desc "helm org rifle" "R" 'helm-org-rifle
         :desc "run macro" "e" #'kmacro-end-and-call-macro
-        :desc "generate laTex previews" "l" #'org-latex-preview
-                (:prefix ("b" . "references")
-                :desc "crossref search for refernce" "r" 'doi-utils-add-entry-from-crossref-query
-                :desc "add refernce from doi" "d" 'doi-utils-add-bibtex-entry-from-doi)
-                )
+        :desc "generate laTex previews" "L" #'org-latex-preview
+        (:prefix ("b" . "references")
+        :desc "crossref search for refernce" "r" 'doi-utils-add-entry-from-crossref-query
+        :desc "add refernce from doi" "d" 'doi-utils-add-bibtex-entry-from-doi)
+        )
         )
 
 (setq
@@ -361,10 +364,10 @@
 (define-key evil-normal-state-map (kbd "J") 'evil-join)
 (define-key evil-normal-state-map (kbd "K") 'join-line)
 
-(setq key-chord-two-keys-delay 0.5)
-(key-chord-define evil-insert-state-map "gj" #'evil-force-normal-state)
-(key-chord-define evil-insert-state-map "jk" #'evil-force-normal-state)
-(key-chord-define evil-visual-state-map "jk" #'evil-force-normal-state)
+;; (setq key-chord-two-keys-delay 0.5)
+;; (key-chord-define evil-insert-state-map "gj" #'evil-force-normal-state)
+;; (key-chord-define evil-insert-state-map "jk" #'evil-force-normal-state)
+;; (key-chord-define evil-visual-state-map "jk" #'evil-force-normal-state)
 
 (global-set-key [f12] 'wordnut-search)
 (global-set-key [(control f12)] 'wordnut-lookup-current-word)
@@ -378,13 +381,25 @@
 (evil-define-key 'normal wordnut-mode-map (kbd "/") 'wordnut-search)
 (evil-define-key 'normal wordnut-mode-map (kbd "o") 'wordnut-show-overview)
 
+
 (map!
-   :nvi "C-c  c" #'org-capture
+   :nvi "C-c  y" #'evil-yank
+   :nvi "C-c  p" #'consult-yank-from-kill-ring
+   :nvi "C-c  u" #'evil-undo
+   :nvi "C-c  C-r" #'evil-redo
+   ;; :nvi "C-c  c" #'org-capture
    :nvi "C-c  m" #'my/evil-mc-make-vertical-cursors
-   :nvi "C-c  h" #'my/visual-inside-org-header
+   :nvi "C-c  H" #'my/visual-inside-org-header
+   :nvi "C-c  h" #'org-toggle-heading
+   :nvi "C-c  i" #'org-toggle-item
+   ;; :nvi "C-c  i" #'(lambda () (interactive) ((org-toggle-item) (org-end-of-line)))
    :nvi "C-c  a" #'(lambda () (interactive) (org-capture nil "a"))
    :nvi "C-c  A" #'(lambda () (interactive) (org-capture nil "A"))
    :nvi "C-c  o" #'(lambda () (interactive) (org-agenda nil "o"))
+   :i "C-c p" #'consult-yank-from-kill-ring
+   :i "C-c y" #'evil-yank
+   :ni "C-c I" #'org-cite-insert
+
  )
 
 

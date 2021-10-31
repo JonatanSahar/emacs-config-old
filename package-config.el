@@ -196,8 +196,6 @@
   (org-roam-setup)
 
 
-  (setq org-roam-v2-ack t)
-
   )
 
 ;; Since the org module lazy loads org-protocol (waits until an org URL is
@@ -207,13 +205,38 @@
 
 
 
-(setq
-    bibtex-completion-bibliography bibliography-file
+(use-package helm-bibtex
+  :config
+  (setq
+    bibtex-completion-bibliography bibliography-files
     bibtex-completion-library-path '( "~/google_drive/.bibliography/zotero-pdf")
     bibtex-completion-notes-path "/home/jonathan/google_drive/.notes.v2/slip-box/literature-notes/"
 
+    bibtex-completion-additional-search-fields '(keywords)
+    bibtex-completion-display-formats '((t . "${author:36} ${title:36} ${year:4} ${=has-pdf=:1}${=has-note=:1} ${=type=:7} ${keywords:*}"))
     bibtex-completion-pdf-field "File"
     bibtex-completion-find-additional-pdfs t)
+    (setq helm-bibtex-notes-template-one-file "
+        #+title: notes on: ${author-or-editor} (${year}): ${title}
+        * main points
+        * findings
+        * methods
+        * summary and short reference
+        * general notes
+        * see also (notes, tags/ other papers):
+
+        ")
+    (setq helm-bibtex-notes-template-multiple-files "
+        #+title: notes on: ${author-or-editor} (${year}): ${title}
+        * main points
+        * findings
+        * methods
+        * summary and short reference
+        * general notes
+        * see also (notes, tags/ other papers):
+
+        ")
+  )
 
 ;; (use-package org-roam-bibtex
 ;;   :hook (org-roam-mode . org-roam-bibtex-mode)
@@ -238,7 +261,7 @@
 
 (setq
  org-ref-bibliography-notes "/home/jonathan/google_drive/.notes/slip-box/literature-notes/"
- org-ref-default-bibliography '("/home/jonathan/google_drive/.bibliography/references.bib")
+ org-ref-default-bibliography '("/home/jonathan/google_drive/.bibliography/motor-cognition.bib")
  org-ref-pdf-directory "~/google_drive/.bibliography/zotero-pdf"
  org-ref-notes-directory "/home/jonathan/google_drive/.notes/slip-box/literature-notes/"
  org-ref-notes-function 'orb-edit-notes)
@@ -588,38 +611,37 @@
     :enter-func (lambda () (mu4e-message "Entering context personal"))
     :leave-func (lambda () (mu4e-message "Leaving context personal"))
     :match-func (lambda (msg)
-		  (when msg
-		(mu4e-message-contact-field-matches
-		 msg '(:from :to :cc :bcc) "acc2@gmail.com")))
-    :vars '((user-mail-address . "acc2@gmail.com")
-	    (user-full-name . "User Account2")
-	    (mu4e-sent-folder . "/acc2-gmail/[acc2].Sent Mail")
-	    (mu4e-drafts-folder . "/acc2-gmail/[acc2].drafts")
-	    (mu4e-trash-folder . "/acc2-gmail/[acc2].Trash")
-	    (mu4e-compose-signature . (concat "Informal Signature\n" "Emacs is awesome!\n"))
-	    (mu4e-compose-format-flowed . t)
-	    (smtpmail-queue-dir . "~/Maildir/acc2-gmail/queue/cur")
-	    (message-send-mail-function . smtpmail-send-it)
-	    (smtpmail-smtp-user . "acc2")
-	    (smtpmail-starttls-credentials . (("smtp.gmail.com" 587 nil nil)))
-	    (smtpmail-auth-credentials . (expand-file-name "~/.authinfo.gpg"))
-	    (smtpmail-default-smtp-server . "smtp.gmail.com")
-	    (smtpmail-smtp-server . "smtp.gmail.com")
-	    (smtpmail-smtp-service . 587)
-	    (smtpmail-debug-info . t)
-	    (smtpmail-debug-verbose . t)
-	    (mu4e-maildir-shortcuts . ( ("/acc2-gmail/INBOX"            . ?i)
-					("/acc2-gmail/[acc2].Sent Mail" . ?s)
-					("/acc2-gmail/[acc2].Trash"     . ?t)
-					("/acc2-gmail/[acc2].All Mail"  . ?a)
-					("/acc2-gmail/[acc2].Starred"   . ?r)
-					("/acc2-gmail/[acc2].drafts"    . ?d)
-					))))))
+        (when msg
+        (mu4e-message-contact-field-matches
+        msg '(:from :to :cc :bcc) "acc2@gmail.com")))
+        :vars '((user-mail-address . "acc2@gmail.com")
+        (user-full-name . "User Account2")
+        (mu4e-sent-folder . "/acc2-gmail/[acc2].Sent Mail")
+        (mu4e-drafts-folder . "/acc2-gmail/[acc2].drafts")
+        (mu4e-trash-folder . "/acc2-gmail/[acc2].Trash")
+        (mu4e-compose-signature . (concat "Informal Signature\n" "Emacs is awesome!\n"))
+        (mu4e-compose-format-flowed . t)
+        (smtpmail-queue-dir . "~/Maildir/acc2-gmail/queue/cur")
+        (message-send-mail-function . smtpmail-send-it)
+        (smtpmail-smtp-user . "acc2")
+        (smtpmail-starttls-credentials . (("smtp.gmail.com" 587 nil nil)))
+        (smtpmail-auth-credentials . (expand-file-name "~/.authinfo.gpg"))
+        (smtpmail-default-smtp-server . "smtp.gmail.com")
+        (smtpmail-smtp-server . "smtp.gmail.com")
+        (smtpmail-smtp-service . 587)
+        (smtpmail-debug-info . t)
+        (smtpmail-debug-verbose . t)
+        (mu4e-maildir-shortcuts . ( ("/acc2-gmail/INBOX"            . ?i)
+        ("/acc2-gmail/[acc2].Sent Mail" . ?s)
+        ("/acc2-gmail/[acc2].Trash"     . ?t)
+        ("/acc2-gmail/[acc2].All Mail"  . ?a)
+        ("/acc2-gmail/[acc2].Starred"   . ?r)
+        ("/acc2-gmail/[acc2].drafts"    . ?d)
+        ))))))
 
 
 
 (use-package consult-dir
-  :ensure t
   :bind (("C-x C-d" . consult-dir)
          :map minibuffer-local-completion-map
          ("C-x C-d" . consult-dir)
@@ -672,3 +694,102 @@
 ;;   :ensure t
 ;;   :config
 ;;   (evil-better-visual-line-on))
+(use-package bibtex-completion)
+;; (use-package bibtex-actions
+;;   :bind (("C-c b" . bibtex-actions-insert-citation)
+;;          :map minibuffer-local-map
+;;          ("M-b" . bibtex-actions-insert-preset))
+;;   :after (embark bibtex-completion)
+;;   :config
+;;   ;; Make the 'bibtex-actions' bindings and targets available to `embark'.
+;;   (add-to-list 'embark-target-finders 'bibtex-actions-citation-key-at-point)
+;;   (add-to-list 'embark-keymap-alist '(bib-reference . bibtex-actions-map))
+;;   (add-to-list 'embark-keymap-alist '(citation-key . bibtex-actions-buffer-map))
+;;   (setq bibtex-actions-bibliography '("/home/jonathan/google_drive/.bibliography/motor-cognition.bib"))
+;;   (setq bibtex-actions-file-note-org-include '(org-id org-roam-ref))
+;;   ;; (setq bibtex-actions-file-open-note-function 'orb-bibtex-actions-edit-note)
+;; ;; use consult-completing-read for enhanced interface
+;;   (setq bibtex-actions-templates '((main . "${author editor:30}     ${date year issued:4}     ${title:48}")
+;;                                    (suffix . "${tags keywords keywords:*}   ${=key= id:15}    ${=type=:12}")
+;;                                    (note . "#+title: Notes on ${author editor}, ${title}
+;; * main points
+;; * findings
+;; * methods
+;; * summary and short reference
+;; * general notes
+;; * see also (notes, tags/ other papers):
+;; ")))
+
+;;   (setq bibtex-actions-symbols
+;;         `((file . (,(all-the-icons-icon-for-file "foo.pdf" :face 'all-the-icons-dred) .
+;;                 ,(all-the-icons-icon-for-file "foo.pdf" :face 'bibtex-actions-icon-dim)))
+;;         (note . (,(all-the-icons-icon-for-file "foo.txt") .
+;;                 ,(all-the-icons-icon-for-file "foo.txt" :face 'bibtex-actions-icon-dim)))
+;;         (link .
+;;               (,(all-the-icons-faicon "external-link-square" :v-adjust 0.02 :face 'all-the-icons-dpurple) .
+;;          ,(all-the-icons-faicon "external-link-square" :v-adjust 0.02 :face 'bibtex-actions-icon-dim)))))
+;;   ;; Here we define a face to dim non 'active' icons, but preserve alignment
+;;   (defface bibtex-actions-icon-dim
+;;     '((((background dark)) :foreground "#282c34")
+;;       (((background light)) :foreground "#fafafa"))
+;;     "Face for obscuring/dimming icons"
+;;     :group 'all-the-icons-faces)
+
+;;   (load "~/.emacs.d/.local/straight/repos/bibtex-actions/oc-bibtex-actions.el")
+;;   (advice-add #'completing-read-multiple :override #'consult-completing-read-multiple)
+;;   )
+
+
+(defvar my/bibs '("/home/jonathan/google_drive/.bibliography/motor-cognition.bib"))
+
+(use-package bibtex-actions
+  :bind (("C-c b" . org-cite-insert)
+         ("M-o" . org-open-at-point)
+         :map minibuffer-local-map
+         ("M-b" . bibtex-actions-insert-preset))
+  :after (embark oc)
+  :config
+  (setq bibtex-actions-bibliography my/bibs
+        org-cite-global-bibliography my/bibs
+        org-cite-insert-processor 'oc-bibtex-actions
+        org-cite-follow-processor 'oc-bibtex-actions
+        org-cite-activate-processor 'oc-bibtex-actions)
+  (setq bibtex-actions-at-point-function 'embark-act)
+  (add-to-list 'embark-target-finders 'bibtex-actions-citation-key-at-point)
+  (add-to-list 'embark-keymap-alist '(bib-reference . bibtex-actions-map))
+  (add-to-list 'embark-keymap-alist '(citation-key . bibtex-actions-buffer-map))
+  (setq bibtex-actions-bibliography '("/home/jonathan/google_drive/.bibliography/motor-cognition.bib"))
+
+  (setq bibtex-actions-file-note-org-include '(org-id org-roam-ref))
+  ;; (setq bibtex-actions-file-open-note-function 'orb-bibtex-actions-edit-note)
+;; use consult-completing-read for enhanced interface
+  (setq bibtex-actions-templates '((main . "${author editor:30}     ${date year issued:4}     ${title:48}")
+                                   (suffix . "${tags keywords keywords:*}   ${=key= id:15}    ${=type=:12}")
+                                   (note . "#+title: Notes on ${author editor}, ${title}
+* main points
+* findings
+* methods
+* summary and short reference
+* general notes
+* see also (notes, tags/ other papers):
+")))
+
+  (setq bibtex-actions-symbols
+        `((file . (,(all-the-icons-icon-for-file "foo.pdf" :face 'all-the-icons-dred) .
+                ,(all-the-icons-icon-for-file "foo.pdf" :face 'bibtex-actions-icon-dim)))
+        (note . (,(all-the-icons-icon-for-file "foo.txt") .
+                ,(all-the-icons-icon-for-file "foo.txt" :face 'bibtex-actions-icon-dim)))
+        (link .
+              (,(all-the-icons-faicon "external-link-square" :v-adjust 0.02 :face 'all-the-icons-dpurple) .
+         ,(all-the-icons-faicon "external-link-square" :v-adjust 0.02 :face 'bibtex-actions-icon-dim)))))
+  ;; Here we define a face to dim non 'active' icons, but preserve alignment
+  (defface bibtex-actions-icon-dim
+    '((((background dark)) :foreground "#282c34")
+      (((background light)) :foreground "#fafafa"))
+    "Face for obscuring/dimming icons"
+    :group 'all-the-icons-faces)
+
+)
+
+  ;; (load "~/.emacs.d/.local/straight/repos/bibtex-actions/oc-bibtex-actions.el")
+  (advice-add #'completing-read-multiple :override #'consult-completing-read-multiple)

@@ -179,3 +179,4 @@
        (default +bindings +smartparens))
 
 (setq evil-respect-visual-line-mode t)
+(setq org-roam-v2-ack t)

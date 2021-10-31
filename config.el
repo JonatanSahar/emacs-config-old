@@ -42,7 +42,7 @@
 ;;
 ;; If you use `org' and don't want your org files in the default location below,
 ;; change `org-directory'. It must be set before org loads!
-(setq org-directory "~/google_drive/.notes/")
+(setq org-directory "~/google_drive/.notes.v2/slip-box")
 ;;
 ;; This determines the style of line numbers in effect. If set to `nil', line
 ;; numbers are disabled. For relative line numbers, set this to `relative'.
@@ -68,8 +68,7 @@
 (setq
  bibliography-dir (concat (getenv "HOME") "/google_drive/.bibliography/")
  bibliography-pdf-dir (concat  bibliography-dir "zotero-pdf")
- bibliography-file (concat  bibliography-dir "references.bib")
-
+ bibliography-files (concat  bibliography-dir "motor-cognition.bib")
  notes-dir (concat (getenv "HOME") "/google_drive/.notes.v2/")
  gtd-dir (concat notes-dir  "gtd/")
  slip-box-dir (concat notes-dir "slip-box/")
@@ -91,7 +90,6 @@
  uniquify-buffer-name-style nil              ; Uniquify buffer names
  window-combination-resize t                      ; take new window space from all other        windows (not just current)
  x-stretch-cursor t                              ; Stretch cursor to the glyph width
-
  undo-limit 80000000                         ; Raise undo-limit to 80Mb
  evil-want-fine-undo t                       ; By default while in insert all changes are one big blob. Be more granular
  garbage-collection-messages t
@@ -100,6 +98,10 @@
  backup-directory-alist `(("." . ,(concat user-emacs-directory "autosaved_files")))
  truncate-string-ellipsis "…")               ; Unicode ellispis are nicer than "...", and also save /precious/ space
 
+
+(setq browse-url-filename-alist '(("^/\\(ftp@\\|anonymous@\\)?\\([^:/]+\\):/*" . "ftp://\\2/") ("^/\\([^:@/]+@\\)?\\([^:/]+\\):/*" . "ftp://\\1\\2/") ("^/+" . "file:///") ("mnt/g" . "G:")))
+
+;; (add-to-list browse-url-filename-alist (quote("mnt/g" . "G:")))
 (load! "package-config.el")
 (load! "my-functions.el")
 (load! "keybindings.el")
@@ -137,8 +139,8 @@
 
 (remove-hook 'text-mode-hook #'auto-fill-mode)
 
-(add-hook 'pdf-tools-enabled-hook 'pdf-view-midnight-minor-mode)
-(add-hook 'pdf-tools-enabled-hook 'pdf-view-midnight-minor-mode)
+;; (add-hook 'pdf-tools-enabled-hook 'pdf-view-midnight-minor-mode)
+
 (defun my/snipe_ivy ()
   (evilem-create (list 'evil-snipe-repeat
                        'evil-snipe-repeat-reverse)
@@ -165,7 +167,7 @@
           )
 
 
-(add-hook! org-mode #'flyspell-mode #'org-superstar-mode #'my/org-mode-hook) ;; #'org-hide-properties)
+(add-hook! org-mode #'flyspell-mode #'org-superstar-mode #'writeroom-mode #'my/org-mode-hook) ;; #'org-hide-properties)
 (add-hook 'text-mode-hook (lambda ()
                             (setq bidi-paragraph-direction nil)
                             (setq helm-ff-fuzzy-matching t)
@@ -187,7 +189,7 @@
 ;;  '(org-mode-hook python-mode-hook matlab-mode-hook emacs-lisp-mode-hook)
 ;;  #'(display-line-numbers-mode))
 
-(key-chord-mode 1)
+;; (key-chord-mode 1)
 (evil-snipe-override-mode 1)
 
 (my/set-faces)
@@ -211,6 +213,14 @@
 (add-to-list 'load-path "/home/jonathan/wordnut")
 (require 'wordnut)
 
+(add-to-list 'load-path "/home/jonathan/.emacs.d/orgnv")
+(load "orgnv.el")
+(require 'orgnv)
+(setq orgnv-directories "/home/jonathan/google_drive/.notes.v2/slip-box/")
+
+(map! :leader
+        (:prefix "k"
+        :desc "orgnv" "g" 'orgnv-browse))
 
 
 (add-hook 'occur-mode-hook
