@@ -23,10 +23,8 @@
     :nvi "C-s-a" nil
     :nvi "C-s-e" nil
     :nvi "M-`" nil
-    :i "C-c p" nil
-    )
+    :nvi "C-c p" nil
 
-(map!
     (:map org-mode-map
     :nv "j" nil
     :nv "E" nil
@@ -65,51 +63,45 @@
 
     (:map helm-find-files-map
      [control-backspace] nil)
-    )
 
-(map!
-   :i "C-v" nil)
+   :i "C-v" nil
 
+    ) ;;unmap a bunch of keys
 (map!
  :ni "C-{" #'org-roam-node-insert
  :ni "C-}" #'org-ref-insert-link)
-;; (map!
-;;  (:map evil-visual-state-map
-;;          :nv
-;;         "j" nil
-;;         "k" nil
-;;         "'" nil
-;;         "`" nil)
-;;         (:map evil-normal-state-map
-;;          :nv
-;;         "j" nil
-;;         "k" nil
-;;         "'" nil
-;;         "`" nil)
-;;         (:map evil-org-mode-map
-;;         :nv
-;;         "j" nil
-;;         "k" nil
-;;         "'" nil
-;;         "`" nil)
-;;         )
+
+(defun my/save-and-change-to-normal ()
+         (interactive)
+         (evil-normal-state)
+         (save-buffer)
+ )
+
+(map! (:map org-mode-map :map prog-mode-map)
+ :i "<up>" #'evil-previous-visual-line
+ :i    "<down>" #'evil-next-visual-line
+ :n "<up>" #'evil-collection-scroll-lock-previous-line
+ :n     "<down>" #'evil-collection-scroll-lock-next-line
+ )
 
 (map!
  :nvi "C-\\" #'toggle-input-method
  :nvi "C-s" (lambda ()
-         (interactive)
-         (evil-normal-state)
-         (save-buffer)
-         )
+              (interactive)
+              (evil-normal-state)
+              (save-buffer)
+              )
  :i "S-SPC" #'evil-force-normal-state
  :map evil-org-mode-map
-        :i "C-SPC" #'counsel-company
-        :ni "C-{" #'org-roam-node-insert)
- ;; :i "C-S-L" #'org-ref-insert-link)
+ :i "C-SPC" #'counsel-company
+ :ni "C-{" #'org-roam-node-insert)
+;; :i "C-S-L" #'org-ref-insert-link)
 
 (map!
  :map pdf-view-mode-map
- :vin "gl" nil)
+ :vin "gl" nil
+ :map company-active-map "C-s" #'my/save-and-change-to-normal
+ )
 
 (map! :map matlab-mode-map
  :nv "C-S-m" (lambda ()
@@ -283,8 +275,8 @@
 
 (map! :leader
   :nv
-  :desc "search project/dir" "sp" #'counsel-rg
-  :desc "search project/dir" "sd" #'counsel-rg
+  :desc "search project/dir" "sp" #'consult-ripgrep
+  :desc "search project/dir" "sd" #'consult-ripgrep
   :desc "search buffer"  "ss" #'consult-line
   :desc "equate window sizes" "we" #'balance-windows
   :desc "minimize window" "wmm" #'minimize-window
@@ -307,10 +299,10 @@
 
 (map! :leader
         (:prefix ("j" . "navigation")
-        :desc "avy timer" "j" 'avy-goto-char-timer
-        :desc "avy line" "l" 'avy-goto-line)
+        :desc "avy timer" "j" 'evil-avy-goto-char-timer
+        :desc "avy line" "l" 'evil-avy-goto-line)
 
-        ;; (:prefix ("y" . "yank")
+        ;; (:line ("yank" . "y")
         ;;  :desc "header content" "y" #'my/visual-inside-org-header)
 
         (:prefix ("k" . "my commands")
@@ -318,7 +310,8 @@
         :desc "select header content" "y" #'my/visual-inside-org-header
         :desc "copy header content" "h" #'my/yank-org-headline
         :desc "kill all other windows" "o" 'delete-other-windows
-        :desc "kill buffer and window" "w" '+workspace/close-window-or-workspace
+        :desc "writeroom mode" "w" 'writeroom-mode
+        :desc "kill buffer and window" "W" '+workspace/close-window-or-workspace
         :desc "kill buffer" "d" 'kill-current-buffer
         :desc "switch to previous buffer" "k" 'evil-switch-to-windows-last-buffer
         :desc "search and replace vim style" "s" #'(lambda () (interactive) (evil-ex "%s/"))
@@ -383,6 +376,10 @@
 (evil-define-key 'normal wordnut-mode-map (kbd "o") 'wordnut-show-overview)
 
 
+(map! :map org-mode-map
+   :nvi "C-c  y" #'evil-yank
+   :nvi "C-c  p" #'consult-yank-from-kill-ring
+   )
 (map!
    :nvi "C-c  y" #'evil-yank
    :nvi "C-c  p" #'consult-yank-from-kill-ring
@@ -397,15 +394,15 @@
    :nvi "C-c  a" #'(lambda () (interactive) (org-capture nil "a"))
    :nvi "C-c  A" #'(lambda () (interactive) (org-capture nil "A"))
    :nvi "C-c  o" #'(lambda () (interactive) (org-agenda nil "o"))
-   :i "C-c p" #'consult-yank-from-kill-ring
-   :i "C-c y" #'evil-yank
+   ;; :i "C-c p" #'consult-yank-from-kill-ring
+   ;; :i "C-c y" #'evil-yank
    :ni "C-c I" #'org-cite-insert
 
  )
 
 
 
-(map! :map org-mode-map
-      :nvi "C-c p h" 'org-hide-properties
-      :nvi "C-c p s" 'org-show-properties
-      :nvi "C-c p t" 'org-toggle-properties)
+;; (map! :map org-mode-map
+;;       :nvi "C-c p h" 'org-hide-properties
+;;       :nvi "C-c p s" 'org-show-properties
+;;       :nvi "C-c p t" 'org-toggle-properties)

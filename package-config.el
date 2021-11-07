@@ -203,12 +203,15 @@
 (use-package org-roam-protocol
   :after org-protocol)
 
-
+(defun my/get-bib-file-list ()
+  "Get the list of all the bib files containing my bib database."
+  (mapcan (lambda (dir) (directory-files dir t "\\.bib\\'"))
+'("/home/jonathan/google_drive/.bibliography/")))
 
 (use-package helm-bibtex
   :config
   (setq
-    bibtex-completion-bibliography bibliography-files
+    bibtex-completion-bibliography (my/get-bib-file-list)
     bibtex-completion-library-path '( "~/google_drive/.bibliography/zotero-pdf")
     bibtex-completion-notes-path "/home/jonathan/google_drive/.notes.v2/slip-box/literature-notes/"
 
@@ -443,7 +446,7 @@
   )
 (setq olivetti-body-width 100)
 
-(set-company-backend! 'matlab-mode '(company-capf company-yasnippet company-dabbrev))
+(set-company-backend! 'matlab-mode '(company-capf company-dabbrev))
 (set-company-backend! 'matlab-shell-mode '(company-capf company-matlab-shell company-dabbrev))
 (custom-set-variables '(matlab-shell-command-switches '("-nodesktop -nosplash -nodisplay")))
 (setq matlab-verify-on-save-flag nil)
@@ -690,53 +693,9 @@
             (sort-lines nil (point-min) (point-max)))
           (write-region nil nil ispell-complete-word-dict))))))
 
+(use-package bibtex-completion)
 ;; (use-package evil-better-visual-line
 ;;   :ensure t
 ;;   :config
 ;;   (evil-better-visual-line-on))
-(use-package bibtex-completion)
-;; (use-package bibtex-actions
-;;   :bind (("C-c b" . bibtex-actions-insert-citation)
-;;          :map minibuffer-local-map
-;;          ("M-b" . bibtex-actions-insert-preset))
-;;   :after (embark bibtex-completion)
-;;   :config
-;;   ;; Make the 'bibtex-actions' bindings and targets available to `embark'.
-;;   (add-to-list 'embark-target-finders 'bibtex-actions-citation-key-at-point)
-;;   (add-to-list 'embark-keymap-alist '(bib-reference . bibtex-actions-map))
-;;   (add-to-list 'embark-keymap-alist '(citation-key . bibtex-actions-buffer-map))
-;;   (setq bibtex-actions-bibliography '("/home/jonathan/google_drive/.bibliography/motor-cognition.bib"))
-;;   (setq bibtex-actions-file-note-org-include '(org-id org-roam-ref))
-;;   ;; (setq bibtex-actions-file-open-note-function 'orb-bibtex-actions-edit-note)
-;; ;; use consult-completing-read for enhanced interface
-;;   (setq bibtex-actions-templates '((main . "${author editor:30}     ${date year issued:4}     ${title:48}")
-;;                                    (suffix . "${tags keywords keywords:*}   ${=key= id:15}    ${=type=:12}")
-;;                                    (note . "#+title: Notes on ${author editor}, ${title}
-;; * main points
-;; * findings
-;; * methods
-;; * summary and short reference
-;; * general notes
-;; * see also (notes, tags/ other papers):
-;; ")))
-
-;;   (setq bibtex-actions-symbols
-;;         `((file . (,(all-the-icons-icon-for-file "foo.pdf" :face 'all-the-icons-dred) .
-;;                 ,(all-the-icons-icon-for-file "foo.pdf" :face 'bibtex-actions-icon-dim)))
-;;         (note . (,(all-the-icons-icon-for-file "foo.txt") .
-;;                 ,(all-the-icons-icon-for-file "foo.txt" :face 'bibtex-actions-icon-dim)))
-;;         (link .
-;;               (,(all-the-icons-faicon "external-link-square" :v-adjust 0.02 :face 'all-the-icons-dpurple) .
-;;          ,(all-the-icons-faicon "external-link-square" :v-adjust 0.02 :face 'bibtex-actions-icon-dim)))))
-;;   ;; Here we define a face to dim non 'active' icons, but preserve alignment
-;;   (defface bibtex-actions-icon-dim
-;;     '((((background dark)) :foreground "#282c34")
-;;       (((background light)) :foreground "#fafafa"))
-;;     "Face for obscuring/dimming icons"
-;;     :group 'all-the-icons-faces)
-
-;;   (load "~/.emacs.d/.local/straight/repos/bibtex-actions/oc-bibtex-actions.el")
-;;   (advice-add #'completing-read-multiple :override #'consult-completing-read-multiple)
-;;   )
-
-
+;; (use-package org-preview-html)

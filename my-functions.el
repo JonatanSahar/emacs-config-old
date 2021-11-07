@@ -411,3 +411,10 @@ https://org-roam.discourse.group/t/org-roam-major-redesign/1198/34."
   (org-toggle-item)
   (org-end-of-line)
   )
+
+
+(defun open-file-in-browser (file) (browse-url-of-file file))
+(defun export-to-html-and-open (file)
+  (let* (html-filename (org-html-export-to-html file))
+       (open-file-in-browser html-filename)))
+(map! :map embark-file-map "O" #'open-file-in-browser)

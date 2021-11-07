@@ -23,7 +23,8 @@
 ;;       doom-variable-pitch-font (font-spec :family "sans" :size 13))
 ;; (setq doom-font
 (setq
-       doom-font  (font-spec :family "Source Code Pro" :size 18)
+       doom-font  (font-spec :family "NotoMono" :size 18)
+       ;; doom-font  (font-spec :family "Source Code Pro" :size 18)
      ;; doom-font (font-spec :family "Alef" :size 20)
       doom-big-font (font-spec :family "JetBrains Mono" :size 16)
       doom-variable-pitch-font (font-spec :family "Source Code Pro" :size 16)
@@ -68,7 +69,8 @@
 (setq
  bibliography-dir (concat (getenv "HOME") "/google_drive/.bibliography/")
  bibliography-pdf-dir (concat  bibliography-dir "zotero-pdf")
- bibliography-files (concat  bibliography-dir "motor-cognition.bib")
+ bibliography-files '( "~/google_drive/.bibliography/motor-cognition.bib"  "~/google_drive/.bibliography/consciousness.bib")
+ ;; bibliography-files (concat  bibliography-dir "motor-cognition.bib")
  notes-dir (concat (getenv "HOME") "/google_drive/.notes.v2/")
  gtd-dir (concat notes-dir  "gtd/")
  slip-box-dir (concat notes-dir "slip-box/")
@@ -83,6 +85,7 @@
  org-capture-writing-inbox-file (concat slip-box-dir "writing-inbox.org")
 
  org-directory notes-dir
+ ;; org-roam-directory "~/slip-box"
  org-roam-directory slip-box-dir
 
  evil-respect-visual-line-mode 't

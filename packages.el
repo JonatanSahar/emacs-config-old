@@ -103,7 +103,7 @@
 (package!       evil-better-visual-line)
 (package!  helm-bibtex)
 (package!  bibtex-completion)
-(package!  bibtex-actions)
+(package!  citar)
 (package!  consult-bibtex
  :recipe (:host github
           :repo "mohkale/consult-bibtex"))
@@ -112,4 +112,4 @@
 (package! matlab-mode)
 (package! virtualenvwrapper)
 (package! company-statistics)
-(package! yasnippet-snippets)
+;; (package! yasnippet-snippets)

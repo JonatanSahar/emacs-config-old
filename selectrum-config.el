@@ -370,25 +370,21 @@ the directory.  `REST' is passed to the `CONSULT-RIPGREP-FUNCTION'."
     				   (minibuffer . (initials))))
   (orderless-style-dispatchers '(dm/orderless-dispatch)))
 
-(defvar my/bibs '("/home/jonathan/google_drive/.bibliography/motor-cognition.bib"))
-
-(use-package bibtex-actions
-  :after (embark oc)
+(use-package citar
+  :no-require
+  :custom
+  (org-cite-global-bibliography (my/get-bib-file-list))
+  (org-cite-insert-processor 'citar)
+  (org-cite-follow-processor 'citar)
+  (org-cite-activate-processor 'citar)
+  ;; optional: org-cite-insert is also bound to C-c C-x C-@
+  :bind
+  (:map org-mode-map :package org ("C-c b" . #'org-cite-insert))
   :config
-  (setq bibtex-actions-bibliography my/bibs
-        org-cite-global-bibliography my/bibs
-        org-cite-insert-processor 'oc-bibtex-actions
-        org-cite-follow-processor 'oc-bibtex-actions
-        org-cite-activate-processor 'oc-bibtex-actions)
-  (setq bibtex-actions-at-point-function 'embark-act)
-  (add-to-list 'embark-target-finders 'bibtex-actions-citation-key-at-point)
-  (add-to-list 'embark-keymap-alist '(bib-reference . bibtex-actions-map))
-  (add-to-list 'embark-keymap-alist '(citation-key . bibtex-actions-buffer-map))
-
-  (setq bibtex-actions-file-note-org-include '(org-id org-roam-ref))
-  ;; (setq bibtex-actions-file-open-note-function 'orb-bibtex-actions-edit-note)
-;; use consult-completing-read for enhanced interface
-  (setq bibtex-actions-templates '((main . "${author editor:30}     ${date year issued:4}     ${title:48}")
+  (setq citar-filenotify-callback 'refresh-cache)
+  (setq citar-at-point-function 'embark-act)
+  (setq citar-file-note-org-include '(org-id org-roam-ref))
+  (setq citar-templates '((main . "${author editor:30}     ${date year issued:4}     ${title:48}")
                                    (suffix . "${tags keywords keywords:*}   ${=key= id:15}    ${=type=:12}")
                                    (note . "#+title: Notes on ${author editor}, ${title}
 * main points
@@ -399,24 +395,28 @@ the directory.  `REST' is passed to the `CONSULT-RIPGREP-FUNCTION'."
 * see also (notes, tags/ other papers):
 ")))
 
-  (setq bibtex-actions-symbols
+  (setq citar-symbols
         `((file . (,(all-the-icons-icon-for-file "foo.pdf" :face 'all-the-icons-dred) .
-                ,(all-the-icons-icon-for-file "foo.pdf" :face 'bibtex-actions-icon-dim)))
-        (note . (,(all-the-icons-icon-for-file "foo.txt") .
-                ,(all-the-icons-icon-for-file "foo.txt" :face 'bibtex-actions-icon-dim)))
-        (link .
-              (,(all-the-icons-faicon "external-link-square" :v-adjust 0.02 :face 'all-the-icons-dpurple) .
-         ,(all-the-icons-faicon "external-link-square" :v-adjust 0.02 :face 'bibtex-actions-icon-dim)))))
-  ;; Here we define a face to dim non 'active' icons, but preserve alignment
-  (defface bibtex-actions-icon-dim
+                   ,(all-the-icons-icon-for-file "foo.pdf" :face 'citar-icon-dim)))
+          (note . (,(all-the-icons-icon-for-file "foo.txt") .
+                   ,(all-the-icons-icon-for-file "foo.txt" :face 'citar-icon-dim)))
+          (link .
+                (,(all-the-icons-faicon "external-link-square" :v-adjust 0.02 :face 'all-the-icons-dpurple) .
+                 ,(all-the-icons-faicon "external-link-square" :v-adjust 0.02 :face 'citar-icon-dim)))))
+;; Here we define a face to dim non 'active' icons, but preserve alignment
+  (defface citar-icon-dim
     '((((background dark)) :foreground "#282c34")
       (((background light)) :foreground "#fafafa"))
     "Face for obscuring/dimming icons"
     :group 'all-the-icons-faces)
 
-)
+  (defun gen-bib-cache-idle ()
+    "Generate bib item caches with idle timer"
+    (run-with-idle-timer 0.5 nil #'citar-refresh))
 
-  ;; (load "~/.emacs.d/.local/straight/repos/bibtex-actions/oc-bibtex-actions.el")
+  (add-hook 'LaTeX-mode-hook #'gen-bib-cache-idle)
+  (add-hook 'org-mode-hook #'gen-bib-cache-idle)
+  )
+
 (advice-add #'completing-read-multiple :override #'consult-completing-read-multiple)
 (provide 'selectrum-config.el)
-;;; jnf-selectrum.el ends here
