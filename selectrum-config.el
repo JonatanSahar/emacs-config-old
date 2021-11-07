@@ -370,53 +370,56 @@ the directory.  `REST' is passed to the `CONSULT-RIPGREP-FUNCTION'."
     				   (minibuffer . (initials))))
   (orderless-style-dispatchers '(dm/orderless-dispatch)))
 
-(use-package citar
-  :no-require
-  :custom
-  (org-cite-global-bibliography (my/get-bib-file-list))
-  (org-cite-insert-processor 'citar)
-  (org-cite-follow-processor 'citar)
-  (org-cite-activate-processor 'citar)
-  ;; optional: org-cite-insert is also bound to C-c C-x C-@
-  :bind
-  (:map org-mode-map :package org ("C-c b" . #'org-cite-insert))
-  :config
-  (setq citar-filenotify-callback 'refresh-cache)
-  (setq citar-at-point-function 'embark-act)
-  (setq citar-file-note-org-include '(org-id org-roam-ref))
-  (setq citar-templates '((main . "${author editor:30}     ${date year issued:4}     ${title:48}")
-                                   (suffix . "${tags keywords keywords:*}   ${=key= id:15}    ${=type=:12}")
-                                   (note . "#+title: Notes on ${author editor}, ${title}
-* main points
-* findings
-* methods
-* summary and short reference
-* general notes
-* see also (notes, tags/ other papers):
-")))
+;; (use-package citar
+;;   :no-require
+;;   :custom
+;;   (org-cite-global-bibliography (my/get-bib-file-list))
+;;   (citar-bibliography (my/get-bib-file-list))
+;;   (org-cite-insert-processor 'citar)
+;;   (org-cite-follow-processor 'citar)
+;;   (org-cite-activate-processor 'citar)
+;;   ;; (citar-filenotify-callback 'refresh-cache)
+;;   (citar-at-point-function 'embark-act)
+;;   (citar-file-note-org-include '(org-id org-roam-ref))
+;;   (citar-notes-paths literature-notes-dir)
+;;   ;; optional: org-cite-insert is also bound to C-c C-x C-@
+;;   :bind
+;;   (:map org-mode-map :package org ("C-c b" . #'org-cite-insert))
+;;   :config
+;;   (setq citar-open-note-function 'orb-citar-edit-note)
+;;   (setq citar-templates '((main . "${author editor:30}     ${date year issued:4}     ${title:48}")
+;;                                    (suffix . "${tags keywords keywords:*}   ${=key= id:15}    ${=type=:12}")
+;;                                    (note . "#+title: Notes on ${author editor}, ${title}
+;; * main points
+;; * findings
+;; * methods
+;; * summary and short reference
+;; * general notes
+;; * see also (notes, tags/ other papers):
+;; ")))
 
-  (setq citar-symbols
-        `((file . (,(all-the-icons-icon-for-file "foo.pdf" :face 'all-the-icons-dred) .
-                   ,(all-the-icons-icon-for-file "foo.pdf" :face 'citar-icon-dim)))
-          (note . (,(all-the-icons-icon-for-file "foo.txt") .
-                   ,(all-the-icons-icon-for-file "foo.txt" :face 'citar-icon-dim)))
-          (link .
-                (,(all-the-icons-faicon "external-link-square" :v-adjust 0.02 :face 'all-the-icons-dpurple) .
-                 ,(all-the-icons-faicon "external-link-square" :v-adjust 0.02 :face 'citar-icon-dim)))))
-;; Here we define a face to dim non 'active' icons, but preserve alignment
-  (defface citar-icon-dim
-    '((((background dark)) :foreground "#282c34")
-      (((background light)) :foreground "#fafafa"))
-    "Face for obscuring/dimming icons"
-    :group 'all-the-icons-faces)
+;;   (setq citar-symbols
+;;         `((file . (,(all-the-icons-icon-for-file "foo.pdf" :face 'all-the-icons-dred) .
+;;                    ,(all-the-icons-icon-for-file "foo.pdf" :face 'citar-icon-dim)))
+;;           (note . (,(all-the-icons-icon-for-file "foo.txt") .
+;;                    ,(all-the-icons-icon-for-file "foo.txt" :face 'citar-icon-dim)))
+;;           (link .
+;;                 (,(all-the-icons-faicon "external-link-square" :v-adjust 0.02 :face 'all-the-icons-dpurple) .
+;;                  ,(all-the-icons-faicon "external-link-square" :v-adjust 0.02 :face 'citar-icon-dim)))))
+;; ;; Here we define a face to dim non 'active' icons, but preserve alignment
+;;   (defface citar-icon-dim
+;;     '((((background dark)) :foreground "#282c34")
+;;       (((background light)) :foreground "#fafafa"))
+;;     "Face for obscuring/dimming icons"
+;;     :group 'all-the-icons-faces)
 
-  (defun gen-bib-cache-idle ()
-    "Generate bib item caches with idle timer"
-    (run-with-idle-timer 0.5 nil #'citar-refresh))
+;;   (defun gen-bib-cache-idle ()
+;;     "Generate bib item caches with idle timer"
+;;     (run-with-idle-timer 0.5 nil #'citar-refresh))
 
-  (add-hook 'LaTeX-mode-hook #'gen-bib-cache-idle)
-  (add-hook 'org-mode-hook #'gen-bib-cache-idle)
-  )
+;;   (add-hook 'LaTeX-mode-hook #'gen-bib-cache-idle)
+;;   (add-hook 'org-mode-hook #'gen-bib-cache-idle)
+;;   )
 
 (advice-add #'completing-read-multiple :override #'consult-completing-read-multiple)
 (provide 'selectrum-config.el)

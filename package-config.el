@@ -196,6 +196,15 @@
   (org-roam-setup)
 
 
+  (add-to-list 'display-buffer-alist
+               '("\\*org-roam\\*"
+                 (display-buffer-in-side-window)
+                 (dedicated . t)
+                 (side . right)
+                 (slot . 0)
+                 (window-width . 0.33)
+                 (window-parameters . ((no-other-window . t)
+                                       (no-delete-other-windows . t)))))
   )
 
 ;; Since the org module lazy loads org-protocol (waits until an org URL is
@@ -240,7 +249,10 @@
 
         ")
   )
-
+(use-package! org-roam-bibtex
+  :after org-roam
+  :config
+  (require 'org-ref)) ; optional: if Org Ref is not loaded anywhere else, load it here
 ;; (use-package org-roam-bibtex
 ;;   :hook (org-roam-mode . org-roam-bibtex-mode)
 ;;   :config

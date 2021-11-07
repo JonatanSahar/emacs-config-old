@@ -54,13 +54,13 @@
 (package! org-super-agenda :pin "dd0d104c26...")
 (package! helm-org-rifle)
 (package! org-download)
+(package! org :pin "73875939a8b5545")
 (package! org-pretty-tags :pin "40fd72f3e7...")
 (package! org-pomodoro)
 (package! org-superstar)
 (package! org-ref)
-;; (package! org-roam-bibtex
-;;   :recipe (:host github :repo "org-roam/org-roam-bibtex" :branch "org-roam-v2"))
-
+(package! org-roam-bibtex
+  :recipe (:host github :repo "org-roam/org-roam-bibtex"))
 ;; writing experience
 (package! writeroom-mode)
 (package! visual-fill-column)

@@ -42,5 +42,10 @@
                         `(org-roam-link ((t (:inherit default :foreground "#e8c24f" :strike-through nil :underline nil :slant normal :weight normal :width normal :foundry "ADBO" @variable-tuple))))
                         `(org-roam-link-current ((t (:inherit default :foreground "#e8c24f" :strike-through nil :underline nil :slant normal :weight normal :width normal :foundry "ADBO" @variable-tuple)))))
 
-;; (face-remap-add-relative 'default :family "alef" :height 190)
+;; (custom-theme-set-faces 'user
+;; '(default ((t (:family "NotoMono" :height 170))))
+;; )
+
+(custom-theme-set-faces 'user
+'(org-default ((t (:family "NotoSans" :height 170)))))
 )

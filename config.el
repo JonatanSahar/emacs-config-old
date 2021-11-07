@@ -27,8 +27,9 @@
        ;; doom-font  (font-spec :family "Source Code Pro" :size 18)
      ;; doom-font (font-spec :family "Alef" :size 20)
       doom-big-font (font-spec :family "JetBrains Mono" :size 16)
-      doom-variable-pitch-font (font-spec :family "Source Code Pro" :size 16)
-      doom-unicode-font (font-spec :name "DejaVu Sans Mono" :size 16))
+      ;; doom-variable-pitch-font (font-spec :family "Source Code Pro" :size 16)
+      doom-variable-pitch-font (font-spec :family "NotoSans" :size 16)
+      doom-unicode-font (font-spec :name "NotoMono" :size 16))
 
 
 ;; (custom-theme-set-faces 'user
@@ -38,7 +39,7 @@
 ;; There are two ways to load a theme. Both assume the theme is installed and
 ;; available. You can either set `doom-theme' or manually load a theme with the
 ;; `load-theme' function. This is the default:
-(setq doom-theme 'doom-one)
+(setq doom-theme 'doom-one-light)
 ;;(setq doom-theme 'doom-vibrant)
 ;;
 ;; If you use `org' and don't want your org files in the default location below,
@@ -177,6 +178,7 @@
                             (setq captain-predicate (lambda () t))
 
                             (visual-fill-column-mode 1)
+                            (visual-line-mode 1)
                             (flyspell-mode 1)
                             (captain-mode 1)
                             (my/set-faces)

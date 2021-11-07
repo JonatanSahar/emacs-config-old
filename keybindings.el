@@ -181,7 +181,7 @@
       :nv
       :desc "copy buffer name"  "fc" #'my/get-buffer-name
       :desc "helm-bibtex"  "nB" #'helm-bibtex
-      :desc "bibtex-actions"  "nb" #'bibtex-actions-open
+      :desc "citar references"  "nb" #'citar-open
       :desc "Org Noter"  "nN" #'org-noter
       :desc "M-x" :n "SPC" #'execute-extended-command)
 
