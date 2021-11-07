@@ -23,7 +23,7 @@
 
 (defun my/org-font ()
   (interactive)
-  (face-remap-add-relative 'default :family "alef" :height 190))
+  (face-remap-add-relative 'default :family "NotoSans" :height 190))
 
 (defun org-journal-find-location ()
   ;; Open today's journal, but specify a non-nil prefix argument in order to

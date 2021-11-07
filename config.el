@@ -170,7 +170,7 @@
           (setq after-save-hook '(flycheck-handle-save t ))
           )
 
-
+(add-hook! org-roam-mode #'visual-line-mode)
 (add-hook! org-mode #'flyspell-mode #'org-superstar-mode #'my/org-mode-hook) ;; #'org-hide-properties)
 (add-hook 'text-mode-hook (lambda ()
                             (setq bidi-paragraph-direction nil)
@@ -292,3 +292,15 @@
 (add-hook 'after-init-hook 'company-statistics-mode)
 
 ;; (my-generic-ispell-company-complete-setup)
+
+(defun my/dedicate-org-roam-buffer ()
+  (add-to-list 'display-buffer-alist
+               '("\\*org-roam\\*"
+                 (display-buffer-in-side-window)
+                 (dedicated . t)
+                 (side . right)
+                 (slot . 0)
+                 (window-width . 0.33)
+                 (window-parameters . ((no-other-window . t)
+                                       (no-delete-other-windows . t)))))
+  )

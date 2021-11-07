@@ -196,15 +196,6 @@
   (org-roam-setup)
 
 
-  (add-to-list 'display-buffer-alist
-               '("\\*org-roam\\*"
-                 (display-buffer-in-side-window)
-                 (dedicated . t)
-                 (side . right)
-                 (slot . 0)
-                 (window-width . 0.33)
-                 (window-parameters . ((no-other-window . t)
-                                       (no-delete-other-windows . t)))))
   )
 
 ;; Since the org module lazy loads org-protocol (waits until an org URL is
