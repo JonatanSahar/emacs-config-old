@@ -370,6 +370,10 @@ the directory.  `REST' is passed to the `CONSULT-RIPGREP-FUNCTION'."
     				   (minibuffer . (initials))))
   (orderless-style-dispatchers '(dm/orderless-dispatch)))
 
+
+
+
+
 ;; (use-package citar
 ;;   :no-require
 ;;   :custom
@@ -386,7 +390,7 @@ the directory.  `REST' is passed to the `CONSULT-RIPGREP-FUNCTION'."
 ;;   :bind
 ;;   (:map org-mode-map :package org ("C-c b" . #'org-cite-insert))
 ;;   :config
-;;   (setq citar-open-note-function 'orb-citar-edit-note)
+;;   ;; (setq citar-file-open-note-function 'orb-citar-edit-note)
 ;;   (setq citar-templates '((main . "${author editor:30}     ${date year issued:4}     ${title:48}")
 ;;                                    (suffix . "${tags keywords keywords:*}   ${=key= id:15}    ${=type=:12}")
 ;;                                    (note . "#+title: Notes on ${author editor}, ${title}

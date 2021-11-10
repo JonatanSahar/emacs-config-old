@@ -400,7 +400,15 @@
 
  )
 
-
+  (map! :map vertico-map
+        "C-." #'embark-act
+        "C-," #'embark-become
+        "C-/" #'embark-export
+        "C-a" #'my/embark-ace-action
+        "C-b" #'embark-become
+        "C-e" #'embark-export
+        "C-j" #'vertico-previous
+        "C-j" #'vertico-next)
 
 ;; (map! :map org-mode-map
 ;;       :nvi "C-c p h" 'org-hide-properties

@@ -69,13 +69,13 @@
 ;; various settings
 (setq
  bibliography-dir (concat (getenv "HOME") "/google_drive/.bibliography/")
- bibliography-pdf-dir (concat  bibliography-dir "zotero-pdf")
+ bibliography-pdf-dir (list  "~/google_drive/.bibliography/zotero_pdf")
+
  bibliography-files '( "~/google_drive/.bibliography/motor-cognition.bib"  "~/google_drive/.bibliography/consciousness.bib")
- ;; bibliography-files (concat  bibliography-dir "motor-cognition.bib")
  notes-dir (concat (getenv "HOME") "/google_drive/.notes.v2/")
  gtd-dir (concat notes-dir  "gtd/")
  slip-box-dir (concat notes-dir "slip-box/")
- literature-notes-dir (concat slip-box-dir "literature-notes/")
+ literature-notes-dir (list  "~/google_drive/.notes.v2/slip-box/literature-notes/")
 
  org-my-anki-file (concat slip-box-dir "anki.org")
  org-capture-papers-file (concat slip-box-dir "2021-06-17-papers_by_subject.org")
@@ -108,7 +108,7 @@
 ;; (add-to-list browse-url-filename-alist (quote("mnt/g" . "G:")))
 (load! "package-config.el")
 (load! "my-functions.el")
-(load! "selectrum-config.el")
+;; (load! "selectrum-config.el")
 (load! "faces.el")
 (load! "keybindings.el")
 
@@ -304,3 +304,8 @@
                  (window-parameters . ((no-other-window . t)
                                        (no-delete-other-windows . t)))))
   )
+
+
+  (setq
+   org-cite-global-bibliography bibliography-files
+   org-cite-insert-processor 'citar)

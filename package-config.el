@@ -16,7 +16,7 @@
 
 (use-package! org-superstar
   :config
-  (setq org-superstar-headline-bullets-list '("○" "✸" "✿" "●" "►")
+  (setq org-superstar-headline-bullets-list '("○" "►" "✿" "●" "✸")
         inhibit-compacting-font-caches t)
   )
 
@@ -240,30 +240,11 @@
 
         ")
   )
+
 (use-package! org-roam-bibtex
   :after org-roam
   :config
   (require 'org-ref)) ; optional: if Org Ref is not loaded anywhere else, load it here
-;; (use-package org-roam-bibtex
-;;   :hook (org-roam-mode . org-roam-bibtex-mode)
-;;   :config
-;;   (setq orb-preformat-keywords '("=key=" "title" "url" "file" "author-or-editor" "keywords"))
-;;   (setq org-roam-capture-templates
-;;         '(
-;;           ("d" "default" plain "%?"
-;;            :if-new (file+head "${slug}.org"
-;;                               "#+title: ${title}\n")
-;;            :immediate-finish t
-;;            :unnarrowed t)
-;;           ("r" "ref" plain "%?"
-;;         :if-new (file+head "literature-notes/Notes: ${title}"
-;;         "#+title: Notes: ${title}\n\n- tags :: \n- source :: \n\n* Notes:"
-;;         )
-;;         :unnarrowed t
-;;                  )
-;;           ))
-;;   (require 'org-ref)
-;;   )
 
 (setq
  org-ref-bibliography-notes "/home/jonathan/google_drive/.notes/slip-box/literature-notes/"
@@ -696,9 +677,42 @@
             (sort-lines nil (point-min) (point-max)))
           (write-region nil nil ispell-complete-word-dict))))))
 
-(use-package bibtex-completion)
-;; (use-package evil-better-visual-line
-;;   :ensure t
-;;   :config
-;;   (evil-better-visual-line-on))
-;; (use-package org-preview-html)
+(after! citar
+  (setq! citar-bibliography (my/get-bib-file-list))
+  (setq! citar-at-point-function 'embark-act)
+  (setq! citar-file-note-org-include '(org-id org-roam-ref))
+  (setq! citar-notes-paths literature-notes-dir)
+  (setq! citar-library-paths bibliography-pdf-dir)
+  (setq citar-templates '((main . "${author editor:30}     ${date year issued:4}     ${title:48}")
+                                   (suffix . "${tags keywords keywords:*}   ${=key= id:15}    ${=type=:12}")
+                                   (note . "#+title: Notes on ${author editor}, ${title}
+* main points
+* findings
+* methods
+* summary and short reference
+* general notes
+* see also (notes, tags/ other papers):
+")))
+
+  (setq citar-symbols
+        `((file . (,(all-the-icons-icon-for-file "foo.pdf" :face 'all-the-icons-dred) .
+                   ,(all-the-icons-icon-for-file "foo.pdf" :face 'citar-icon-dim)))
+          (note . (,(all-the-icons-icon-for-file "foo.txt") .
+                   ,(all-the-icons-icon-for-file "foo.txt" :face 'citar-icon-dim)))
+          (link .
+                (,(all-the-icons-faicon "external-link-square" :v-adjust 0.02 :face 'all-the-icons-dpurple) .
+                 ,(all-the-icons-faicon "external-link-square" :v-adjust 0.02 :face 'citar-icon-dim)))))
+;; Here we define a face to dim non 'active' icons, but preserve alignment
+  (defface citar-icon-dim
+    '((((background dark)) :foreground "#282c34")
+      (((background light)) :foreground "#fafafa"))
+    "Face for obscuring/dimming icons"
+    :group 'all-the-icons-faces)
+
+  (defun gen-bib-cache-idle ()
+    "Generate bib item caches with idle timer"
+    (run-with-idle-timer 0.5 nil #'citar-refresh))
+
+  (add-hook 'LaTeX-mode-hook #'gen-bib-cache-idle)
+  (add-hook 'org-mode-hook #'gen-bib-cache-idle)
+  )
