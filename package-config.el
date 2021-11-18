@@ -716,3 +716,11 @@
   (add-hook 'LaTeX-mode-hook #'gen-bib-cache-idle)
   (add-hook 'org-mode-hook #'gen-bib-cache-idle)
   )
+
+(after! consult
+(consult-customize
+ consult-buffer consult-buffer-other-window consult-ripgrep consult-git-grep consult-grep
+ consult-bookmark consult-recent-file consult-xref
+ consult--source-file consult--source-project-file consult--source-bookmark
+ :preview-key (kbd "M-."))
+  )

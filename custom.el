@@ -6,7 +6,7 @@
  '(ansi-color-names-vector
    ["#282c34" "#ff6c6b" "#98be65" "#ECBE7B" "#51afef" "#c678dd" "#46D9FF" "#bbc2cf"])
  '(custom-safe-themes
-   '("613aedadd3b9e2554f39afe760708fc3285bf594f6447822dd29f947f0775d6c" "a7b20039f50e839626f8d6aa96df62afebb56a5bbd1192f557cb2efb5fcfb662" "0d01e1e300fcafa34ba35d5cf0a21b3b23bc4053d388e352ae6a901994597ab1" "d268b67e0935b9ebc427cad88ded41e875abfcc27abd409726a92e55459e0d01" "835868dcd17131ba8b9619d14c67c127aa18b90a82438c8613586331129dda63" "246a9596178bb806c5f41e5b571546bb6e0f4bd41a9da0df5dfbca7ec6e2250c" default))
+   '("47db50ff66e35d3a440485357fb6acb767c100e135ccdf459060407f8baea7b2" "613aedadd3b9e2554f39afe760708fc3285bf594f6447822dd29f947f0775d6c" "a7b20039f50e839626f8d6aa96df62afebb56a5bbd1192f557cb2efb5fcfb662" "0d01e1e300fcafa34ba35d5cf0a21b3b23bc4053d388e352ae6a901994597ab1" "d268b67e0935b9ebc427cad88ded41e875abfcc27abd409726a92e55459e0d01" "835868dcd17131ba8b9619d14c67c127aa18b90a82438c8613586331129dda63" "246a9596178bb806c5f41e5b571546bb6e0f4bd41a9da0df5dfbca7ec6e2250c" default))
  '(evil-digit-bound-motions '(evil-beginning-of-visual-line))
  '(exwm-floating-border-color "#191b20")
  '(fci-rule-color "#5B6268")
@@ -54,6 +54,7 @@
  ;; If there is more than one, they won't work right.
  '(line-number ((t (:inherit default :foreground "#6599bf" :strike-through nil :underline nil :slant normal :weight normal :height 174 :width normal :foundry "ADBO" :family "Source Code Pro"))))
  '(line-number-current-line ((t (:inherit (hl-line default) :foreground "#bbc2cf" :strike-through nil :underline nil :slant normal :weight normal :height 174 :width normal :foundry "ADBO" :family "Source Code Pro"))))
+ '(org-default ((t (:family "NotoSans" :height 170))))
  '(org-document-title ((t (:inherit default :weight normal :family "NotoSans" :height 1.15 :underline nil))))
  '(org-level-1 ((t (:inherit default :weight normal :family "NotoSans" :height 1.05 :weight bold))))
  '(org-level-2 ((t (:inherit default :weight normal :family "NotoSans" :height 1.01))))

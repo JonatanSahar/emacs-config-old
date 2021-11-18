@@ -221,7 +221,9 @@
 (add-to-list 'load-path "/home/jonathan/.emacs.d/orgnv")
 (load "orgnv.el")
 (require 'orgnv)
-(setq orgnv-directories "/home/jonathan/google_drive/.notes.v2/slip-box/")
+;; (setq orgnv-directories '("/home/jonathan/test"))
+;; (setq orgnv-directories "/home/jonathan/google_drive/.notes.v2/slip-box")
+(setq orgnv-directories '("/home/jonathan/google_drive/.notes.v2/slip-box"))
 
 (map! :leader
         (:prefix "k"

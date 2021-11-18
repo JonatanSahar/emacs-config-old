@@ -77,12 +77,12 @@
          (save-buffer)
  )
 
-(map! (:map org-mode-map :map prog-mode-map)
- :i "<up>" #'evil-previous-visual-line
- :i    "<down>" #'evil-next-visual-line
- :n "<up>" #'evil-collection-scroll-lock-previous-line
- :n     "<down>" #'evil-collection-scroll-lock-next-line
- )
+;; (map! (:map org-mode-map :map prog-mode-map)
+;;  :i "<up>" #'evil-previous-visual-line
+;;  :i    "<down>" #'evil-next-visual-line
+;;  :n "<up>" #'evil-collection-scroll-lock-previous-line
+;;  :n     "<down>" #'evil-collection-scroll-lock-next-line
+;;  )
 
 (map!
  :nvi "C-\\" #'toggle-input-method
@@ -283,6 +283,7 @@
   :desc "minimize window" "wO" #'minimize-window
   :desc "maximize window" "wmM" #'doom/window-maximize-buffer
   :desc "switch to buffer" "bb" #'consult-buffer
+  :desc "buffer to new window" "bB" #'consult-buffer-other-window
   :desc "add line above" "ik" #'+evil/insert-newline-above
   :desc "add line below" "ij" #'+evil/insert-newline-below)
 
@@ -323,10 +324,10 @@
         :desc "run macro" "e" #'kmacro-end-and-call-macro
         :desc "generate laTex previews" "L" #'org-latex-preview
         (:prefix ("b" . "references")
-        :desc "crossref search for refernce" "r" 'doi-utils-add-entry-from-crossref-query
-        :desc "add refernce from doi" "d" 'doi-utils-add-bibtex-entry-from-doi)
+        :desc "refresh bibliography" "r" #'citar-refresh
+        :desc "open bibliography" "b" #'citar-open
         )
-        )
+        ))
 
 (setq
       avy-style 'at-full
@@ -414,3 +415,19 @@
 ;;       :nvi "C-c p h" 'org-hide-properties
 ;;       :nvi "C-c p s" 'org-show-properties
 ;;       :nvi "C-c p t" 'org-toggle-properties)
+ ;; (map! :map (evil-org-mode-map emacs-lisp-mode-map) :n "<up>" (lambda nil (scroll-down-command 1)))
+ ;; (map! :map (evil-org-mode-map emacs-lisp-mode-map) :n "<up>" #'evil-scroll-line-up)
+ ;; (map! :map (evil-org-mode-map emacs-lisp-mode-map) :n "<down>" #'evil-scroll-line-down)
+(map! :map (evil-org-mode-map emacs-lisp-mode-map prog-mode-map text-mode-map org-mode-map)
+  :n "<down>" (lambda nil (interactive) (scroll-up-command 1))
+  :n "<up>"   (lambda nil (interactive) (scroll-down-command 1))
+  :i "C-k" #'evil-previous-visual-line
+  :i "C-j" #'evil-next-visual-line
+  :n "j" (lambda nil (interactive) (scroll-up-command 1))
+  :n "k" (lambda nil (interactive) (scroll-down-command 1))
+  :i "M-h" #'org-beginning-of-line
+  :i "M-l" #'org-end-of-line
+  :i "C-l" #'right-word
+  :i "C-h" #'left-word)
+
+(setq scroll-preserve-screen-position 1)
