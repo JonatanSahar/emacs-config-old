@@ -505,6 +505,7 @@ same directory as the org-buffer and insert a link to this file."
 
     (if (file-exists-p target-file)
         (progn (insert (concat "[[" target-file "]]"))
+               (insert (concat "[[" wsl-path "]]"))
                (org-display-inline-images))
       (user-error
        "Error pasting the image, make sure you have an image in the clipboard!"))
@@ -524,3 +525,18 @@ same directory as the org-buffer and insert a link to this file."
                 "-Command" (concat "& {" script "}")))
 
 (global-set-key "\C-cs" #'my/org-paste-screenshot)
+
+(defun org-html-export-to-mhtml (async subtree visible body)
+  (cl-letf (((symbol-function 'org-html--format-image) 'format-image-inline))
+    (org-html-export-to-html nil subtree visible body)))
+
+(defun format-image-inline (source attributes info)
+  (let* ((ext (file-name-extension source))
+         (prefix (if (string= "svg" ext) "data:image/svg+xml;base64," "data:;base64,"))
+         (data (with-temp-buffer (url-insert-file-contents source) (buffer-string)))
+         (data-url (concat prefix (base64-encode-string data)))
+         (attributes (org-combine-plists `(:src ,data-url) attributes)))
+    (org-html-close-tag "img" (org-html--make-attribute-string attributes) info)))
+
+(org-export-define-derived-backend 'html-inline-images 'html
+  :menu-entry '(?h "Export to HTML" ((?m "As MHTML file and open" org-html-export-to-mhtml))))
