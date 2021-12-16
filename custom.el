@@ -22,6 +22,8 @@
  '(jdee-db-spec-breakpoint-face-colors (cons "#1B2229" "#3f444a"))
  '(matlab-shell-command-switches '("-nodesktop -nosplash -nodisplay"))
  '(objed-cursor-color "#ff6c6b")
+ '(org-agenda-files
+   '("/mnt/g/My Drive/.notes.v2/slip-box/literature-notes/greenFamiliarInteractingObject2006.org" "/home/jonathan/google_drive/.notes.v2/gtd/inbox.org" "/home/jonathan/google_drive/.notes.v2/gtd/projects.org" "/home/jonathan/google_drive/.notes.v2/gtd/someday.org" "/home/jonathan/google_drive/.notes.v2/gtd/writing_inbox.org"))
  '(pdf-view-midnight-colors (cons "#bbc2cf" "#282c34"))
  '(rustic-ansi-faces
    ["#282c34" "#ff6c6b" "#98be65" "#ECBE7B" "#51afef" "#c678dd" "#46D9FF" "#bbc2cf"])
@@ -52,6 +54,7 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(default ((t (:family "NotoMono" :height 170))))
  '(line-number ((t (:inherit default :foreground "#6599bf" :strike-through nil :underline nil :slant normal :weight normal :height 174 :width normal :foundry "ADBO" :family "Source Code Pro"))))
  '(line-number-current-line ((t (:inherit (hl-line default) :foreground "#bbc2cf" :strike-through nil :underline nil :slant normal :weight normal :height 174 :width normal :foundry "ADBO" :family "Source Code Pro"))))
  '(org-default ((t (:family "NotoSans" :height 170))))

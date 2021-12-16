@@ -23,13 +23,14 @@
 ;;       doom-variable-pitch-font (font-spec :family "sans" :size 13))
 ;; (setq doom-font
 (setq
-       doom-font  (font-spec :family "NotoMono" :size 18)
+       doom-font  (font-spec :family "NotoMono" :size 20)
        ;; doom-font  (font-spec :family "Source Code Pro" :size 18)
      ;; doom-font (font-spec :family "Alef" :size 20)
-      doom-big-font (font-spec :family "JetBrains Mono" :size 16)
-      ;; doom-variable-pitch-font (font-spec :family "Source Code Pro" :size 16)
-      doom-variable-pitch-font (font-spec :family "NotoSans" :size 16)
-      doom-unicode-font (font-spec :name "NotoMono" :size 16))
+      doom-big-font (font-spec :family "NotoMono" :size 20)
+      ;; doom-big-font (font-spec :family "JetBrains Mono" :size 20)
+      ;; doom-variable-pitch-font (font-spec :family "Source Code Pro" :size 20)
+      doom-variable-pitch-font (font-spec :family "NotoSans" :size 20)
+      doom-unicode-font (font-spec :name "NotoMono" :size 20))
 
 
 ;; (custom-theme-set-faces 'user
@@ -102,13 +103,12 @@
  backup-directory-alist `(("." . ,(concat user-emacs-directory "autosaved_files")))
  truncate-string-ellipsis "…")               ; Unicode ellispis are nicer than "...", and also save /precious/ space
 
-
+(setq trash-directory "~/trashed-files-from-emacs/")
 (setq browse-url-filename-alist '(("^/\\(ftp@\\|anonymous@\\)?\\([^:/]+\\):/*" . "ftp://\\2/") ("^/\\([^:@/]+@\\)?\\([^:/]+\\):/*" . "ftp://\\1\\2/") ("^/+" . "file:///") ("mnt/g" . "G:")))
 
 ;; (add-to-list browse-url-filename-alist (quote("mnt/g" . "G:")))
 (load! "package-config.el")
 (load! "my-functions.el")
-;; (load! "selectrum-config.el")
 (load! "faces.el")
 (load! "keybindings.el")
 
@@ -168,7 +168,8 @@
 (defun my/org-mode-hook()
           (interactive)
           (setq after-save-hook '(flycheck-handle-save t ))
-          )
+          (sp-pair "$" "$")
+)
 
 (add-hook! org-roam-mode #'visual-line-mode)
 (add-hook! org-mode #'flyspell-mode #'org-superstar-mode #'my/org-mode-hook) ;; #'org-hide-properties)
@@ -181,6 +182,7 @@
                             (visual-line-mode 1)
                             (flyspell-mode 1)
                             (captain-mode 1)
+                            (abbrev-mode 1)
                             (my/set-faces)
                             (my/org-font)
                             ))
@@ -215,19 +217,13 @@
    ("emacs" "~/google_drive/icons/014-coding.svg" nil nil :ascent center)
    ))
 
-(add-to-list 'load-path "/home/jonathan/wordnut")
-(require 'wordnut)
+;; (add-to-list 'load-path "/home/jonathan/wordnut")
+;; (require 'wordnut)
 
 (add-to-list 'load-path "/home/jonathan/.emacs.d/orgnv")
 (load "orgnv.el")
 (require 'orgnv)
-;; (setq orgnv-directories '("/home/jonathan/test"))
-;; (setq orgnv-directories "/home/jonathan/google_drive/.notes.v2/slip-box")
 (setq orgnv-directories '("/home/jonathan/google_drive/.notes.v2/slip-box"))
-
-(map! :leader
-        (:prefix "k"
-        :desc "orgnv" "g" 'orgnv-browse))
 
 
 (add-hook 'occur-mode-hook
@@ -307,6 +303,7 @@
                                        (no-delete-other-windows . t)))))
   )
 
+(my/dedicate-org-roam-buffer)
 
   (setq
    org-cite-global-bibliography bibliography-files

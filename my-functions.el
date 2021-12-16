@@ -418,3 +418,109 @@ https://org-roam.discourse.group/t/org-roam-major-redesign/1198/34."
   (let* (html-filename (org-html-export-to-html file))
        (open-file-in-browser html-filename)))
 (map! :map embark-file-map "O" #'open-file-in-browser)
+
+;; (defun my/set-writeroom-width ()
+;;   (interactive)
+;;   (setq writeroom-width (if writeroom-width )))
+
+(defun my/orgnv-update-db ()
+           (setq orgnv--database (orgnv-build-database))
+)
+
+(defmacro wsl--open-with (id &optional app dir)
+  `(defun ,(intern (format "wsl/%s" id)) ()
+     (interactive)
+     (wsl-open-with ,app ,dir)))
+
+(defun wsl-open-with (&optional app-name path)
+  "Send PATH to APP-NAME on WSL."
+  (interactive)
+  (let* ((path (expand-file-name
+                (replace-regexp-in-string
+                 "'" "\\'"
+                 (or path (if (derived-mode-p 'dired-mode)
+                              (dired-get-file-for-visit)
+                            (buffer-file-name)))
+                 nil t)))
+         (command (format "%s `wslpath -w %s`" (shell-quote-argument app-name) path)))
+    (shell-command-to-string command)))
+
+(wsl--open-with open-in-default-program "explorer.exe" buffer-file-name)
+(wsl--open-with reveal-in-explorer "explorer.exe" default-directory)
+;; M-x wsl/open-in-default-program
+;; M-x wsl/reveal-in-explorer
+(defun my/open-current-with (arg)
+  "Open visited file in default external program.
+
+With a prefix ARG always prompt for command to use."
+  (interactive "P")
+  (when buffer-file-name
+    (shell-command (concat
+                    (read-shell-command "Open current file with: ")
+                    " "
+                    (shell-quote-argument buffer-file-name)))))
+(global-set-key (kbd "C-c O") #'my/open-current-with)
+
+;; (defun my/org-paste-screenshot ()
+;;   "Take a screenshot into a time stamped unique-named file in the
+;; same directory as the org-buffer and insert a link to this file."
+;;   (interactive)
+;;   (setq filename
+;;         (concat
+;;          (make-temp-name
+;;           (concat (buffer-file-name)
+;;                   "_"
+;;                   (format-time-string "%Y%m%d_%H%M%S_")) ) ".png"))
+;;   (setq command (format "touch %s" (shell-quote-argument filename)))
+;;   (shell-command-to-string command)
+;;   (setq command (format "wslpath -w %s" (shell-quote-argument filename)))
+;;   (setq windows-filename (shell-command-to-string command))
+;;   (message "%s" filename)
+;;   (message "%s" windows-filename)
+;;   ;; (shell-command "snippingtool /clip")
+;;   (setq command (concat "powershell -command \"[void] [System.Reflection.Assembly]::LoadWithPartialName(\"System.Windows.Forms\") ;if ($([System.Windows.Forms.Clipboard]::ContainsImage())) {$image = [System.Windows.Forms.Clipboard]::GetImage();[System.Drawing.Bitmap]$image.Save(" windows-filename "',[System.Drawing.Imaging.ImageFormat]::Png); Write-Output 'clipboard content saved as file'} else {Write-Output 'clipboard does not contain image data'}\""))
+;;   ;; (setq command (concat "powershell -command \"Add-Type -AssemblyName System.Windows.Forms;if ($([System.Windows.Forms.Clipboard]::ContainsImage())) {$image = [System.Windows.Forms.Clipboard]::GetImage();[System.Drawing.Bitmap]$image.Save(" windows-filename "',[System.Drawing.Imaging.ImageFormat]::Png); Write-Output 'clipboard content saved as file'} else {Write-Output 'clipboard does not contain image data'}\""))
+;;   (message "%s" command)
+;;   (insert (concat "[[file:" filename "]]"))
+;;   (org-display-inline-images))
+
+
+
+
+(defun my/org-paste-screenshot ()
+  "Paste an image into a time stamped unique-named file in the
+same directory as the org-buffer and insert a link to this file."
+  (interactive)
+  (let* ((target-file
+          (concat
+           (make-temp-name
+            (concat (buffer-file-name)
+                    "_"
+                    (format-time-string "%Y%m%d_%H%M%S_"))) ".png"))
+         (wsl-path
+          (concat (as-windows-path(file-name-directory (shell-quote-argument target-file))) "\\" (file-name-nondirectory target-file)))
+         (ps-script
+          (concat "(Get-Clipboard -Format image).Save('" wsl-path "')")))
+    (powershell ps-script)
+
+    (if (file-exists-p target-file)
+        (progn (insert (concat "[[" target-file "]]"))
+               (org-display-inline-images))
+      (user-error
+       "Error pasting the image, make sure you have an image in the clipboard!"))
+    ))
+
+(defun as-windows-path (unix-path)
+  "Takes a unix path and returns a matching WSL path
+(e.g. \\wsl$\Ubuntu-20.04\tmp)"
+  ;; substring removes the trailing \n
+  (substring
+   (shell-command-to-string
+    (concat "wslpath -w " unix-path)) 0 -1))
+
+(defun powershell (script)
+  "executes the given script within a powershell and returns its return value"
+  (call-process "powershell.exe" nil nil nil
+                "-Command" (concat "& {" script "}")))
+
+(global-set-key "\C-cs" #'my/org-paste-screenshot)

@@ -99,6 +99,11 @@
 
 (map!
  :map pdf-view-mode-map
+ :nvi "go" nil)
+(map!
+ :map pdf-view-mode-map
+ :nvi "C-c O" (lambda () (interactive) (dired-jump) (dired-open))
+ :nvi "go" (kbd "SPC o - & RET")
  :vin "gl" nil
  :map company-active-map "C-s" #'my/save-and-change-to-normal
  )
@@ -167,6 +172,7 @@
 (map! :leader
       :nv
       "bb" nil
+      "is" nil
       "ir" nil
       "fc" nil)
 
@@ -182,8 +188,9 @@
       :desc "copy buffer name"  "fc" #'my/get-buffer-name
       :desc "helm-bibtex"  "nB" #'helm-bibtex
       :desc "citar references"  "nb" #'citar-open
+      :desc "rebuild orgNv database"  "nr" #'(lambda () (interactive) (setq orgnv--database (orgnv-build-database)))
       :desc "Org Noter"  "nN" #'org-noter
-      :desc "M-x" :n "SPC" #'execute-extended-command)
+      "M-x" :n "SPC" #'execute-extended-command)
 
 
 (map!
@@ -283,9 +290,7 @@
   :desc "minimize window" "wO" #'minimize-window
   :desc "maximize window" "wmM" #'doom/window-maximize-buffer
   :desc "switch to buffer" "bb" #'consult-buffer
-  :desc "buffer to new window" "bB" #'consult-buffer-other-window
-  :desc "add line above" "ik" #'+evil/insert-newline-above
-  :desc "add line below" "ij" #'+evil/insert-newline-below)
+  :desc "buffer to new window" "bB" #'consult-buffer-other-window)
 
 (map! :map org-mode-map :localleader
   ("x" (lambda ()
@@ -306,12 +311,28 @@
         ;; (:line ("yank" . "y")
         ;;  :desc "header content" "y" #'my/visual-inside-org-header)
 
+        (:prefix ("i" . "insert stuff")
+                :desc "add line above" "k" #'+evil/insert-newline-above
+                :desc "add line below" "j" #'+evil/insert-newline-below
+                 ;; :desc "surround object with bold"  "sb" (kbd "jkysio*"))
+                (:prefix ("l" . "latex symbols")
+                 :desc "right double arrow"  "ar" (kbd "$\\Rightarrow$"))
+                (:prefix ("s" . "surround stuff")
+                 :desc "surround object with bold"  "*" (kbd "jkysio*")
+                 :desc "surround object with quotes"  "\"" (kbd "jkysio\"")
+                 :desc "surround object with single quotes"  "\'" (kbd "jkysio\'")
+                 :desc "surround object with parens" "\)" (kbd "jkysio\)")
+                 :desc "surround object with brackets" "\]" (kbd "jkysio\]")
+                ))
+
         (:prefix ("k" . "my commands")
         :desc "embark act" "a" #'embark-act
         :desc "select header content" "y" #'my/visual-inside-org-header
         :desc "copy header content" "h" #'my/yank-org-headline
+        :desc "orgnv" "g" #'orgnv-browse
+        :desc "orgnv + rebuild DB" "G" #'(lambda () (interactive) (my/orgnv-update-db) (orgnv-browse))
         :desc "kill all other windows" "o" 'delete-other-windows
-        :desc "writeroom mode" "w" 'writeroom-mode
+        :desc "writeroom mode" "w" #'writeroom-mode
         :desc "kill buffer and window" "W" '+workspace/close-window-or-workspace
         :desc "kill buffer" "d" 'kill-current-buffer
         :desc "switch to previous buffer" "k" 'evil-switch-to-windows-last-buffer
@@ -323,10 +344,10 @@
         :desc "helm org rifle" "R" 'helm-org-rifle
         :desc "run macro" "e" #'kmacro-end-and-call-macro
         :desc "generate laTex previews" "L" #'org-latex-preview
-        (:prefix ("b" . "references")
-        :desc "refresh bibliography" "r" #'citar-refresh
-        :desc "open bibliography" "b" #'citar-open
-        )
+                (:prefix ("b" . "references")
+                :desc "refresh bibliography" "r" #'citar-refresh
+                :desc "open bibliography" "b" #'citar-open
+                )
         ))
 
 (setq
@@ -361,7 +382,7 @@
 
 ;; (setq key-chord-two-keys-delay 0.5)
 ;; (key-chord-define evil-insert-state-map "gj" #'evil-force-normal-state)
-;; (key-chord-define evil-insert-state-map "jk" #'evil-force-normal-state)
+;; (key-chord-define term-mode-map "jk" #'evil-force-normal-state)
 ;; (key-chord-define evil-visual-state-map "jk" #'evil-force-normal-state)
 
 (global-set-key [f12] 'wordnut-search)
@@ -423,11 +444,16 @@
   :n "<up>"   (lambda nil (interactive) (scroll-down-command 1))
   :i "C-k" #'evil-previous-visual-line
   :i "C-j" #'evil-next-visual-line
-  :n "j" (lambda nil (interactive) (scroll-up-command 1))
-  :n "k" (lambda nil (interactive) (scroll-down-command 1))
+  :n "k" #'evil-previous-visual-line
+  :n "j" #'evil-next-visual-line
+  ;; :n "j" (lambda nil (interactive) (scroll-up-command 1))
+  ;; :n "k" (lambda nil (interactive) (scroll-down-command 1))
+  :nv "C-e" #'evil-end-of-line-or-visual-line
   :i "M-h" #'org-beginning-of-line
   :i "M-l" #'org-end-of-line
-  :i "C-l" #'right-word
-  :i "C-h" #'left-word)
+  :i "C-'" #'evil-forward-char
+  :i "C-;" #'evil-backward-char
+  :i "C-l" #'evil-forward-word-begin
+  :i "C-h" #'evil-backward-word-end)
 
 (setq scroll-preserve-screen-position 1)

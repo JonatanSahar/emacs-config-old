@@ -56,14 +56,14 @@
     org-outline-path-complete-in-steps nil
     org-goto-interface 'outline-path-completion
 
-    org-ellipsis "▼"
+    org-ellipsis "…"
     ;; ➡, ⚡, ▼, ↴, ∞, ⬎, ⤷, ⤵, …
     org-deadline-warning-days 7
     org-agenda-breadcrumbs-separator " ❱ "
     org-odd-levels-only  t
     org-startup-with-inline-images t
     org-hide-emphasis-markers t
-
+    org-list-indent-offset 2
     org-agenda-files '(
                        "~/google_drive/.notes.v2/gtd/inbox.org"
                        "~/google_drive/.notes.v2/gtd/reminders.org"
@@ -186,6 +186,13 @@
               #'org-roam-reflinks-insert-section
               ;; #'org-roam-unlinked-references-insert-section
               ))
+
+  (setq org-roam-capture-templates
+        '(("d" "default" plain "%?"
+           :target (file+head "%<%Y-%m-%d-%H%M%S>-${slug}.org"
+                              "#+title: ${title}\n")
+           :unnarrowed t)))
+
   (setq org-roam-dailies-directory "daily/")
   (setq org-roam-dailies-capture-templates
         '(("d" "default" entry
