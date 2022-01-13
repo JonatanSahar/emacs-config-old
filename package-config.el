@@ -64,6 +64,8 @@
     org-startup-with-inline-images t
     org-hide-emphasis-markers t
     org-list-indent-offset 2
+    org-list-demote-modify-bullet
+       '(("+" . "*") ("-" . "+") ("*" . "-"))
     org-agenda-files '(
                        "~/google_drive/.notes.v2/gtd/inbox.org"
                        "~/google_drive/.notes.v2/gtd/reminders.org"
@@ -441,6 +443,10 @@
 (set-company-backend! 'matlab-shell-mode '(company-capf company-matlab-shell company-dabbrev))
 (custom-set-variables '(matlab-shell-command-switches '("-nodesktop -nosplash -nodisplay")))
 (setq matlab-verify-on-save-flag nil)
+(defadvice! inhibit-real-only-a (oldfun &rest r)
+  "Temporary remove read-only lines in shell buffer - fixes problems with completion"
+  :around#'matlab-shell-collect-command-output
+      (let ((inhibit-read-only t)) (apply oldfun r)))
 (add-hook! matlab-mode #'doom/toggle-line-numbers)
 
 (setq completion-ignore-case t)
@@ -731,3 +737,22 @@
  consult--source-file consult--source-project-file consult--source-bookmark
  :preview-key (kbd "M-."))
   )
+
+(use-package! consult-company
+  :config
+  (define-key company-mode-map [remap completion-at-point] #'consult-company)
+  )
+(use-package! websocket
+    :after org-roam)
+
+(use-package! org-roam-ui
+    :after org-roam ;; or :after org
+;;         normally we'd recommend hooking orui after org-roam, but since org-roam does not have
+;;         a hookable mode anymore, you're advised to pick something yourself
+;;         if you don't care about startup time, use
+;;  :hook (after-init . org-roam-ui-mode)
+    :config
+    (setq org-roam-ui-sync-theme t
+          org-roam-ui-follow t
+          org-roam-ui-update-on-save t
+          org-roam-ui-open-on-start t))

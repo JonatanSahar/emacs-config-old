@@ -91,7 +91,7 @@
  org-roam-directory slip-box-dir
 
  evil-respect-visual-line-mode 't
- delete-by-moving-to-trash t                      ; Delete files to trash
+ delete-by-moving-to-trash nil                      ; Delete files to trash
  uniquify-buffer-name-style nil              ; Uniquify buffer names
  window-combination-resize t                      ; take new window space from all other        windows (not just current)
  x-stretch-cursor t                              ; Stretch cursor to the glyph width
@@ -308,3 +308,4 @@
   (setq
    org-cite-global-bibliography bibliography-files
    org-cite-insert-processor 'citar)
+(setq org-cite-csl-styles-dir "~/Zotero/styles")

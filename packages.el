@@ -61,13 +61,21 @@
 (package! org-ref)
 (package! org-roam-bibtex
   :recipe (:host github :repo "org-roam/org-roam-bibtex"))
+
+(package! org-roam-ui)
+(package! simple-httpd)
+(package! f)
+
+
+
 ;; writing experience
 (package! writeroom-mode)
-(package! visual-fill-column)
-;; (package! olivetti)
+;; (package! visual-fill-column)
+(package! olivetti)
 (package! captain) ;; auto capitalize words
 (package! helm-flyspell)
 (package! define-word)
+(package! consult-company)
 (package! company-statistics)
 (package! company-wordfreq)
 (package! flyspell-lazy :pin "3ebf68cc9e...")
@@ -100,11 +108,11 @@
 (package! wgrep)
 (package! orderless)
 (package! consult-dir)
-(package!       evil-better-visual-line)
+(package! evil-better-visual-line)
 (package!  helm-bibtex)
 (package!  bibtex-completion)
-(when (featurep! :completion vertico)
-  (package! citar :pin "08c6ca0e5b736de50a4d1db5a00ce01b4c2093eb"))
+;; (when (featurep! :completion vertico)
+;;   (package! citar :pin "08c6ca0e5b736de50a4d1db5a00ce01b4c2093eb"))
 ;; (package!  citar)
 (package!  consult-bibtex
  :recipe (:host github
@@ -114,4 +122,3 @@
 (package! matlab-mode)
 (package! virtualenvwrapper)
 (package! company-statistics)
-;; (package! yasnippet-snippets)

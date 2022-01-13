@@ -22,7 +22,7 @@
     :nvi "C-s-b" nil
     :nvi "C-s-a" nil
     :nvi "C-s-e" nil
-    :nvi "M-`" nil
+    :nvi "M-q" nil
     :nvi "C-c p" nil
 
     (:map org-mode-map
@@ -37,7 +37,6 @@
     :n "gJ" nil
     :n "gK" nil
     :n "z=" nil
-    :nvi "M-`" nil
 
     :n "gf" nil
     :n "gs" nil
@@ -64,10 +63,9 @@
     (:map helm-find-files-map
      [control-backspace] nil)
 
-   :i "C-v" nil
-
-    ) ;;unmap a bunch of keys
+   :i "C-v" nil) ;;unmap a bunch of keys
 (map!
+ :nvi "M-q" #'+workspace/other
  :ni "C-{" #'org-roam-node-insert
  :ni "C-}" #'org-ref-insert-link)
 
@@ -93,7 +91,7 @@
               )
  :i "S-SPC" #'evil-force-normal-state
  :map evil-org-mode-map
- :i "C-SPC" #'counsel-company
+ :i "C-SPC" #'consult-company
  :ni "C-{" #'org-roam-node-insert)
 ;; :i "C-S-L" #'org-ref-insert-link)
 
@@ -108,11 +106,15 @@
  :map company-active-map "C-s" #'my/save-and-change-to-normal
  )
 
-(map! :map matlab-mode-map
+(map!
+ (:map matlab-mode-map
  :nv "C-S-m" (lambda ()
          (interactive)
-         (org-switch-to-buffer-other-window "*MATLAB*")
-         )
+         (org-switch-to-buffer-other-window "*MATLAB*"))
+ )
+ (:map matlab-shell-mode-map
+  :ni "C-c l" #'comint-clear-buffer
+  )
 )
 
 
@@ -316,7 +318,8 @@
                 :desc "add line below" "j" #'+evil/insert-newline-below
                  ;; :desc "surround object with bold"  "sb" (kbd "jkysio*"))
                 (:prefix ("l" . "latex symbols")
-                 :desc "right double arrow"  "ar" (kbd "$\\Rightarrow$"))
+                        (:prefix ("a" . "arrows")
+                 :desc "right double arrow"  "r" (kbd "$\\Rightarrow$")))
                 (:prefix ("s" . "surround stuff")
                  :desc "surround object with bold"  "*" (kbd "jkysio*")
                  :desc "surround object with quotes"  "\"" (kbd "jkysio\"")
@@ -418,7 +421,9 @@
    :nvi "C-c  o" #'(lambda () (interactive) (org-agenda nil "o"))
    ;; :i "C-c p" #'consult-yank-from-kill-ring
    ;; :i "C-c y" #'evil-yank
-   :ni "C-c I" #'org-cite-insert
+   :ni "C-c I" #'org-ref-insert-cite-link
+   :ni "C-c ]" #'org-roam-node-insert
+   ;; :ni "C-c I" #'org-cite-insert
 
  )
 
