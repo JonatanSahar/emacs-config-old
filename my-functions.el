@@ -513,3 +513,9 @@ same directory as the org-buffer and insert a link to this file."
 
 (org-export-define-derived-backend 'html-inline-images 'html
   :menu-entry '(?h "Export to HTML" ((?m "As MHTML file and open" org-html-export-to-mhtml))))
+
+(defun matlab-shell-help-at-point ()
+  (interactive)
+  (let ((fcn (matlab-read-word-at-point)))
+    (if (and fcn (not (equal fcn "")))
+        (matlab-shell-describe-command fcn))))

@@ -49,6 +49,6 @@
 (custom-theme-set-faces 'user
 '(default ((t (:family "NotoMono" :height 170))))
 '(org-default ((t (:family "NotoSans" :height 170))))
-'(magit-section-highlight ((t (:family "NotoSans" :height 220))))
+;; '(magit-section-highlight ((t (:family "NotoSans" :height 220))))
 )
 )

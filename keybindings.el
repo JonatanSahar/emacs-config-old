@@ -111,9 +111,14 @@
  :nv "C-S-m" (lambda ()
          (interactive)
          (org-switch-to-buffer-other-window "*MATLAB*"))
+  :ni "C-c h" #'matlab-shell-help-at-point
  )
  (:map matlab-shell-mode-map
   :ni "C-c l" #'comint-clear-buffer
+  :nv "C-l" #'windmove-right
+  :nv "C-h" #'windmove-left
+  :nv "C-j" #'windmove-down
+  :nv "C-k" #'windmove-up
   )
 )
 
@@ -302,7 +307,12 @@
          (end-of-line))))
 
 (map! :localleader
+      (:map matlab-shell-mode-map
+       :n "~" #'+workspace/close-window-or-workspace
+       :n "ESC" #'+workspace/close-window-or-workspace)
       (:map matlab-mode-map
+       :desc "eval buffer" :n "eb" #'(lambda () (interactive) (evil-goto-first-line) (evil-visual-line) (evil-goto-line) (matlab-shell-run-region))
+       :desc "eval region" :n "er" #'matlab-shell-run-region
        :n "f" #'matlab-shell-help-at-point))
 
 (map! :leader

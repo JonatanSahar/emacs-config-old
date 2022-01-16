@@ -308,4 +308,4 @@
   (setq
    org-cite-global-bibliography bibliography-files
    org-cite-insert-processor 'citar)
-(setq org-cite-csl-styles-dir "~/Zotero/styles")
+;; (setq org-cite-csl-styles-dir "~/Zotero/styles")

@@ -441,13 +441,17 @@
 
 (set-company-backend! 'matlab-mode '(company-capf company-dabbrev))
 (set-company-backend! 'matlab-shell-mode '(company-capf company-matlab-shell company-dabbrev))
-(custom-set-variables '(matlab-shell-command-switches '("-nodesktop -nosplash -nodisplay")))
+(custom-set-variables '(matlab-shell-command-switches '("-nodesktop -nosplash ")))
+;; (custom-set-variables '(matlab-shell-command-switches '("-nodesktop -nosplash -nodisplay")))
 (setq matlab-verify-on-save-flag nil)
 (defadvice! inhibit-real-only-a (oldfun &rest r)
   "Temporary remove read-only lines in shell buffer - fixes problems with completion"
   :around#'matlab-shell-collect-command-output
       (let ((inhibit-read-only t)) (apply oldfun r)))
-(add-hook! matlab-mode #'doom/toggle-line-numbers)
+(defun my-setup-matlab-mode()
+  (doom/toggle-line-numbers)
+  (visual-line-mode))
+(add-hook! matlab-mode #'my-setup-matlab-mode)
 
 (setq completion-ignore-case t)
 
