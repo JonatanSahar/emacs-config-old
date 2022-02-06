@@ -62,6 +62,7 @@
 (package! org-roam-bibtex
   :recipe (:host github :repo "org-roam/org-roam-bibtex"))
 
+(package! anki-editor)
 (package! org-roam-ui)
 (package! simple-httpd)
 (package! f)
@@ -94,6 +95,8 @@
 (package! s)
 (package! promise)
 (package! org-mime)
+(package! dired-hacks-utils)
+(package! dired-filter)
 
 ;; ivy/helm alternative
 (package! selectrum)

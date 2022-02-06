@@ -89,10 +89,10 @@
                  (buffer-substring-no-properties (point) (line-end-position)))
            (with-temp-buffer
              (insert "
-** Question :drill:
+** Question %^G
 :PROPERTIES:
 :ANKI_NOTE_TYPE: Cloze
-:ANKI_DECK: TheDeck
+:ANKI_DECK: 
 :END:
 *** Text
 \t"
@@ -102,7 +102,7 @@
 \t"
                        )
 
-             (search-backward "drill")
+             (search-backward "Question")
              (my_refile org-my-anki-file "Waiting for export")))))
 
 (defun my_get_anki_question()
@@ -116,7 +116,7 @@
          (save-excursion
            (with-temp-buffer
              (insert "
-** Question :drill:
+** Question %^G
 :PROPERTIES:
 :ANKI_NOTE_TYPE: Basic
 :ANKI_DECK: TheDeck
@@ -206,6 +206,8 @@
                 (goto-char (point-min))
                 (while (search-forward "G\\:" nil t)
                 (replace-match "\/mnt\/g")
+
+                (save-buffer)
 )))
 
 (defun my/get-buffer-name()

@@ -1,6 +1,7 @@
 ;;; ~/.doom.d/keybindings.el -*- lexical-binding: t; -*-
 
 (map!
+    :i "C-z" nil
     :i  "C-k" nil
     :nv "E" nil
     :nv "W" nil
@@ -64,7 +65,38 @@
      [control-backspace] nil)
 
    :i "C-v" nil) ;;unmap a bunch of keys
-(map!
+
+(map! :map (evil-org-mode-map emacs-lisp-mode-map prog-mode-map text-mode-map org-mode-map)
+  :ni "M-`" #'delete-other-windows
+  :i "C-z" #'evil-undo
+  :i "C-Z" #'evil-emacs-state
+  :n "<down>" (lambda nil (interactive) (scroll-up-command 1))
+  :n "<up>"   (lambda nil (interactive) (scroll-down-command 1))
+  :i "C-S-j" (lambda nil (interactive) (scroll-up-command 1))
+  :i "C-S-k" (lambda nil (interactive) (scroll-down-command 1))
+  :n "k" #'evil-previous-visual-line
+  :n "j" #'evil-next-visual-line
+  ;; :n "j" (lambda nil (interactive) (scroll-up-command 1))
+  ;; :n "k" (lambda nil (interactive) (scroll-down-command 1))
+  :i "C-c =" #'helm-flyspell-correct
+  :nv "C-e" #'evil-end-of-line-or-visual-line
+  :i "M-h" #'org-beginning-of-line
+  :i "M-l" #'org-end-of-line
+  :i "C-S-k" #'right-char
+  :i "C-S-j" #'left-char
+  :i "C-S-l" #'right-char
+  :i "C-S-h" #'left-char
+  :i "C-'" #'right-char
+  :i "C-;" #'left-char
+  :i "C-k" #'previous-line
+  :i "C-j" #'next-line
+  :i "C-l" #'right-word
+  :i "C-h" #'left-word
+  :i "C-z" #'evil-undo
+  :i "C-y" #'evil-redo
+  )
+
+ (map!
  :nvi "M-q" #'+workspace/other
  :ni "C-{" #'org-roam-node-insert
  :ni "C-}" #'org-ref-insert-link)
@@ -74,13 +106,6 @@
          (evil-normal-state)
          (save-buffer)
  )
-
-;; (map! (:map org-mode-map :map prog-mode-map)
-;;  :i "<up>" #'evil-previous-visual-line
-;;  :i    "<down>" #'evil-next-visual-line
-;;  :n "<up>" #'evil-collection-scroll-lock-previous-line
-;;  :n     "<down>" #'evil-collection-scroll-lock-next-line
-;;  )
 
 (map!
  :nvi "C-\\" #'toggle-input-method
@@ -234,8 +259,12 @@
 
  :map vterm-mode-map
  :nv "p" #'term-paste
-
- ;; :map dired-mode-map
+ :nvi "C-c p" #'term-paste
+ :nvi "C-c v" #'term-paste
+ :nvi "C-c c" #'evil-yank
+ :n "!" #'+workspace/close-window-or-workspace
+ :map dired-mode-map
+ :nv "g\/g" #'dired-filter-mode
  ;; :nv "YY" #'(lambda ()
  ;;              (interactive)
  ;;              (dired-copy-filename-as-kill 0))
@@ -328,8 +357,7 @@
                 :desc "add line below" "j" #'+evil/insert-newline-below
                  ;; :desc "surround object with bold"  "sb" (kbd "jkysio*"))
                 (:prefix ("l" . "latex symbols")
-                        (:prefix ("a" . "arrows")
-                 :desc "right double arrow"  "r" (kbd "$\\Rightarrow$")))
+                  :desc "right double arrow"  "r" (kbd "$\\Rightarrow$"))
                 (:prefix ("s" . "surround stuff")
                  :desc "surround object with bold"  "*" (kbd "jkysio*")
                  :desc "surround object with quotes"  "\"" (kbd "jkysio\"")
@@ -361,6 +389,9 @@
                 :desc "refresh bibliography" "r" #'citar-refresh
                 :desc "open bibliography" "b" #'citar-open
                 )
+                ;; (:prefix ("i" . "insert stuff")
+                ;;         (:prefix ("l" . "latex symbols")
+                ;;          :desc "right double arrow"  "R" (kbd "$\\Rightarrow$")))
         ))
 
 (setq
@@ -412,10 +443,15 @@
 
 
 (map! :map org-mode-map
+   :nvi "C-c  c" #'evil-yank
+   :nvi "C-c  x" #'evil-delete
+   :nvi "C-c  v" #'consult-yank-from-kill-ring
    :nvi "C-c  y" #'evil-yank
    :nvi "C-c  p" #'consult-yank-from-kill-ring
    )
 (map!
+   :nvi "C-c  c" #'evil-yank
+   :nvi "C-c  v" #'consult-yank-from-kill-ring
    :nvi "C-c  y" #'evil-yank
    :nvi "C-c  p" #'consult-yank-from-kill-ring
    :nvi "C-c  u" #'evil-undo
@@ -454,21 +490,9 @@
  ;; (map! :map (evil-org-mode-map emacs-lisp-mode-map) :n "<up>" (lambda nil (scroll-down-command 1)))
  ;; (map! :map (evil-org-mode-map emacs-lisp-mode-map) :n "<up>" #'evil-scroll-line-up)
  ;; (map! :map (evil-org-mode-map emacs-lisp-mode-map) :n "<down>" #'evil-scroll-line-down)
-(map! :map (evil-org-mode-map emacs-lisp-mode-map prog-mode-map text-mode-map org-mode-map)
-  :n "<down>" (lambda nil (interactive) (scroll-up-command 1))
-  :n "<up>"   (lambda nil (interactive) (scroll-down-command 1))
-  :i "C-k" #'evil-previous-visual-line
-  :i "C-j" #'evil-next-visual-line
-  :n "k" #'evil-previous-visual-line
-  :n "j" #'evil-next-visual-line
-  ;; :n "j" (lambda nil (interactive) (scroll-up-command 1))
-  ;; :n "k" (lambda nil (interactive) (scroll-down-command 1))
-  :nv "C-e" #'evil-end-of-line-or-visual-line
-  :i "M-h" #'org-beginning-of-line
-  :i "M-l" #'org-end-of-line
-  :i "C-'" #'evil-forward-char
-  :i "C-;" #'evil-backward-char
-  :i "C-l" #'evil-forward-word-begin
-  :i "C-h" #'evil-backward-word-end)
 
 (setq scroll-preserve-screen-position 1)
+
+(defun make-bold()
+(interactive)
+(if (use-region-p) (evil-surround-region (region-beginning) (region-end) "block" "*")))

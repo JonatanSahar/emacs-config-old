@@ -138,12 +138,12 @@
                               ("a" "Anki basic"
                                entry
                                (file+headline org-my-anki-file "Waiting for export")
-                               "* %<%H:%M> :drill: \n:PROPERTIES:\n:ANKI_NOTE_TYPE: Basic\n:ANKI_DECK: TheDeck\n:END:\n** Front\n\t%?\n** Back\n\t%i\n** Extra\n\t- source:")
+                               "* %<%H:%M>  %^G \n:PROPERTIES:\n:ANKI_NOTE_TYPE: Basic\n:ANKI_DECK: %^{deck?|Master|School|Research}\n:END:\n** Front\n\t%?\n** Back\n\t%i\n** Extra\n\t- source:")
 
                               ("A" "Anki close"
                                entry
                                (file+headline org-my-anki-file "Waiting for export")
-                               "* %<%H:%M> :drill: \n:PROPERTIES:\n:ANKI_NOTE_TYPE: Cloze\n:ANKI_DECK: TheDeck\n:END:\n** Text\n\t%i%?\n** Extra\n\t- source:")
+                               "* %<%H:%M> :drill: \n:PROPERTIES:\n:ANKI_NOTE_TYPE: Cloze\n:ANKI_DECK: %^{deck?|Master|School|Research}\n:END:\n** Text\n\t%i%?\n** Extra\n\t- source:")
 
                               )
     )
@@ -250,32 +250,40 @@
         ")
   )
 
+
+(use-package! org-ref
+  :after org
+  :init
+  (let
+      ((cache-dir (concat doom-cache-dir "org-ref")))
+    (unless (file-exists-p cache-dir)
+      (make-directory cache-dir t))
+    (setq orhc-bibtex-cache-file (concat cache-dir "/orhc-bibtex-cache")))
+  :config
+ (setq
+  org-ref-bibliography-notes "/home/jonathan/google_drive/.notes/slip-box/literature-notes/"
+  org-ref-default-bibliography '("/home/jonathan/google_drive/.bibliography/motor-cognition.bib")
+  org-ref-pdf-directory "~/google_drive/.bibliography/zotero-pdf"
+  org-ref-notes-directory "/home/jonathan/google_drive/.notes/slip-box/literature-notes/"
+  org-latex-pdf-process
+  '("pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"
+    "bibtex %b"
+    "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"
+    "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f")
+  org-ref-notes-function 'orb-edit-notes
+ org-latex-logfiles-extensions (quote ("lof" "lot" "tex" "aux" "idx" "log" "out" "toc" "nav" "snm" "vrb" "dvi" "fdb_latexmk" "blg" "brf" "fls" "entoc" "ps" "spl" "bbl" "pygtex" "pygstyle")))
+ )
+
 (use-package! org-roam-bibtex
   :after org-roam
+  :hook (org-roam-mode . org-roam-bibtex-mode)
   :config
   (require 'org-ref)) ; optional: if Org Ref is not loaded anywhere else, load it here
-
-(setq
- org-ref-bibliography-notes "/home/jonathan/google_drive/.notes/slip-box/literature-notes/"
- org-ref-default-bibliography '("/home/jonathan/google_drive/.bibliography/motor-cognition.bib")
- org-ref-pdf-directory "~/google_drive/.bibliography/zotero-pdf"
- org-ref-notes-directory "/home/jonathan/google_drive/.notes/slip-box/literature-notes/"
- org-ref-notes-function 'orb-edit-notes)
-
-;; (after! org-roam
-;;   (org-roam-bibtex-mode))
 
 ;; Anki configuration
 (use-package anki-editor
   :after org
-  :bind (:map org-mode-map
-         ("<f5>" . anki-editor-cloze-region-auto-incr)
-         ("C-<f5>" . anki-editor-cloze-region-dont-incr)
-         ("<f6>" . anki-editor-reset-cloze-number)
-         ("<f7>"  . anki-editor-push-tree))
-  ;; :hook (org-capture-after-finalize . anki-editor-reset-cloze-number) ; Reset cloze-number after each capture.
   :config
-
   (setq anki-editor-create-decks t ;; Allow anki-editor to create a new deck if it doesn't exist
         anki-editor-org-tags-as-anki-tags t)
 
@@ -702,6 +710,7 @@
   (setq! citar-library-paths bibliography-pdf-dir)
   (setq citar-templates '((main . "${author editor:30}     ${date year issued:4}     ${title:48}")
                                    (suffix . "${tags keywords keywords:*}   ${=key= id:15}    ${=type=:12}")
+                                   (preview . "${author editor} (${year issued date}) ${title}, ${journal journaltitle publisher container-title collection-title}.\n")
                                    (note . "#+title: Notes on ${author editor}, ${title}
 * main points
 * findings
@@ -760,3 +769,7 @@
           org-roam-ui-follow t
           org-roam-ui-update-on-save t
           org-roam-ui-open-on-start t))
+
+;; (use-package! dired-narrow
+;;   :bind (:map dired-mode-map
+;;               ("/" . dired-narrow)))

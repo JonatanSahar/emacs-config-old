@@ -134,16 +134,14 @@
 
 (setq
  visual-fill-column-width 90
- split-window-preferred-function 'visual-fill-column-split-window-sensibly)
+ split-window-preferred-function 'visual-fill-column-split-window-sensibly
 
-(setq dired-dwim-target t)
+ dired-dwim-target t
 
-(setq evil-vsplit-window-right t
-      evil-split-window-below t)
+ evil-vsplit-window-right t
+ evil-split-window-below t)
 
 (remove-hook 'text-mode-hook #'auto-fill-mode)
-
-;; (add-hook 'pdf-tools-enabled-hook 'pdf-view-midnight-minor-mode)
 
 (defun my/snipe_ivy ()
   (evilem-create (list 'evil-snipe-repeat
@@ -171,6 +169,7 @@
           (sp-pair "$" "$")
 )
 
+(add-hook! org-agenda-mode #'writeroom-mode)
 (add-hook! org-roam-mode #'visual-line-mode)
 (add-hook! org-mode #'flyspell-mode #'org-superstar-mode #'my/org-mode-hook) ;; #'org-hide-properties)
 (add-hook 'text-mode-hook (lambda ()
@@ -192,11 +191,6 @@
                             (setq captain-predicate (lambda () (nth 8 (syntax-ppss (point)))))
                             ))
 
-;; (add-hook!
-;;  '(org-mode-hook python-mode-hook matlab-mode-hook emacs-lisp-mode-hook)
-;;  #'(display-line-numbers-mode))
-
-;; (key-chord-mode 1)
 (evil-snipe-override-mode 1)
 
 (my/set-faces)
@@ -251,6 +245,7 @@
 (set-company-backend! 'prog-mode '(company-files))
 (set-company-backend! 'emacs-lisp-mode '(company-files))
 
+(add-hook 'bibtex-mode-hook 'my/convert-windows-to-linux-paths)
 (add-hook 'text-mode-hook (lambda ()
                             (setq-local company-backends '(company-wordfreq))
                             (setq-local company-transformers nil)))
@@ -276,14 +271,9 @@
      (("^pdf$" "." "evince -f %o")
       ("^html?$" "." "iceweasel %o"))))
 
-;; Setting up writegood-mode
-;; (require 'writegood-mode)
-;; (global-set-key "\C-cg" 'writegood-mode)
 (setq initial-major-mode 'org-mode)
-
 (setq helm-ff-fuzzy-matching t)
 
-(add-hook 'bibtex-mode-hook 'my/convert-windows-to-linux-paths)
 (set-input-method 'hebrew-full)
 
 (remove-hook 'after-save-hook #'ws-butler-after-save)   ;
@@ -309,3 +299,31 @@
    org-cite-global-bibliography bibliography-files
    org-cite-insert-processor 'citar)
 ;; (setq org-cite-csl-styles-dir "~/Zotero/styles")
+
+(advice-add #'completing-read-multiple :override #'consult-completing-read-multiple)
+(defun with-minibuffer-keymap (keymap)
+  (lambda (fn &rest args)
+    (minibuffer-with-setup-hook
+        (lambda ()
+          (use-local-map
+           (make-composed-keymap keymap (current-local-map))))
+      (apply fn args))))
+
+(defvar embark-completing-read-prompter-map
+  (let ((map (make-sparse-keymap)))
+    (define-key map (kbd "<tab>") 'abort-recursive-edit)
+    map))
+
+;; (advice-add 'embark-completing-read-prompter :around
+;;             (with-minibuffer-keymap embark-completing-read-prompter-map))
+;; (define-key vertico-map (kbd "C-<tab>") 'embark-act-with-completing-read)
+
+  (defun embark-act-with-completing-read (&optional arg)
+    (interactive "P")
+    (let* ((embark-prompter 'embark-completing-read-prompter)
+           (act (propertize "Act" 'face 'highlight))
+           (embark-indicator (lambda (_keymap targets) nil)))
+      (embark-act arg)))
+
+(advice-add #'completing-read-multiple :override #'consult-completing-read-multiple)
+(setq org-odt-preferred-output-format "docx")
