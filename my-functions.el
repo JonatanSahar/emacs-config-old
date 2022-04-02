@@ -420,6 +420,10 @@ https://org-roam.discourse.group/t/org-roam-major-redesign/1198/34."
   (let* (html-filename (org-html-export-to-html file))
        (open-file-in-browser html-filename)))
 (map! :map embark-file-map "O" #'open-file-in-browser)
+(map! :map embark-file-map "F" #'citar-file-open-external)
+(map! :map embark-file-map "C-o" #'find-file-other-frame)
+(map! :map embark-general-map "W" #'widen)
+(map! :map citar-citation-map "f" #'citar-file-open-external)
 
 ;; (defun my/set-writeroom-width ()
 ;;   (interactive)
@@ -521,3 +525,32 @@ same directory as the org-buffer and insert a link to this file."
   (let ((fcn (matlab-read-word-at-point)))
     (if (and fcn (not (equal fcn "")))
         (matlab-shell-describe-command fcn))))
+
+(defhydra my/mc-hydra (:color pink
+                       :hint nil
+                       :pre (evil-mc-pause-cursors))
+  "
+^Match^            ^Line-wise^           ^Manual^
+^^^^^^----------------------------------------------------
+_Z_: match all     _J_: make & go down   _z_: toggle here
+_m_: make & next   _K_: make & go up     _r_: remove last
+_M_: make & prev   ^ ^                   _R_: remove all
+_n_: skip & next   ^ ^                   _p_: pause/resume
+_N_: skip & prev
+
+Current pattern: %`evil-mc-pattern
+
+"
+  ("Z" #'evil-mc-make-all-cursors)
+  ("m" #'evil-mc-make-and-goto-next-match)
+  ("M" #'evil-mc-make-and-goto-prev-match)
+  ("n" #'evil-mc-skip-and-goto-next-match)
+  ("N" #'evil-mc-skip-and-goto-prev-match)
+  ("J" #'evil-mc-make-cursor-move-next-line)
+  ("K" #'evil-mc-make-cursor-move-prev-line)
+  ("z" #'+multiple-cursors/evil-mc-toggle-cursor-here)
+  ("r" #'+multiple-cursors/evil-mc-undo-cursor)
+  ("R" #'evil-mc-undo-all-cursors)
+  ("p" #'+multiple-cursors/evil-mc-toggle-cursors)
+  ("q" #'evil-mc-resume-cursors "quit" :color blue)
+  ("<escape>" #'evil-mc-resume-cursors "quit" :color blue))

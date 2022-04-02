@@ -16,7 +16,7 @@
 
 (use-package! org-superstar
   :config
-  (setq org-superstar-headline-bullets-list '("○" "►" "✿" "●" "✸")
+  (setq org-superstar-headline-bullets-list '("○" "●" "✿" "►" "✸")
         inhibit-compacting-font-caches t)
   )
 
@@ -55,6 +55,7 @@
     org-id-method 'ts
     org-outline-path-complete-in-steps nil
     org-goto-interface 'outline-path-completion
+    org-cycle-separator-lines 1
 
     org-ellipsis "…"
     ;; ➡, ⚡, ▼, ↴, ∞, ⬎, ⤷, ⤵, …
@@ -67,11 +68,11 @@
     org-list-demote-modify-bullet
        '(("+" . "*") ("-" . "+") ("*" . "-"))
     org-agenda-files '(
-                       "~/google_drive/.notes.v2/gtd/inbox.org"
-                       "~/google_drive/.notes.v2/gtd/reminders.org"
-                       "~/google_drive/.notes.v2/gtd/projects.org"
-                       "~/google_drive/.notes.v2/gtd/someday.org"
-                       "~/google_drive/.notes.v2/gtd/writing_inbox.org")
+                       "~/google_drive/notes/gtd/inbox.org"
+                       "~/google_drive/notes/gtd/reminders.org"
+                       "~/google_drive/notes/gtd/projects.org"
+                       "~/google_drive/notes/gtd/someday.org"
+                       "~/google_drive/notes/gtd/writing_inbox.org")
 
     org-refile-targets '(
                          ( org-capture-projects-file :maxlevel . 1)
@@ -81,7 +82,7 @@
                          ( org-capture-reminders-file :maxlevel . 1))
 
     org-todo-keywords '(
-                        (sequence "TODO(t)" "NEXT(n)" "HOLD(h)" "NOTE(N)" "|" "DONE(d)")
+                        (sequence "TODO(t)" "NEXT(n)" "READ(r)" "NOTE(N)" "|" "DONE(d)")
                         (sequence "[ ](T)" "[-](S)" "[?](W)" "|" "[X](D)"))
 
     org-agenda-block-separator " "
@@ -91,14 +92,16 @@
         (todo "NEXT|HOLD" (
                            (org-agenda-overriding-header "\n⚡ Next up:\n")
                            (org-agenda-remove-tags t)
-                           (org-agenda-prefix-format (concat "  %-2i %-13b" ))
+                           (org-agenda-prefix-format (concat "  %-2i  %t%s" ))
+                           ;; (org-agenda-prefix-format (concat "  %-2i %-13b" ))
                            (org-agenda-todo-keyword-format "")))
         (agenda "" (
                     (org-agenda-overriding-header "⚡ Schedule:\n")
                     (org-agenda-start-day "+0d")
                     (org-agenda-span 5)
                     (org-agenda-remove-tags t)
-                    (org-agenda-prefix-format   (concat "  %-3i  %-15b %t%s"))
+                    (org-agenda-prefix-format   (concat "  %-3i  %t%s"))
+                    ;; (org-agenda-prefix-format   (concat "  %-3i  %-15b %t%s"))
                     (org-agenda-current-time-string "⟸ now")
                     (org-agenda-scheduled-leaders '("" ""))
                     (org-agenda-time-grid (quote ((daily today remove-match)
@@ -109,7 +112,7 @@
     org-capture-templates '(
                             ("t" "Todo"
                              entry
-                             (file+headline org-capture-inbox-file "Tasks")
+                             (file org-capture-inbox-file )
                              "* TODO %? %i")
 
                             ("T" "Todo with link"
@@ -138,12 +141,13 @@
                               ("a" "Anki basic"
                                entry
                                (file+headline org-my-anki-file "Waiting for export")
-                               "* %<%H:%M>  %^G \n:PROPERTIES:\n:ANKI_NOTE_TYPE: Basic\n:ANKI_DECK: %^{deck?|Master|School|Research}\n:END:\n** Front\n\t%?\n** Back\n\t%i\n** Extra\n\t- source:")
+                               ;; "* %<%H:%M> \n:PROPERTIES:\n:ANKI_NOTE_TYPE: Basic\n:ANKI_DECK: %^{deck?|School|Master|Research}\n:END:\n** Front\n\t%?\n** Back\n\t%i\n** Extra\n\t- source:")
+                               "* %<%H:%M> \n:PROPERTIES:\n:ANKI_NOTE_TYPE: Basic\n:ANKI_DECK: School\n:END:\n** Front\n\t%?\n** Back\n\t%i\n** Extra\n\t- source:")
 
                               ("A" "Anki close"
                                entry
                                (file+headline org-my-anki-file "Waiting for export")
-                               "* %<%H:%M> :drill: \n:PROPERTIES:\n:ANKI_NOTE_TYPE: Cloze\n:ANKI_DECK: %^{deck?|Master|School|Research}\n:END:\n** Text\n\t%i%?\n** Extra\n\t- source:")
+                               "* %<%H:%M> \n:PROPERTIES:\n:ANKI_NOTE_TYPE: Cloze\n:ANKI_DECK: %^{deck?|School|Master|Research}\n:END:\n** Text\n\t%i%?\n** Extra\n\t- source:")
 
                               )
     )
@@ -152,8 +156,8 @@
    (quote
     (:foreground default :background default :scale 2.5 :html-foreground "Black" :html-background "Transparent" :html-scale 1.0 :matchers
          ("begin" "$1" "$" "$$" "\\(" "\\["))))
-
   )
+
 (use-package! org-roam
   :init
   (map!
@@ -222,7 +226,7 @@
   (setq
     bibtex-completion-bibliography (my/get-bib-file-list)
     bibtex-completion-library-path '( "~/google_drive/.bibliography/zotero-pdf")
-    bibtex-completion-notes-path "/home/jonathan/google_drive/.notes.v2/slip-box/literature-notes/"
+    bibtex-completion-notes-path "/home/jonathan/google_drive/notes/slip-box/literature-notes/"
 
     bibtex-completion-additional-search-fields '(keywords)
     bibtex-completion-display-formats '((t . "${author:36} ${title:36} ${year:4} ${=has-pdf=:1}${=has-note=:1} ${=type=:7} ${keywords:*}"))
@@ -262,7 +266,7 @@
   :config
  (setq
   org-ref-bibliography-notes "/home/jonathan/google_drive/.notes/slip-box/literature-notes/"
-  org-ref-default-bibliography '("/home/jonathan/google_drive/.bibliography/motor-cognition.bib")
+  org-ref-default-bibliography '("/home/jonathan/google_drive/.bibliography/motor-cognition.bib" "~/google_drive/.bibliography/methods.bib" "~/google_drive/.bibliography/consciousness.bib")
   org-ref-pdf-directory "~/google_drive/.bibliography/zotero-pdf"
   org-ref-notes-directory "/home/jonathan/google_drive/.notes/slip-box/literature-notes/"
   org-latex-pdf-process
@@ -711,12 +715,9 @@
   (setq citar-templates '((main . "${author editor:30}     ${date year issued:4}     ${title:48}")
                                    (suffix . "${tags keywords keywords:*}   ${=key= id:15}    ${=type=:12}")
                                    (preview . "${author editor} (${year issued date}) ${title}, ${journal journaltitle publisher container-title collection-title}.\n")
-                                   (note . "#+title: Notes on ${author editor}, ${title}
-* main points
-* findings
-* methods
-* summary and short reference
+                                   (note . "Notes on ${author editor}, ${title}
 * general notes
+* summary and short reference
 * see also (notes, tags/ other papers):
 ")))
 
@@ -749,7 +750,162 @@
  consult-bookmark consult-recent-file consult-xref
  consult--source-file consult--source-project-file consult--source-bookmark
  :preview-key (kbd "M-."))
-  )
+  ;; Replace bindings. Lazily loaded due by `use-package!'.
+  ;; :bind (;; C-c bindings (mode-specific-map)
+  ;;        ("C-c h" . consult-history)
+  ;;        ("C-c m" . consult-mode-command)
+  ;;        ("C-c b" . consult-bookmark)
+  ;;        ("C-c k" . consult-kmacro)
+  ;;        ;; C-x bindings (ctl-x-map)
+  ;;        ("C-x M-:" . consult-complex-command)     ;; orig. repeat-complet-command
+  ;;        ("C-x b" . consult-buffer)                ;; orig. switch-to-buffer
+  ;;        ("s-b" . consult-buffer)                ;; orig. switch-to-buffer
+  ;;        ("C-x 4 b" . consult-buffer-other-window) ;; orig. switch-to-buffer-other-window
+  ;;        ("C-s-b" . consult-buffer-other-window)
+  ;;        ("C-x 5 b" . consult-buffer-other-frame)  ;; orig. switch-to-buffer-other-frame
+  ;;        ;; Custom M-# bindings for fast register access
+  ;;        ("M-#" . consult-register-load)
+  ;;        ("M-'" . consult-register-store)          ;; orig. abbrev-prefix-mark (unrelated)
+  ;;        ("C-M-#" . consult-register)
+  ;;        ;; Other custom bindings
+  ;;        ("M-y" . consult-yank-from-kill-ring)                ;; orig. yank-pop
+  ;;        ("<help> a" . consult-apropos)            ;; orig. apropos-command
+  ;;        ;; M-g bindings (goto-map)
+  ;;        ("M-g e" . consult-compile-error)
+  ;;        ("M-g g" . consult-goto-line)             ;; orig. goto-line
+  ;;        ("M-g M-g" . consult-goto-line)           ;; orig. goto-line
+  ;;        ("M-g o" . consult-outline)
+  ;;        ("M-g m" . consult-mark)
+  ;;        ("M-g k" . consult-global-mark)
+  ;;        ("C-x C-SPC" . consult-mark)
+  ;;        ("M-g i" . consult-imenu)
+  ;;        ("M-g I" . consult-project-imenu)
+  ;;        ;; M-s bindings (search-map)
+  ;;        ("M-s f" . consult-find)
+  ;;        ("M-s L" . consult-locate)
+  ;;        ("M-s g" . consult-grep)
+  ;;        ("M-s G" . consult-git-grep)
+  ;;        ("M-s r" . consult-ripgrep)
+  ;;        ("C-c f" . consult-ripgrep)
+  ;;        ("M-s l" . consult-line)
+  ;;        ("M-s m" . consult-multi-occur)
+  ;;        ("M-s k" . consult-to-ivy)
+  ;;        ("s-r" . consult-recent-file)
+  ;;        ("C-c o" . consult-file-externally)
+  ;;        ("s-4" . consult-bookmark)
+  ;;        ("C-y" . yank)
+  ;;        ("C-s" . consult-line) ;; I've long favored Swiper mapped to c-s
+  ;;        ("s-l" . consult-goto-line)
+  ;;        ;; Isearch integration
+  ;;        ("M-s e" . consult-isearch)
+  ;;        ;; ("s-t" . jnf/consult-find-using-fd)
+  ;;        ("s-3" . consult-imenu)
+  ;;        ("s-#" . consult-project-imenu)
+  ;;        :map isearch-mode-map
+  ;;        ("M-e" . consult-isearch)                 ;; orig. isearch-edit-string
+  ;;        ("M-s e" . consult-isearch)               ;; orig. isearch-edit-string
+  ;;        ("M-s l" . consult-line))                 ;; required by consult-line to detect isearch
+
+  ;; The :init configuration is always executed (Not lazy)
+  :init
+
+  ;; Optionally configure the register formatting. This improves the register
+  ;; preview for `consult-register', `consult-register-load',
+  ;; `consult-register-store' and the Emacs built-ins.
+  (setq register-preview-delay 0
+        register-preview-function #'consult-register-format)
+
+
+  ;; From https://github.com/minad/consult/wiki#find-files-using-fd
+  ;; Note: this requires lexical binding
+  (defun jnf/consult-find-using-fd (&optional dir initial)
+    "Find project files.
+
+A replacement for `projectile-find-file'."
+    (interactive "P")
+    (let ((consult-find-command "fd --color=never --hidden --exclude .git/ --full-path ARG OPTS"))
+      (consult-find dir initial)))
+
+  (defun jnf/consult-line (consult-line-function &rest rest)
+  "Advising function around `CONSULT-LINE-FUNCTION'.
+
+When there's an active region, use that as the first parameter
+for `CONSULT-LINE-FUNCTION'.  Otherwise, use the current word as
+the first parameter.  This function handles the `REST' of the
+parameters."
+  (interactive)
+  (apply consult-line-function
+         (if (use-region-p) (buffer-substring (region-beginning) (region-end)))
+           rest))
+
+(defun jnf/consult-ripgrep (consult-ripgrep-function &optional dir &rest rest)
+    "Use region or thing at point to populate initial parameter for `CONSULT-RIPGREP-FUNCTION'.
+
+When there's an active region, use that as the initial parameter
+for the `CONSULT-RIPGREP-FUNCTION'.  Otherwise, use the thing at
+point.
+
+`DIR' use the universal argument (e.g. C-u prefix) to first set
+the directory.  `REST' is passed to the `CONSULT-RIPGREP-FUNCTION'."
+    (interactive "P")
+    (apply consult-ripgrep-function
+           dir
+           (if (use-region-p) (buffer-substring (region-beginning) (region-end)))
+           rest))
+
+  ;; Optionally tweak the register preview window.
+  ;; This adds thin lines, sorting and hides the mode line of the window.
+  (advice-add #'register-preview :override #'consult-register-window)
+  (advice-add #'consult-line :around #'jnf/consult-line '((name . "wrapper")))
+  (advice-add #'consult-ripgrep :around #'jnf/consult-ripgrep '((name . "wrapper")))
+
+  ;; Use Consult to select xref locations with preview
+  (setq xref-show-xrefs-function #'consult-xref
+        xref-show-definitions-function #'consult-xref)
+
+  ;; Updating the default to include "--ignore-case"
+  (setq consult-ripgrep-command "rg --null --line-buffered --color=ansi --max-columns=1000 --ignore-case --no-heading --line-number . -e ARG OPTS")
+
+  ;; Configure other variables and modes in the :config section,
+  ;; after lazily loading the package.
+
+  ;; Optionally configure preview. Note that the preview-key can also be
+  ;; configured on a per-command basis via `consult-config'. The default value
+  ;; is 'any, such that any key triggers the preview.
+  ;; (setq consult-preview-key 'any)
+  ;; (setq consult-preview-key (kbd "M-p"))
+  ;; (setq consult-preview-key (list (kbd "<S-down>") (kbd "<S-up>")))
+
+  ;; Optionally configure the narrowing key.
+  ;; Both < and C-+ work reasonably well.
+  (setq consult-narrow-key "<") ;; (kbd "C-+")
+
+  ;; Optionally make narrowing help available in the minibuffer.
+  ;; Probably not needed if you are using which-key.
+  ;; (define-key consult-narrow-map (vconcat consult-narrow-key "?") #'consult-narrow-help)
+
+  ;; Optionally configure a function which returns the project root directory.
+  ;; There are multiple reasonable alternatives to chose from:
+  ;; * projectile-project-root
+  ;; * vc-root-dir
+  ;; * project-roots
+  ;; * locate-dominating-file
+  (autoload 'projectile-project-root "projectile")
+  (setq consult-project-root-function #'projectile-project-root)
+  ;; (setq consult-project-root-function
+  ;;       (lambda ()
+  ;;         (when-let (project (project-current))
+  ;;           (car (project-roots project)))))
+  ;; (setq consult-project-root-function #'vc-root-dir)
+  ;; (setq consult-project-root-function
+  ;;       (lambda () (locate-dominating-file "." ".git")))
+
+
+;; Optionally add the `consult-flycheck' command.
+(use-package! consult-flycheck
+  :bind (:map flycheck-command-map
+              ("!" . consult-flycheck)))
+ )
 
 (use-package! consult-company
   :config
@@ -773,3 +929,63 @@
 ;; (use-package! dired-narrow
 ;;   :bind (:map dired-mode-map
 ;;               ("/" . dired-narrow)))
+;; fix org-open-file for wsl by temporarily replacing start-process-shell-command with call-process-shell-command
+;; if we don't do this, emacs on WSL will block forever trying to open exported file with windows handler
+(defun wsl-fix-org-open-file (orig-org-open-file &rest args)
+  ;; temporarily replace function,
+  ;; see https://endlessparentheses.com/understanding-letf-and-how-it-replaces-flet.html
+  (cl-letf (((symbol-function 'start-process-shell-command) #'call-process-shell-command))
+    (apply orig-org-open-file args)))
+
+(advice-add #'org-open-file :around #'wsl-fix-org-open-file)
+(use-package org-super-agenda
+  :config
+  (org-super-agenda-mode t))
+(add-to-list 'org-agenda-custom-commands
+             '("r" "Categor: Research" todo ""
+              ((org-super-agenda-groups
+                '((:category ("research"))
+                  ;; (:category ("research"))
+                  (:discard (:anything))
+                  ))
+                )))
+(with-eval-after-load 'citar
+
+  (defun citar-open-library-file (key-entry)
+    "Open library file associated with the KEY-ENTRY.
+
+With prefix, rebuild the cache before offering candidates."
+    (interactive (list (citar-select-ref
+                        :rebuild-cache current-prefix-arg)))
+    (let ((embark-default-action-overrides '((file . citar-file-open-external))))
+      (message "embark-default-action-overrides %s" embark-default-action-overrides)
+      (when (and citar-library-paths
+                 (stringp citar-library-paths))
+        (error "Make sure 'citar-library-paths' is a list of paths"))
+      (citar--library-file-action key-entry 'open)))
+  )
+
+(with-eval-after-load 'citar
+(defun citar--library-file-action (key-entry action)
+  "Run ACTION on file associated with KEY-ENTRY."
+  (let* ((fn (pcase action
+               ('open 'citar-file-open-external 'citar-file-open)
+               ('attach 'mml-attach-file)))
+         (ke (citar--ensure-entries key-entry))
+         (key (caar ke))
+         (entry (cdar ke))
+         (files
+          (citar-file--files-for-entry
+           key
+           entry
+           citar-library-paths
+           citar-file-extensions))
+         (file
+          (pcase (length files)
+            (1 (car files))
+            ((guard (> 1))
+             (citar-select-file files)))))
+    (if file
+        (funcall fn file)
+      (message "No associated file"))))
+  )

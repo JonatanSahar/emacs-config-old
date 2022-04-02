@@ -8,7 +8,8 @@
  '(helm-ag-success-exit-status '(0 2))
  '(matlab-shell-command-switches '("-nodesktop -nosplash -nodisplay"))
  '(org-agenda-files
-   '("/mnt/g/My Drive/.notes.v2/slip-box/daily/2022-02-01.org" "/mnt/g/My Drive/.notes.v2/slip-box/daily/2022-01-18.org" "/mnt/g/My Drive/.notes.v2/slip-box/2022-01-12-095219-working_on_semantic_integration_paper.org" "/mnt/g/My Drive/.notes.v2/slip-box/20211117180211-thesis_ideas.org" "/home/jonathan/google_drive/.notes.v2/gtd/inbox.org" "/home/jonathan/google_drive/.notes.v2/gtd/projects.org" "/home/jonathan/google_drive/.notes.v2/gtd/someday.org" "/home/jonathan/google_drive/.notes.v2/gtd/writing_inbox.org")))
+   '("/home/jonathan/google_drive/notes/gtd/projects.org" "/home/jonathan/google_drive/notes/gtd/inbox.org" "/home/jonathan/google_drive/notes/gtd/someday.org" "/home/jonathan/google_drive/notes/gtd/writing_inbox.org")))
+
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.

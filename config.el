@@ -45,7 +45,7 @@
 ;;
 ;; If you use `org' and don't want your org files in the default location below,
 ;; change `org-directory'. It must be set before org loads!
-(setq org-directory "~/google_drive/.notes.v2/slip-box")
+(setq org-directory "~/google_drive/notes/slip-box")
 ;;
 ;; This determines the style of line numbers in effect. If set to `nil', line
 ;; numbers are disabled. For relative line numbers, set this to `relative'.
@@ -68,15 +68,15 @@
 ;; You can also try 'gd' (or 'C-c c d') to jump to their definition and see how
 ;; they are implemented.
 ;; various settings
-(setq
- bibliography-dir (concat (getenv "HOME") "/google_drive/.bibliography/")
- bibliography-pdf-dir (list  "~/google_drive/.bibliography/zotero_pdf")
 
- bibliography-files '( "~/google_drive/.bibliography/motor-cognition.bib"  "~/google_drive/.bibliography/consciousness.bib")
- notes-dir (concat (getenv "HOME") "/google_drive/.notes.v2/")
+(setq
+ bibliography-pdf-dir (list  "~/google_drive/.bibliography/zotero_pdf")
+ bibliography-files '("~/google_drive/.bibliography/references.bib"  ) ;
+ ;; bibliography-files '( "~/google_drive/.bibliography/motor-cognition.bib"  "~/google_drive/.bibliography/consciousness.bib" "~/google_drive/.bibliography/methods.bib"  )
+ notes-dir (concat (getenv "HOME") "/google_drive/notes/")
  gtd-dir (concat notes-dir  "gtd/")
  slip-box-dir (concat notes-dir "slip-box/")
- literature-notes-dir (list  "~/google_drive/.notes.v2/slip-box/literature-notes/")
+ literature-notes-dir (list  "~/google_drive/notes/slip-box/literature-notes/")
 
  org-my-anki-file (concat slip-box-dir "anki.org")
  org-capture-papers-file (concat slip-box-dir "2021-06-17-papers_by_subject.org")
@@ -169,6 +169,7 @@
           (sp-pair "$" "$")
 )
 
+(font-lock-add-keywords nil '(("\"\\(\\(?:.\\|\n\\)*?[^\\]\\)\"" 0 font-lock-string-face)))
 (add-hook! org-agenda-mode #'writeroom-mode)
 (add-hook! org-roam-mode #'visual-line-mode)
 (add-hook! org-mode #'flyspell-mode #'org-superstar-mode #'my/org-mode-hook) ;; #'org-hide-properties)
@@ -182,6 +183,7 @@
                             (flyspell-mode 1)
                             (captain-mode 1)
                             (abbrev-mode 1)
+                            (font-lock-mode 1)
                             (my/set-faces)
                             (my/org-font)
                             ))
@@ -217,7 +219,7 @@
 (add-to-list 'load-path "/home/jonathan/.emacs.d/orgnv")
 (load "orgnv.el")
 (require 'orgnv)
-(setq orgnv-directories '("/home/jonathan/google_drive/.notes.v2/slip-box"))
+(setq orgnv-directories '("/home/jonathan/google_drive/notes/slip-box"))
 
 
 (add-hook 'occur-mode-hook
@@ -325,5 +327,10 @@
            (embark-indicator (lambda (_keymap targets) nil)))
       (embark-act arg)))
 
-(advice-add #'completing-read-multiple :override #'consult-completing-read-multiple)
+;; (advice-add #'completing-read-multiple :override #'conult-completing-read-multiple)
 (setq org-odt-preferred-output-format "docx")
+(defun my/make-small-frame () (interactive) (set-frame-size (selected-frame) 50 42))
+(add-to-list 'default-frame-alist '(height . 40))
+(add-to-list 'default-frame-alist '(width . 50))
+
+(setq org-id-link-to-org-use-id 'create-if-interactive)

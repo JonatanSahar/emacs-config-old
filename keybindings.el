@@ -25,6 +25,7 @@
     :nvi "C-s-e" nil
     :nvi "M-q" nil
     :nvi "C-c p" nil
+    :nvi "M-l" nil
 
     (:map org-mode-map
     :nv "j" nil
@@ -47,6 +48,7 @@
     :n "zl" nil
     :n "zl" nil
 
+    :nvi "M-l" nil
     :nvi "C-c p" nil
     :nvi "C-i" nil
     :nvi "C-h" nil
@@ -78,7 +80,8 @@
   :n "j" #'evil-next-visual-line
   ;; :n "j" (lambda nil (interactive) (scroll-up-command 1))
   ;; :n "k" (lambda nil (interactive) (scroll-down-command 1))
-  :i "C-c =" #'helm-flyspell-correct
+  :i "C-c S" #'company-ispell
+  :ni "C-c =" #'helm-flyspell-correct
   :nv "C-e" #'evil-end-of-line-or-visual-line
   :i "M-h" #'org-beginning-of-line
   :i "M-l" #'org-end-of-line
@@ -92,8 +95,8 @@
   :i "C-j" #'next-line
   :i "C-l" #'right-word
   :i "C-h" #'left-word
-  :i "C-z" #'evil-undo
-  :i "C-y" #'evil-redo
+  :nvi "C-z" #'evil-undo
+  :nvi "C-y" #'evil-redo
   )
 
  (map!
@@ -256,6 +259,8 @@
  :nv "C-h" #'windmove-left
  :nv "C-j" #'windmove-down
  :nv "C-k" #'windmove-up
+ :nvi "C-c l" #'toggle-input-method
+ :nvi "M-;" #'toggle-input-method
 
  :map vterm-mode-map
  :nv "p" #'term-paste
@@ -287,6 +292,7 @@
  :nvi "C-h" #'windmove-left
  :nvi "C-j" #'windmove-down
  :nvi "C-k" #'windmove-up
+ :ni "]]" #'org-roam-node-insert
  )
 
 ;; (map!
@@ -341,6 +347,7 @@
        :n "ESC" #'+workspace/close-window-or-workspace)
       (:map matlab-mode-map
        :desc "eval buffer" :n "eb" #'(lambda () (interactive) (evil-goto-first-line) (evil-visual-line) (evil-goto-line) (matlab-shell-run-region))
+       :desc "eval line" :n "el" #'(lambda () (interactive) (evil-visual-line) (matlab-shell-run-region))
        :desc "eval region" :n "er" #'matlab-shell-run-region
        :n "f" #'matlab-shell-help-at-point))
 
@@ -373,6 +380,8 @@
         :desc "orgnv" "g" #'orgnv-browse
         :desc "orgnv + rebuild DB" "G" #'(lambda () (interactive) (my/orgnv-update-db) (orgnv-browse))
         :desc "kill all other windows" "o" 'delete-other-windows
+        :desc "resize window to small" "f" 'my/make-small-frame
+        :desc "make new frame" "F" 'make-frame-command
         :desc "writeroom mode" "w" #'writeroom-mode
         :desc "kill buffer and window" "W" '+workspace/close-window-or-workspace
         :desc "kill buffer" "d" 'kill-current-buffer
@@ -443,13 +452,18 @@
 
 
 (map! :map org-mode-map
+   :nvi "C-c  C-y" #'evil-yank
+   :nvi "C-c  C-x" #'evil-delete
    :nvi "C-c  c" #'evil-yank
-   :nvi "C-c  x" #'evil-delete
-   :nvi "C-c  v" #'consult-yank-from-kill-ring
    :nvi "C-c  y" #'evil-yank
-   :nvi "C-c  p" #'consult-yank-from-kill-ring
+   :nvi "C-c  x" #'evil-delete
+   ;; :nvi "C-c  v" #'consult-yank-from-kill-ring
+   :nvi "C-c  v" #'helm-show-kill-ring
+   :nvi "C-c  p" #'evil-paste-after
+   :nvi "C-c  P" #'evil-paste-from-register
    )
 (map!
+   :nvi "C-;" #'embark-act
    :nvi "C-c  c" #'evil-yank
    :nvi "C-c  v" #'consult-yank-from-kill-ring
    :nvi "C-c  y" #'evil-yank
@@ -467,10 +481,13 @@
    :nvi "C-c  o" #'(lambda () (interactive) (org-agenda nil "o"))
    ;; :i "C-c p" #'consult-yank-from-kill-ring
    ;; :i "C-c y" #'evil-yank
-   :ni "C-c I" #'org-ref-insert-cite-link
+   :ni "C-c I" #'org-cite-insert
+   ;; :ni "C-c I" #'org-ref-insert-cite-link
    :ni "C-c ]" #'org-roam-node-insert
    ;; :ni "C-c I" #'org-cite-insert
 
+   :nvi "M-j" #'drag-stuff-down
+   :nvi "M-k" #'drag-stuff-up
  )
 
   (map! :map vertico-map
@@ -495,4 +512,9 @@
 
 (defun make-bold()
 (interactive)
-(if (use-region-p) (evil-surround-region (region-beginning) (region-end) "block" "*")))
+(if (use-region-p) (evil-surround-region (region-beginning) (region-end) t *)))
+
+(map!
+ (:when (featurep! :editor multiple-cursors)
+  :prefix "g"
+  :nv "z" #'my/mc-hydra/body))
