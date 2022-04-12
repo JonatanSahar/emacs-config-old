@@ -490,6 +490,28 @@ same directory as the org-buffer and insert a link to this file."
        "Error pasting the image, make sure you have an image in the clipboard!"))
     ))
 
+(defun my/org-paste-screenshot-windows-path ()
+  "Paste an image into a time stamped unique-named file in the
+same directory as the org-buffer and insert a link to this file."
+  (interactive)
+  (let* ((target-file
+          (concat
+           (make-temp-name
+            (concat (buffer-file-name)
+                    "_"
+                    (format-time-string "%Y%m%d_%H%M%S_"))) ".png"))
+         (wsl-path
+          (concat (as-windows-path(file-name-directory (shell-quote-argument target-file))) "\\" (file-name-nondirectory target-file)))
+         (ps-script
+          (concat "(Get-Clipboard -Format image).Save('" wsl-path "')")))
+    (powershell ps-script)
+
+    (if (file-exists-p target-file)
+        (progn (insert (concat "[[" wsl-path "]]"))
+               );; (org-display-inline-images))
+      (user-error
+       "Error pasting the image, make sure you have an image in the clipboard!"))
+    ))
 (defun as-windows-path (unix-path)
   ;; "Takes a unix path and returns a matching WSL path
 ;; (e.g. \\wsl$\Ubuntu-20.04\tmp)"
@@ -504,6 +526,7 @@ same directory as the org-buffer and insert a link to this file."
                 "-Command" (concat "& {" script "}")))
 
 (global-set-key "\C-cs" #'my/org-paste-screenshot)
+(global-set-key "\C-cS" #'my/org-paste-screenshot-windows-path)
 
 (defun org-html-export-to-mhtml (async subtree visible body)
   (cl-letf (((symbol-function 'org-html--format-image) 'format-image-inline))
@@ -532,25 +555,48 @@ same directory as the org-buffer and insert a link to this file."
   "
 ^Match^            ^Line-wise^           ^Manual^
 ^^^^^^----------------------------------------------------
-_Z_: match all     _J_: make & go down   _z_: toggle here
-_m_: make & next   _K_: make & go up     _r_: remove last
-_M_: make & prev   ^ ^                   _R_: remove all
-_n_: skip & next   ^ ^                   _p_: pause/resume
-_N_: skip & prev
+_Z_: match all     _j_: make & go down   _z_: toggle here
+_n_: make & next   _k_: make & go up     _r_: remove last
+_N_: make & prev   ^ ^                   _R_: remove all
+_s_: skip & next   ^ ^                   _p_: pause/resume
+_S_: skip & prev
 
 Current pattern: %`evil-mc-pattern
 
 "
+  ;; (setq evil-mc-pattern (buffer-substring region-beginning region-end))
+
   ("Z" #'evil-mc-make-all-cursors)
-  ("m" #'evil-mc-make-and-goto-next-match)
-  ("M" #'evil-mc-make-and-goto-prev-match)
-  ("n" #'evil-mc-skip-and-goto-next-match)
-  ("N" #'evil-mc-skip-and-goto-prev-match)
-  ("J" #'evil-mc-make-cursor-move-next-line)
-  ("K" #'evil-mc-make-cursor-move-prev-line)
-  ("z" #'+multiple-cursors/evil-mc-toggle-cursor-here)
+  ("n" #'evil-mc-make-and-goto-next-match)
+  ("N" #'evil-mc-make-and-goto-prev-match)
+  ("s" #'evil-mc-skip-and-goto-next-match)
+  ("S" #'evil-mc-skip-and-goto-prev-match)
+  ("k" #'evil-mc-make-cursor-move-next-line)
+  ("j" #'evil-mc-make-cursor-move-prev-line)
+  ("z" #'my/make-cursor-here)
   ("r" #'+multiple-cursors/evil-mc-undo-cursor)
   ("R" #'evil-mc-undo-all-cursors)
   ("p" #'+multiple-cursors/evil-mc-toggle-cursors)
   ("q" #'evil-mc-resume-cursors "quit" :color blue)
   ("<escape>" #'evil-mc-resume-cursors "quit" :color blue))
+
+(defun my/revert-buffer-no-confirm ()
+    "Revert buffer without confirmation."
+    (interactive)
+    (revert-buffer :ignore-auto :noconfirm))
+
+(shell-command-to-string "wslpath -w '/mnt/g/My Drive/notes/gtd/inbox.org_20220410_170636_v4R344.png'")
+
+(defun my/make-cursor-here ()
+  (interactive)
+  (+multiple-cursors/evil-mc-toggle-cursor-here)
+  (evil-mc-pause-cursors))
+
+;; (defun my/make-cursor-and-next-match ()
+;;   (interactive)
+;;   (evil-mc-make-and-goto-next-match)
+;;   (evil-mc-pause-cursors)
+;;    (forward-word)
+;;    (let ((end (point)))
+;;       (backward-word)
+;;       (region- (point) end) )

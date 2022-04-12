@@ -306,6 +306,7 @@
 
 (map! :prefix "zz"
       :map org-mode-map
+      :nv "0" #'anki-editor-reset-cloze-number
       :nv "n" #'anki-editor-cloze-region-auto-incr
       :nv "N" #'anki-editor-cloze-region-dont-incr
       :nv "c" #'anki-editor-cloze-word-under-cursor-auto-incr
@@ -359,10 +360,22 @@
         ;; (:line ("yank" . "y")
         ;;  :desc "header content" "y" #'my/visual-inside-org-header)
 
+        (:prefix ("b")
+               :desc "reload buffer" "r" #'my/revert-buffer-no-confirm
+               :desc "revert buffer" "R" #'revert-buffer
+          )
         (:prefix ("i" . "insert stuff")
+                :desc "make evil-mc-cursor here" "c" #'my/make-cursor-here
                 :desc "add line above" "k" #'+evil/insert-newline-above
                 :desc "add line below" "j" #'+evil/insert-newline-below
                  ;; :desc "surround object with bold"  "sb" (kbd "jkysio*"))
+                (:prefix ("a" . "anki cloze")
+                     :map org-mode-map
+                     :nv "0" #'anki-editor-reset-cloze-number
+                     :nv "C" #'anki-editor-cloze-region-auto-incr
+                     :nv "c" #'anki-editor-cloze-region-dont-incr
+                     :nv "w" #'anki-editor-cloze-word-under-cursor-auto-incr
+                 )
                 (:prefix ("l" . "latex symbols")
                   :desc "right double arrow"  "r" (kbd "$\\Rightarrow$"))
                 (:prefix ("s" . "surround stuff")
@@ -388,13 +401,22 @@
         :desc "switch to previous buffer" "k" 'evil-switch-to-windows-last-buffer
         :desc "search and replace vim style" "s" #'(lambda () (interactive) (evil-ex "%s/"))
         :desc "search and replace vim style - in region" "S" #'my/search-replace-in-region
-        :desc "refile subtree" "r" 'org-refile
+        :desc "refile subtree" "R" 'org-refile
         :desc "paste from kill-ring" "p" 'consult-yank-from-kill-ring
         ;; :desc "paste from kill-ring" "p" 'helm-show-kill-ring
-        :desc "helm org rifle" "R" 'helm-org-rifle
+        ;; :desc "helm org rifle" "R" 'helm-org-rifle
         :desc "run macro" "e" #'kmacro-end-and-call-macro
         :desc "generate laTex previews" "L" #'org-latex-preview
-                (:prefix ("b" . "references")
+        (:prefix ("r" . "rectangle operations")
+         "r" #'replace-rectangle
+         :desc "paste rectangle" "p" #'yank-rectangle
+         :desc "copy rectangle" "y"  #'copy-rectangle-as-kill
+         :desc "cut rectangle" "x"  #'kill-rectangle
+         :desc "push rectangle right" "r"  #'open-rectangle
+         :desc "delete rectangle" "d"  #'clear-rectangle
+         )
+         (:prefix ("b" . "references")
+
                 :desc "refresh bibliography" "r" #'citar-refresh
                 :desc "open bibliography" "b" #'citar-open
                 )
@@ -486,6 +508,8 @@
    :ni "C-c ]" #'org-roam-node-insert
    ;; :ni "C-c I" #'org-cite-insert
 
+   :ni "C-S-j" #'evil-mc-make-cursor-move-next-line
+   :ni "C-S-k" #'evil-mc-make-cursor-move-prev-line
    :nvi "M-j" #'drag-stuff-down
    :nvi "M-k" #'drag-stuff-up
  )

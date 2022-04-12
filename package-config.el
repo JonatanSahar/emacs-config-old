@@ -147,7 +147,7 @@
                               ("A" "Anki close"
                                entry
                                (file+headline org-my-anki-file "Waiting for export")
-                               "* %<%H:%M> \n:PROPERTIES:\n:ANKI_NOTE_TYPE: Cloze\n:ANKI_DECK: %^{deck?|School|Master|Research}\n:END:\n** Text\n\t%i%?\n** Extra\n\t- source:")
+                               "* %<%H:%M> \n:PROPERTIES:\n:ANKI_NOTE_TYPE: Cloze\n:ANKI_DECK: School\n:END:\n** Text\n\t%?\n** Extra\n\t- source:")
 
                               )
     )
