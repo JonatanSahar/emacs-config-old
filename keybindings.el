@@ -350,7 +350,9 @@
        :desc "eval buffer" :n "eb" #'(lambda () (interactive) (evil-goto-first-line) (evil-visual-line) (evil-goto-line) (matlab-shell-run-region))
        :desc "eval line" :n "el" #'(lambda () (interactive) (evil-visual-line) (matlab-shell-run-region))
        :desc "eval region" :n "er" #'matlab-shell-run-region
-       :n "f" #'matlab-shell-help-at-point))
+       :n "f" #'matlab-shell-help-at-point
+       :n "s" #'matlab-shell
+       ))
 
 (map! :leader
         (:prefix ("j" . "navigation")
