@@ -85,8 +85,8 @@
   :nv "C-e" #'evil-end-of-line-or-visual-line
   :i "M-h" #'org-beginning-of-line
   :i "M-l" #'org-end-of-line
-  :i "C-S-k" #'right-char
-  :i "C-S-j" #'left-char
+  :i "C-S-k" #'previous-line
+  :i "C-S-j" #'next-line
   :i "C-S-l" #'right-char
   :i "C-S-h" #'left-char
   :i "C-'" #'right-char
@@ -259,7 +259,7 @@
  :nv "C-h" #'windmove-left
  :nv "C-j" #'windmove-down
  :nv "C-k" #'windmove-up
- :nvi "C-c l" #'toggle-input-method
+ ;; :nvi "C-c l" #'toggle-input-method
  :nvi "M-;" #'toggle-input-method
 
  :map vterm-mode-map
@@ -510,8 +510,8 @@
    :ni "C-c ]" #'org-roam-node-insert
    ;; :ni "C-c I" #'org-cite-insert
 
-   :ni "C-S-j" #'evil-mc-make-cursor-move-next-line
-   :ni "C-S-k" #'evil-mc-make-cursor-move-prev-line
+   :n "C-S-j" #'evil-mc-make-cursor-move-next-line
+   :n "C-S-k" #'evil-mc-make-cursor-move-prev-line
    :nvi "M-j" #'drag-stuff-down
    :nvi "M-k" #'drag-stuff-up
  )

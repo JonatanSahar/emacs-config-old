@@ -16,7 +16,7 @@
 
 (use-package! org-superstar
   :config
-  (setq org-superstar-headline-bullets-list '("○" "●" "✿" "►" "✸")
+  (setq org-superstar-headline-bullets-list '("\u200b" "\u200b" "●" "○" "✿" "►" "✸")
         inhibit-compacting-font-caches t)
   )
 

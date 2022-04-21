@@ -10,7 +10,7 @@
                             (nil (warn "Cannot find a Sans Serif Font.  Install Source Sans Pro."))
                             )
 
-      base-font-color     (face-foreground 'default nil 'default)
+      ;; base-font-color     (face-foreground 'default nil 'default)
       headline           `(:inherit default :weight normal))
       ;; headline           `(:inherit default :weight normal :foreground ,base-font-color))
 
@@ -30,8 +30,8 @@
                         `(org-level-5 ((t (,@headline ,@variable-tuple :height 1.01))))
                         `(org-level-4 ((t (,@headline ,@variable-tuple :height 1.01))))
                         `(org-level-3 ((t (,@headline ,@variable-tuple :height 1.01))))
-                        `(org-level-2 ((t (,@headline ,@variable-tuple :height 1.01))))
-                        `(org-level-1 ((t (,@headline ,@variable-tuple :height 1.05 :weight bold))))
+                        `(org-level-2 ((t (,@headline ,@variable-tuple :height 1.02 :weight SemiBold))))
+                        `(org-level-1 ((t (,@headline ,@variable-tuple :height 1.05 :weight SemiBold))))
                         `(org-document-title ((t (,@headline ,@variable-tuple :height 1.15 :underline nil)))))
 
 ;; (custom-theme-set-faces 'user

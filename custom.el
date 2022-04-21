@@ -19,7 +19,6 @@
  '(line-number ((t (:inherit default :foreground "#6599bf" :strike-through nil :underline nil :slant normal :weight normal :height 174 :width normal :foundry "ADBO" :family "Source Code Pro"))))
  '(line-number-current-line ((t (:inherit (hl-line default) :foreground "#bbc2cf" :strike-through nil :underline nil :slant normal :weight normal :height 174 :width normal :foundry "ADBO" :family "Source Code Pro"))))
  '(magit-section ((t (:family "NotoSans" :height 220))))
- '(magit-section-highlight ((t (:family "NotoSans" :height 170))))
  '(org-default ((t (:family "NotoSans" :height 170))))
  '(org-document-title ((t (:inherit default :weight normal :family "NotoSans" :height 1.15 :underline nil))))
  '(org-level-1 ((t (:inherit default :weight normal :family "NotoSans" :height 1.05 :weight bold))))
