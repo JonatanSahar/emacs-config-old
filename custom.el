@@ -8,7 +8,7 @@
  '(helm-ag-success-exit-status '(0 2))
  '(matlab-shell-command-switches '("-nodesktop -nosplash -nodisplay"))
  '(org-agenda-files
-   '("/home/jonathan/google_drive/notes/gtd/projects.org" "/home/jonathan/google_drive/notes/gtd/inbox.org" "/home/jonathan/google_drive/notes/gtd/someday.org" "/home/jonathan/google_drive/notes/gtd/writing_inbox.org")))
+   '("/mnt/g/My Drive/notes/slip-box/2022-04-22-151735-convolution.org" "/home/jonathan/google_drive/notes/gtd/inbox.org" "/home/jonathan/google_drive/notes/gtd/projects.org" "/home/jonathan/google_drive/notes/gtd/someday.org" "/home/jonathan/google_drive/notes/gtd/writing_inbox.org")))
 
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
@@ -21,8 +21,8 @@
  '(magit-section ((t (:family "NotoSans" :height 220))))
  '(org-default ((t (:family "NotoSans" :height 170))))
  '(org-document-title ((t (:inherit default :weight normal :family "NotoSans" :height 1.15 :underline nil))))
- '(org-level-1 ((t (:inherit default :weight normal :family "NotoSans" :height 1.05 :weight bold))))
- '(org-level-2 ((t (:inherit default :weight normal :family "NotoSans" :height 1.01))))
+ '(org-level-1 ((t (:inherit default :weight normal :family "NotoSans" :height 1.05 :weight SemiBold))))
+ '(org-level-2 ((t (:inherit default :weight normal :family "NotoSans" :height 1.02 :weight SemiBold))))
  '(org-level-3 ((t (:inherit default :weight normal :family "NotoSans" :height 1.01))))
  '(org-level-4 ((t (:inherit default :weight normal :family "NotoSans" :height 1.01))))
  '(org-level-5 ((t (:inherit default :weight normal :family "NotoSans" :height 1.01))))

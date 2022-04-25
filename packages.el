@@ -123,5 +123,6 @@
 
 ;; code related
 (package! matlab-mode)
+(package! lsp-pyright)
 (package! virtualenvwrapper)
 (package! company-statistics)

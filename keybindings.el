@@ -26,6 +26,7 @@
     :nvi "M-q" nil
     :nvi "C-c p" nil
     :nvi "M-l" nil
+    :nvi "C-v" nil
 
     (:map org-mode-map
     :nv "j" nil
@@ -48,6 +49,7 @@
     :n "zl" nil
     :n "zl" nil
 
+    :nvi "C-v" nil
     :nvi "M-l" nil
     :nvi "C-c p" nil
     :nvi "C-i" nil
@@ -490,6 +492,7 @@
    :nvi "C-;" #'embark-act
    :nvi "C-c  c" #'evil-yank
    :nvi "C-c  v" #'consult-yank-from-kill-ring
+   :nvi "C-v" #'evil-paste-after
    :nvi "C-c  y" #'evil-yank
    :nvi "C-c  p" #'consult-yank-from-kill-ring
    :nvi "C-c  u" #'evil-undo
@@ -544,3 +547,6 @@
  (:when (featurep! :editor multiple-cursors)
   :prefix "g"
   :nv "z" #'my/mc-hydra/body))
+
+;; (map! :map
+;;    :i "RETURN" #'comint-send-input)

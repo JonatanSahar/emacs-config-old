@@ -172,9 +172,11 @@
 (font-lock-add-keywords nil '(("\"\\(\\(?:.\\|\n\\)*?[^\\]\\)\"" 0 font-lock-string-face)))
 (add-hook! org-agenda-mode #'writeroom-mode)
 (add-hook! org-roam-mode #'visual-line-mode)
-(add-hook! org-mode #'flyspell-mode #'org-superstar-mode #'my/org-mode-hook) ;; #'org-hide-properties)
+(add-hook! org-mode #'flyspell-mode #'org-superstar-mode #'writeroom-mode #'my/org-mode-hook) ;; #'org-hide-properties)
 (add-hook 'text-mode-hook (lambda ()
                             (setq bidi-paragraph-direction nil)
+                            (setq bidi-paragraph-start-re  "^")
+                            (setq bidi-paragraph-separate-re  "^")
                             (setq helm-ff-fuzzy-matching t)
                             (setq captain-predicate (lambda () t))
 
@@ -334,3 +336,4 @@
 (add-to-list 'default-frame-alist '(width . 50))
 
 (setq org-id-link-to-org-use-id 'create-if-interactive)
+(setq python-shell-prompt-detect-failure-warning nil)

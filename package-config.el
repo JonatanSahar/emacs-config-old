@@ -56,7 +56,9 @@
     org-outline-path-complete-in-steps nil
     org-goto-interface 'outline-path-completion
     org-cycle-separator-lines 1
-
+    ;; org-image-actual-width nil
+    org-export-with-toc 'nil
+    org-image-actual-width (list 550)
     org-ellipsis "…"
     ;; ➡, ⚡, ▼, ↴, ∞, ⬎, ⤷, ⤵, …
     org-deadline-warning-days 7
@@ -989,3 +991,8 @@ With prefix, rebuild the cache before offering candidates."
         (funcall fn file)
       (message "No associated file"))))
   )
+
+(use-package! lsp-pyright
+  :hook (python-mode . (lambda ()
+                          (require 'lsp-pyright)
+                          (lsp))))  ; or lsp-deferred
