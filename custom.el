@@ -8,7 +8,7 @@
  '(helm-ag-success-exit-status '(0 2))
  '(matlab-shell-command-switches '("-nodesktop -nosplash -nodisplay"))
  '(org-agenda-files
-   '("/mnt/g/My Drive/notes/slip-box/2022-04-22-151735-convolution.org" "/home/jonathan/google_drive/notes/gtd/inbox.org" "/home/jonathan/google_drive/notes/gtd/projects.org" "/home/jonathan/google_drive/notes/gtd/someday.org" "/home/jonathan/google_drive/notes/gtd/writing_inbox.org")))
+   '("/mnt/g/My Drive/notes/slip-box/2022-04-30-181309-mvpa.org" "/mnt/g/My Drive/notes/slip-box/2022-04-30-171457-correlation_time_series.org" "/mnt/g/My Drive/notes/slip-box/2022-04-22-151735-convolution.org" "/home/jonathan/google_drive/notes/gtd/inbox.org" "/home/jonathan/google_drive/notes/gtd/projects.org" "/home/jonathan/google_drive/notes/gtd/someday.org" "/home/jonathan/google_drive/notes/gtd/writing_inbox.org")))
 
 (custom-set-faces
  ;; custom-set-faces was added by Custom.

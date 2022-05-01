@@ -348,6 +348,12 @@
       (:map matlab-shell-mode-map
        :n "~" #'+workspace/close-window-or-workspace
        :n "ESC" #'+workspace/close-window-or-workspace)
+
+      (:map python-mode-map
+       :desc "eval buffer" :n "eb" #'python-shell-send-buffer
+       :desc "eval file" :n "ef" #'python-shell-send-file
+       :desc "eval function" :n "ed" #'python-shell-send-defun
+       :desc "eval region" :n "er" #'python-shell-send-region)
       (:map matlab-mode-map
        :desc "eval buffer" :n "eb" #'(lambda () (interactive) (evil-goto-first-line) (evil-visual-line) (evil-goto-line) (matlab-shell-run-region))
        :desc "eval line" :n "el" #'(lambda () (interactive) (evil-visual-line) (matlab-shell-run-region))
@@ -480,23 +486,26 @@
 (map! :map org-mode-map
    :nvi "C-c  C-y" #'evil-yank
    :nvi "C-c  C-x" #'evil-delete
+   :nvi "C-c  C-d" #'evil-delete
    :nvi "C-c  c" #'evil-yank
    :nvi "C-c  y" #'evil-yank
-   :nvi "C-c  x" #'evil-delete
-   ;; :nvi "C-c  v" #'consult-yank-from-kill-ring
-   :nvi "C-c  v" #'helm-show-kill-ring
+   :nvi "C-c  v" #'consult-yank-from-kill-ring
    :nvi "C-c  p" #'evil-paste-after
-   :nvi "C-c  P" #'evil-paste-from-register
    )
 (map!
    :nvi "C-;" #'embark-act
    :nvi "C-c  c" #'evil-yank
    :nvi "C-c  v" #'consult-yank-from-kill-ring
-   :nvi "C-v" #'evil-paste-after
+   :nv "C-v" #'evil-paste-after
+   :i "C-v" #'evil-paste-before
    :nvi "C-c  y" #'evil-yank
-   :nvi "C-c  p" #'consult-yank-from-kill-ring
-   :nvi "C-c  u" #'evil-undo
+   :nvi "C-c  p" #'evil-paste-after
+   :nvi "C-c  P" #'evil-paste-before
    :nvi "C-c  C-r" #'evil-redo
+   :nvi "C-c  C-d" #'evil-delete
+   :nvi "C-c  x" #'evil-delete
+
+
    ;; :nvi "C-c  c" #'org-capture
    :nvi "C-c  m" #'my/evil-mc-make-vertical-cursors
    :nvi "C-c  H" #'my/visual-inside-org-header

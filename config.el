@@ -332,8 +332,10 @@
 ;; (advice-add #'completing-read-multiple :override #'conult-completing-read-multiple)
 (setq org-odt-preferred-output-format "docx")
 (defun my/make-small-frame () (interactive) (set-frame-size (selected-frame) 50 42))
+(defun my/make-large-frame () (interactive) (set-frame-size (selected-frame) 100 45))
 (add-to-list 'default-frame-alist '(height . 40))
 (add-to-list 'default-frame-alist '(width . 50))
 
 (setq org-id-link-to-org-use-id 'create-if-interactive)
 (setq python-shell-prompt-detect-failure-warning nil)
+(setq lsp-pylsp-plugins-flake8-max-line-length 90)

@@ -16,7 +16,7 @@
 
 (use-package! org-superstar
   :config
-  (setq org-superstar-headline-bullets-list '("\u200b" "\u200b" "●" "○" "✿" "►" "✸")
+  (setq org-superstar-headline-bullets-list '("\u200b" "\u200b" "○" "✿" "►" "➡" "✸" "●" )
         inhibit-compacting-font-caches t)
   )
 
@@ -488,6 +488,7 @@
   :config
   (setq
    writeroom-major-modes '(org-mode prog-mode)
+   writeroom-maximize-window nil
    writeroom-mode-line t
    writeroom-use-derived-modes t)
   ;; (global-writeroom-mode)
@@ -750,7 +751,7 @@
 (consult-customize
  consult-buffer consult-buffer-other-window consult-ripgrep consult-git-grep consult-grep
  consult-bookmark consult-recent-file consult-xref
- consult--source-file consult--source-project-file consult--source-bookmark
+ ;; consult--source-file consult--source-project-file consult--source-bookmark
  :preview-key (kbd "M-."))
   ;; Replace bindings. Lazily loaded due by `use-package!'.
   ;; :bind (;; C-c bindings (mode-specific-map)
