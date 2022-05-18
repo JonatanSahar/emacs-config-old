@@ -80,6 +80,7 @@
 
  org-my-anki-file (concat slip-box-dir "anki.org")
  org-capture-papers-file (concat slip-box-dir "2021-06-17-papers_by_subject.org")
+ org-capture-meeting-file (concat slip-box-dir "2020-10-22-meeting_summaries.org")
  org-capture-inbox-file (concat gtd-dir "inbox.org")
  org-capture-reminders-file (concat gtd-dir "reminders.org")
  org-capture-projects-file (concat gtd-dir "projects.org")
@@ -172,12 +173,11 @@
 (font-lock-add-keywords nil '(("\"\\(\\(?:.\\|\n\\)*?[^\\]\\)\"" 0 font-lock-string-face)))
 (add-hook! org-agenda-mode #'writeroom-mode)
 (add-hook! org-roam-mode #'visual-line-mode)
-(add-hook! org-mode #'flyspell-mode #'org-superstar-mode #'writeroom-mode #'my/org-mode-hook) ;; #'org-hide-properties)
+(add-hook! org-mode #'flyspell-mode #'org-superstar-mode  #'my/org-mode-hook) ;;#'writeroom-mode #'org-hide-properties)
 (add-hook 'text-mode-hook (lambda ()
                             (setq bidi-paragraph-direction nil)
                             (setq bidi-paragraph-start-re  "^")
                             (setq bidi-paragraph-separate-re  "^")
-                            (setq helm-ff-fuzzy-matching t)
                             (setq captain-predicate (lambda () t))
 
                             (visual-fill-column-mode 1)
@@ -186,8 +186,9 @@
                             (captain-mode 1)
                             (abbrev-mode 1)
                             (font-lock-mode 1)
-                            (my/set-faces)
-                            (my/org-font)
+                            (buffer-face-mode)
+                            ;; (my/set-faces)
+                            ;; (my/org-font)
                             ))
 
 (add-hook 'prog-mode-hook (lambda ()
@@ -197,10 +198,10 @@
 
 (evil-snipe-override-mode 1)
 
-(my/set-faces)
+;; (my/set-faces)
 
 (require 'org-download)
-(add-hook 'after-init-hook 'company-statistics-mode)
+;; (add-hook 'after-init-hook 'company-statistics-mode)
 
 (customize-set-value
  'org-agenda-category-icon-alist
@@ -281,7 +282,7 @@
 (set-input-method 'hebrew-full)
 
 (remove-hook 'after-save-hook #'ws-butler-after-save)   ;
-(add-hook 'after-init-hook 'company-statistics-mode)
+;; (add-hook 'after-init-hook 'company-statistics-mode)
 
 ;; (my-generic-ispell-company-complete-setup)
 
@@ -332,10 +333,23 @@
 ;; (advice-add #'completing-read-multiple :override #'conult-completing-read-multiple)
 (setq org-odt-preferred-output-format "docx")
 (defun my/make-small-frame () (interactive) (set-frame-size (selected-frame) 50 42))
-(defun my/make-large-frame () (interactive) (set-frame-size (selected-frame) 100 45))
+(defun my/make-medium-frame () (interactive) (set-frame-size (selected-frame) 90 42))
+(defun my/make-large-frame () (interactive) (set-frame-size (selected-frame) 120 42))
 (add-to-list 'default-frame-alist '(height . 40))
-(add-to-list 'default-frame-alist '(width . 50))
+(add-to-list 'default-frame-alist '(width . 90))
 
 (setq org-id-link-to-org-use-id 'create-if-interactive)
 (setq python-shell-prompt-detect-failure-warning nil)
 (setq lsp-pylsp-plugins-flake8-max-line-length 90)
+(setq which-key-idle-delay 2)
+
+(defmacro csetq (variable value)
+  `(funcall (or (get ',variable 'custom-set)
+                'set-default)
+            ',variable ,value))
+
+(setq ediff-forward-word-function 'forward-char)
+(setq global-company-mode nil)
+
+(global-company-mode -1)
+(load! "custom.el")

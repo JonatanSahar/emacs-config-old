@@ -1,6 +1,7 @@
 ;;; ~/.doom.d/keybindings.el -*- lexical-binding: t; -*-
 
 (map!
+"C-SPC" nil
     :i "C-z" nil
     :i  "C-k" nil
     :nv "E" nil
@@ -27,6 +28,7 @@
     :nvi "C-c p" nil
     :nvi "M-l" nil
     :nvi "C-v" nil
+    :v "C-c" nil
 
     (:map org-mode-map
     :nv "j" nil
@@ -49,6 +51,7 @@
     :n "zl" nil
     :n "zl" nil
 
+    :v "C-c" nil
     :nvi "C-v" nil
     :nvi "M-l" nil
     :nvi "C-c p" nil
@@ -121,7 +124,7 @@
               )
  :i "S-SPC" #'evil-force-normal-state
  :map evil-org-mode-map
- :i "C-SPC" #'consult-company
+ ;; :i "C-SPC" #'consult-company
  :ni "C-{" #'org-roam-node-insert)
 ;; :i "C-S-L" #'org-ref-insert-link)
 
@@ -496,14 +499,16 @@
    :nvi "C-;" #'embark-act
    :nvi "C-c  c" #'evil-yank
    :nvi "C-c  v" #'consult-yank-from-kill-ring
-   :nv "C-v" #'evil-paste-after
+   ;; :nv "C-v" #'evil-paste-after
    :i "C-v" #'evil-paste-before
    :nvi "C-c  y" #'evil-yank
    :nvi "C-c  p" #'evil-paste-after
    :nvi "C-c  P" #'evil-paste-before
+   :nvi "M-p" #'evil-paste-pop
    :nvi "C-c  C-r" #'evil-redo
    :nvi "C-c  C-d" #'evil-delete
    :nvi "C-c  x" #'evil-delete
+   :nvi "C-x  x" #'evil-delete
 
 
    ;; :nvi "C-c  c" #'org-capture
@@ -532,7 +537,7 @@
         "C-." #'embark-act
         "C-," #'embark-become
         "C-/" #'embark-export
-        "C-a" #'my/embark-ace-action
+        "C-a" #'embark-act
         "C-b" #'embark-become
         "C-e" #'embark-export
         "C-j" #'vertico-previous
@@ -559,3 +564,11 @@
 
 ;; (map! :map
 ;;    :i "RETURN" #'comint-send-input)
+ (map! :map corfu-map
+        "M-d" #'corfu-show-documentation
+        "M-l" #'corfu-show-location
+        "TAB"  #'corfu-next
+        "C-j"  #'corfu-next
+        "C-k"  #'corfu-previous
+        "S-TAB"  #'corfu-previous
+        "C-SPC"  #'corfu-insert-separator)

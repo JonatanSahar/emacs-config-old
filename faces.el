@@ -18,9 +18,13 @@
                         ;; `(line-number ((t (:inherit default :foreground "#9fa6b" :strike-through nil :underline nil :slant normal :weight normal :height 174 :width normal :foundry "ADBO" :family "Source Code Pro"))))
                         ;; `(line-number-current-line ((t (:inherit (hl-line default) :foreground "#bbc2cf" :strike-through nil :underline nil :slant normal :weight normal :height 174 :width normal :foundry "ADBO" :family "Source Code Pro"))))
 (custom-theme-set-faces 'user
-                        `(line-number ((t (:inherit default :foreground "#6599bf" :strike-through nil :underline nil :slant normal :weight normal :height 174 :width normal :foundry "ADBO" :family "Source Code Pro"))))
-                        ;; `(line-number ((t (:inherit default :foreground "#3f444a" :strike-through nil :underline nil :slant normal :weight normal :height 174 :width normal :foundry "ADBO" :family "Source Code Pro"))))
-                        `(line-number-current-line ((t (:inherit (hl-line default) :foreground "#bbc2cf" :strike-through nil :underline nil :slant normal :weight normal :height 174 :width normal :foundry "ADBO" :family "Source Code Pro"))))
+                        `(line-number ((t (:inherit default :foreground "#6599bf" :strike-through nil :underline nil :slant normal :weight normal :height 195 :width normal :foundry "ADBO" :family "Source Code Pro"))))
+                        ;; `(line-number ((t (:inherit default :foreground "#3f444a" :strike-through nil :underline nil :slant normal :weight normal :height 195 :width normal :foundry "ADBO" :family "Source Code Pro"))))
+                        `(line-number-current-line ((t (:inherit (hl-line default) :foreground "#bbc2cf" :strike-through nil :underline nil :slant normal :weight normal :height 195 :width normal :foundry "ADBO" :family "Source Code Pro"))))
+;; (custom-theme-set-faces 'user
+;;                         `(line-number ((t ((:inherit default :weight normal ,@variable-tuple :height 174)))))
+;;                         ;; `(line-number ((t (:inherit default :foreground "#3f444a" :strike-through nil :underline nil :slant normal :weight normal :height 174 :width normal :foundry "ADBO" :family "Source Code Pro"))))
+;;                         `(line-number-current-line ((t (:inherit (hl-line default) :foreground "#bbc2cf" :weight normal ,@variable-tuple :height 174)))))
 )
 
 (custom-theme-set-faces 'user
@@ -46,9 +50,9 @@
 ;; '(default ((t (:family "NotoMono" :height 170))))
 ;; )
 
-(custom-theme-set-faces 'user
-'(default ((t (:family "NotoMono" :height 170))))
-'(org-default ((t (:family "NotoSans" :height 170))))
-;; '(magit-section-highlight ((t (:family "NotoMono" :height 220))))
-)
+;; (custom-theme-set-faces 'user
+;; '(default ((t (:family "NotoMono" :height 170 :weight Light))))
+;; '(org-default ((t (:family "NotoSans" :height 170 :weight Light))))
+;; ;; '(magit-section-highlight ((t (:family "NotoMono" :height 220))))
+;; )
 )

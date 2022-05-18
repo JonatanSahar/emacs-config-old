@@ -1,13 +1,13 @@
 ;;; ~/.doom.d/package-config.el -*- lexical-binding: t; -*-
-(use-package! deft
-  :config
-  (setq deft-extensions '("txt" "tex" "org")
-        deft-directory slip-box-dir
-        ;; deft-strip-title-regexp ":PROPERTIES:\n\\(.+\n\\)+:END:\n#+title:"
-        deft-strip-summary-regexp ":PROPERTIES:\n\\(.+\n\\)+:END:\n#+.*"
-        deft-use-filename-as-title t
-        deft-recursive t)
-  )
+;; (use-package! deft
+;;   :config
+;;   (setq deft-extensions '("txt" "tex" "org")
+;;         deft-directory slip-box-dir
+;;         ;; deft-strip-title-regexp ":PROPERTIES:\n\\(.+\n\\)+:END:\n#+title:"
+;;         deft-strip-summary-regexp ":PROPERTIES:\n\\(.+\n\\)+:END:\n#+.*"
+;;         deft-use-filename-as-title t
+;;         deft-recursive t)
+;;   )
 
 (use-package! org-pomodoro
   :config
@@ -127,6 +127,11 @@
                              (file+headline org-capture-papers-file "Misc")
                              "* TODO %? %i")
 
+                            ("m" "meeting notes"
+                             entry
+                             (file org-capture-meeting-file )
+                             "* %<%D, %H:%M> - meeting with %?")
+
                             ("n" "Note"
                                entry
                                (file+headline org-capture-writing-inbox-file "Notes")
@@ -192,7 +197,7 @@
   (setq org-roam-mode-sections
         (list #'org-roam-backlinks-insert-section
               #'org-roam-reflinks-insert-section
-              ;; #'org-roam-unlinked-references-insert-section
+              #'org-roam-unlinked-references-insert-section
               ))
 
   (setq org-roam-capture-templates
@@ -997,3 +1002,186 @@ With prefix, rebuild the cache before offering candidates."
   :hook (python-mode . (lambda ()
                           (require 'lsp-pyright)
                           (lsp))))  ; or lsp-deferred
+(use-package dabbrev
+  ;; Swap M-/ and C-M-/
+  :bind (("M-/" . dabbrev-completion)
+         ("C-M-/" . dabbrev-expand))
+  ;; Other useful Dabbrev configurations.
+  :custom
+  (dabbrev-ignored-buffer-regexps '("\\.\\(?:pdf\\|jpe?g\\|png\\)\\'")))
+
+
+(use-package emacs
+  :init
+  ;; TAB cycle if there are only few candidates
+  (setq completion-cycle-threshold 3)
+
+  ;; Emacs 28: Hide commands in M-x which do not apply to the current mode.
+  ;; Corfu commands are hidden, since they are not supposed to be used via M-x.
+  ;; (setq read-extended-command-predicate
+  ;;       #'command-completion-default-include-p)
+
+  ;; Enable indentation+completion using the TAB key.
+  ;; `completion-at-point' is often bound to M-TAB.
+  (setq tab-always-indent 'complete))
+
+(use-package orderless
+  :init
+  ;; Configure a custom style dispatcher (see the Consult wiki)
+  ;; (setq orderless-style-dispatchers '(+orderless-dispatch)
+  ;;       orderless-component-separator #'orderless-escapable-split-on-space)
+  (setq completion-styles '(orderless basic)
+        completion-category-defaults nil
+        completion-category-overrides '((file (styles . (partial-completion))))))
+(use-package corfu
+  :custom
+  (corfu-quit-at-boundary 'separator)
+  (corfu-auto nil)          ;; Enable auto completion
+  (corfu-separator ?\s) ;; Set to orderless separator, if not using space
+  (corfu-cycle t)             ;; Enable cycling for `corfu-next/previous'
+  (corfu-preselect-first t) ;; Disable candidate preselection
+  (corfu-auto-prefix 2)
+  (corfu-auto-delay 0.25)
+  (corfu-min-width 40)
+  ;; (corfu-max-width corfu-min-width)       ; Always have the same width
+
+  ;; (corfu-count 14)
+  (corfu-scroll-margin 4)
+  (corfu-echo-documentation t)
+  (corfu-preview-current nil)
+;; (lsp-completion-provider :none) ; Use corfu instead the default for lsp completions
+  ;; Use TAB for cycling, default is `corfu-complete'.
+  ;; :bind
+  (:map corfu-map
+        ("TAB" . corfu-next)
+        ([tab] . corfu-next)
+        ("C-j" . corfu-next)
+        ("C-k" . corfu-previous)
+        ("S-TAB" . corfu-previous)
+        ([backtab] . corfu-previous)
+        "C-SPC" . corfu-insert-separator)
+ ;; :states 'insert
+ ;;        : :states 'inserti "C-j" #'corfu-next
+ ;;        "C-SPC" #'corfu-insert-separator
+ ;;        "C-k" #'corfu-previous
+ ;;        "<escape>" #'corfu-quit
+ ;;        "<return>" #'corfu-insert
+ ;;        "m-d" #'corfu-show-documentation
+ ;;        "m-l" #'corfu-show-location
+ ;;        )
+;; :hook (lsp-completion-mode . kb/corfu-setup-lsp) ; Use corfu for lsp completion
+
+  ;; Another key binding can be used, such as S-SPC.
+  ;; (:map corfu-map ("M-SPC" . corfu-insert-separator))
+  :init
+  (global-corfu-mode)
+
+  :config
+  (advice-add 'corfu--setup :after 'evil-normalize-keymaps)
+  (advice-add 'corfu--teardown :after 'evil-normalize-keymaps)
+  (evil-make-overriding-map corfu-map)
+
+  (defun corfu-enable-always-in-minibuffer ()
+  "Enable Corfu in the minibuffer if Vertico/Mct are not active."
+  (unless (or (bound-and-true-p mct--active) ; Useful if I ever use MCT
+              (bound-and-true-p vertico--input))
+    (setq-local corfu-auto nil)       ; Ensure auto completion is disabled
+    (corfu-mode 1)))
+
+  ;; (add-hook 'minibuffer-setup-hook #'corfu-enable-always-in-minibuffer 1)
+
+  ;; (defun kb/corfu-setup-lsp ()
+  ;; "Use orderless completion style with lsp-capf instead of the
+  ;; default lsp-passthrough."
+  ;; (setf (alist-get 'styles (alist-get 'lsp-capf completion-category-defaults))
+  ;;       '(orderless)))
+ )
+
+;; ;; Manual completion example
+;; (use-package corfu
+;;   :custom
+;;   ;; (corfu-separator ?_) ;; Set to orderless separator, if not using space
+;;   :bind
+;;   ;; Configure SPC for separator insertion
+;;   (:map corfu-map ("SPC" . corfu-insert-separator))
+;;   :init
+;;   (global-corfu-mode))
+(use-package cape
+    :custom
+  (cape-dabbrev-min-length 3)
+
+  ;; :general (:prefix "M-c"              ; Choose a particular completion function
+  ;;                   "p" 'completion-at-point
+  ;;                   "t" 'complete-tag   ; etags
+  ;;                   "d" 'cape-dabbrev   ; basically `dabbrev-completion'
+  ;;                   "f" 'cape-file
+  ;;                   "k" 'cape-keyword
+  ;;                   "s" 'cape-symbol
+  ;;                   "a" 'cape-abbrev
+  ;;                   "i" 'cape-ispell
+  ;;                   "l" 'cape-line
+  ;;                   "w" 'cape-dict
+  ;;                   "\\" 'cape-tex
+  ;;                   "_" 'cape-tex
+  ;;                   "^" 'cape-tex
+  ;;                   "&" 'cape-sgml
+  ;;                   "r" 'cape-rfc1345)
+
+  :hook (
+         (emacs-lisp-mode .  kb/cape-capf-setup-elisp)
+         ;; (org-mode . kb/cape-capf-setup-org)
+         (text-mode . kb/cape-capf-setup-text)
+         ;; (lsp-completion-mode . kb/cape-capf-setup-lsp)
+         ;; (eshell-mode . kb/cape-capf-setup-eshell)
+         ;; (git-commit-mode . kb/cape-capf-setup-git-commit)
+         ;; (LaTeX-mode . kb/cape-capf-setup-latex)
+         ;; (sh-mode . kb/cape-capf-setup-sh)
+         )
+
+  :init
+  ;; Elisp
+  (defun kb/cape-capf-ignore-keywords-elisp (cand)
+    "Ignore keywords with forms that begin with \":\" (e.g.
+:history)."
+    (or (not (keywordp cand))
+        (eq (char-after (car completion-in-region--data)) ?:)))
+  (defun kb/cape-capf-setup-elisp ()
+    "Replace the default `elisp-completion-at-point'
+completion-at-point-function. Doing it this way will prevent
+disrupting the addition of other capfs (e.g. merely setting the
+variable entirely, or adding to list).
+
+Additionally, add `cape-file' as early as possible to the list."
+    (setf (elt (cl-member 'elisp-completion-at-point completion-at-point-functions) 0)
+          #'elisp-completion-at-point)
+    (add-to-list 'completion-at-point-functions #'cape-symbol)
+    ;; I prefer this being early/first in the list
+    (add-to-list 'completion-at-point-functions #'cape-file)
+)
+;; Org
+  (defun kb/cape-capf-setup-org ()
+    (interactive)
+    (require 'org-roam)
+    (if (org-roam-file-p)
+        (org-roam--register-completion-functions-h)
+      (let (result)
+        (dolist (element (list
+                          (cape-super-capf #'cape-ispell #'cape-dabbrev)
+                          )
+                         result)
+          (add-to-list 'completion-at-point-functions element)))
+      ))
+
+  (defun kb/cape-capf-setup-text ()
+    ;; I prefer this being early/first in the list
+    (add-to-list 'completion-at-point-functions #'cape-file)
+    (let (result)
+      (dolist (element (list
+                        (cape-super-capf #'cape-ispell #'cape-dabbrev)
+                        )
+                       result)
+        (add-to-list 'completion-at-point-functions element)))
+
+    )
+
+  )

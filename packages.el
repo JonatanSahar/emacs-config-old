@@ -113,6 +113,8 @@
 (package! consult-dir)
 (package! evil-better-visual-line)
 (package!  helm-bibtex)
+(package!  corfu)
+(package!  cape)
 (package!  bibtex-completion)
 ;; (when (featurep! :completion vertico)
 ;;   (package! citar :pin "08c6ca0e5b736de50a4d1db5a00ce01b4c2093eb"))
