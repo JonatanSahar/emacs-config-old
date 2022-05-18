@@ -16,7 +16,7 @@
 
 (use-package! org-superstar
   :config
-  (setq org-superstar-headline-bullets-list '("\u200b" "\u200b" "○" "✿" "►" "➡" "✸" "●" )
+  (setq org-superstar-headline-bullets-list '("\u200b" "\u200b" "○" "●" "✸" "○" "✿" "►" "●" )
         inhibit-compacting-font-caches t)
   )
 
@@ -720,7 +720,15 @@
   (setq! citar-file-note-org-include '(org-id org-roam-ref))
   (setq! citar-notes-paths literature-notes-dir)
   (setq! citar-library-paths bibliography-pdf-dir)
-  (setq citar-templates '((main . "${author editor:30}     ${date year issued:4}     ${title:48}")
+;;   (setq citar-templates '((main . "${author editor:30}     ${date year issued:4}     ${title:48}")
+;;                                    (suffix . "${tags keywords keywords:*}   ${=key= id:15}    ${=type=:12}")
+;;                                    (preview . "${author editor} (${year issued date}) ${title}, ${journal journaltitle publisher container-title collection-title}.\n")
+;;                                    (note . "Notes on ${author editor}, ${title}
+;; * general notes
+;; * summary and short reference
+;; * see also (notes, tags/ other papers):
+;; ")))
+  (setq citar-templates '((main . " ${title:48}    ${date year issued:4}     ${author editor:30}")
                                    (suffix . "${tags keywords keywords:*}   ${=key= id:15}    ${=type=:12}")
                                    (preview . "${author editor} (${year issued date}) ${title}, ${journal journaltitle publisher container-title collection-title}.\n")
                                    (note . "Notes on ${author editor}, ${title}
@@ -1051,7 +1059,7 @@ With prefix, rebuild the cache before offering candidates."
   (corfu-preview-current nil)
 ;; (lsp-completion-provider :none) ; Use corfu instead the default for lsp completions
   ;; Use TAB for cycling, default is `corfu-complete'.
-  ;; :bind
+;; bi kk
   (:map corfu-map
         ("TAB" . corfu-next)
         ([tab] . corfu-next)

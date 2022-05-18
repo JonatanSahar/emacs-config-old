@@ -1,7 +1,7 @@
 ;;; ~/.doom.d/keybindings.el -*- lexical-binding: t; -*-
 
 (map!
-"C-SPC" nil
+    :nvi "C-SPC" nil
     :i "C-z" nil
     :i  "C-k" nil
     :nv "E" nil
@@ -29,6 +29,7 @@
     :nvi "M-l" nil
     :nvi "C-v" nil
     :v "C-c" nil
+    :nvi "C-M i" nil
 
     (:map org-mode-map
     :nv "j" nil
@@ -55,6 +56,7 @@
     :nvi "C-v" nil
     :nvi "M-l" nil
     :nvi "C-c p" nil
+    :nvi "C-M i" nil
     :nvi "C-i" nil
     :nvi "C-h" nil
     :nvi "C-j" nil
@@ -96,8 +98,8 @@
   :i "C-S-h" #'left-char
   :i "C-'" #'right-char
   :i "C-;" #'left-char
-  :i "C-k" #'previous-line
-  :i "C-j" #'next-line
+  :i "C-k" #'evil-previous-visual-line
+  :i "C-j" #'evil-next-visual-line
   :i "C-l" #'right-word
   :i "C-h" #'left-word
   :nvi "C-z" #'evil-undo
@@ -468,24 +470,6 @@
 (define-key evil-normal-state-map (kbd "J") 'evil-join)
 (define-key evil-normal-state-map (kbd "K") 'join-line)
 
-;; (setq key-chord-two-keys-delay 0.5)
-;; (key-chord-define evil-insert-state-map "gj" #'evil-force-normal-state)
-;; (key-chord-define term-mode-map "jk" #'evil-force-normal-state)
-;; (key-chord-define evil-visual-state-map "jk" #'evil-force-normal-state)
-
-(global-set-key [f12] 'wordnut-search)
-(global-set-key [(control f12)] 'wordnut-lookup-current-word)
-(global-set-key [f11] 'flyspell-correct-at-point)
-
-(evil-define-key 'normal wordnut-mode-map (kbd "q") 'quit-window)
-(evil-define-key 'normal wordnut-mode-map (kbd "RET") 'wordnut-lookup-current-word)
-(evil-define-key 'normal wordnut-mode-map (kbd "h") 'wordnut-history-backward)
-(evil-define-key 'normal wordnut-mode-map (kbd "l") 'wordnut-history-forward)
-(evil-define-key 'normal wordnut-mode-map (kbd "H") 'wordnut-history-lookup)
-(evil-define-key 'normal wordnut-mode-map (kbd "/") 'wordnut-search)
-(evil-define-key 'normal wordnut-mode-map (kbd "o") 'wordnut-show-overview)
-
-
 (map! :map org-mode-map
    :nvi "C-c  C-y" #'evil-yank
    :nvi "C-c  C-x" #'evil-delete
@@ -494,6 +478,8 @@
    :nvi "C-c  y" #'evil-yank
    :nvi "C-c  v" #'consult-yank-from-kill-ring
    :nvi "C-c  p" #'evil-paste-after
+   :i "C-M i" #'completion-at-point
+   ;; :i "C-SPC" #'completion-at-point
    )
 (map!
    :nvi "C-;" #'embark-act
@@ -547,9 +533,6 @@
 ;;       :nvi "C-c p h" 'org-hide-properties
 ;;       :nvi "C-c p s" 'org-show-properties
 ;;       :nvi "C-c p t" 'org-toggle-properties)
- ;; (map! :map (evil-org-mode-map emacs-lisp-mode-map) :n "<up>" (lambda nil (scroll-down-command 1)))
- ;; (map! :map (evil-org-mode-map emacs-lisp-mode-map) :n "<up>" #'evil-scroll-line-up)
- ;; (map! :map (evil-org-mode-map emacs-lisp-mode-map) :n "<down>" #'evil-scroll-line-down)
 
 (setq scroll-preserve-screen-position 1)
 
@@ -564,11 +547,15 @@
 
 ;; (map! :map
 ;;    :i "RETURN" #'comint-send-input)
- (map! :map corfu-map
-        "M-d" #'corfu-show-documentation
-        "M-l" #'corfu-show-location
+(map! :map corfu-map
+      "C-SPC" nil)
+
+(map! :map corfu-map
+        ;; "M-d" #'corfu-show-documentation
+        ;; "M-l" #'corfu-show-location
         "TAB"  #'corfu-next
         "C-j"  #'corfu-next
         "C-k"  #'corfu-previous
         "S-TAB"  #'corfu-previous
+        "ESC"  #'corfu-quit
         "C-SPC"  #'corfu-insert-separator)
