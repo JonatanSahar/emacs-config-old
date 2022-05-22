@@ -35,6 +35,7 @@
     :nv "j" nil
     :nv "E" nil
     :nv "W" nil
+    :n "zc" nil
     :n "gz" nil
     :n "gh" nil
     :n "gj" nil
@@ -480,6 +481,8 @@
    :nvi "C-c  p" #'evil-paste-after
    :i "C-M i" #'completion-at-point
    ;; :i "C-SPC" #'completion-at-point
+   :n "zc" #'+org/toggle-fold
+   :n "zC" #'+org/close-fold
    )
 (map!
    :nvi "C-;" #'embark-act
@@ -545,17 +548,25 @@
   :prefix "g"
   :nv "z" #'my/mc-hydra/body))
 
-;; (map! :map
-;;    :i "RETURN" #'comint-send-input)
-(map! :map corfu-map
+(map!
+      "C-n" nil
+      "C-p" nil
       "C-SPC" nil)
 
 (map! :map corfu-map
-        ;; "M-d" #'corfu-show-documentation
-        ;; "M-l" #'corfu-show-location
-        "TAB"  #'corfu-next
-        "C-j"  #'corfu-next
-        "C-k"  #'corfu-previous
-        "S-TAB"  #'corfu-previous
-        "ESC"  #'corfu-quit
-        "C-SPC"  #'corfu-insert-separator)
+      ;; "M-d" #'corfu-show-documentation
+      ;; "M-l" #'corfu-show-location
+      "C-n"  #'corfu-next
+      "C-p"  #'corfu-previous
+      "C-j"  #'corfu-next
+      "C-k"  #'corfu-previous
+      ;; "TAB"  #'corfu-next
+      ;; "S-TAB"  #'corfu-previous
+      "C-SPC"  #'completion-at-point
+      "ESC"  #'corfu-quit
+      "#"  #'corfu-insert-separator)
+      ;; "C-SPC"  #'corfu-insert-separator)
+
+(map! :i "C-SPC" #'completion-at-point)
+(map! :map org-mode-map :in "C-c u" #'org-previous-visible-heading)
+(map! :map org-mode-map :in "C-c U" #'outline-up-heading)

@@ -13,7 +13,9 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(default ((t (:inherit nil :extend nil :stipple nil :background "#fafafa" :foreground "#383a42" :weight regular :height 180 :width normal :foundry "GOOG" :family "RobotoMono"))))
+
+ '(default ((t (:inherit nil :extend nil :stipple nil  :weight regular :height 180 :width normal :foundry "GOOG" :family "NotoMono"))))
+ ;; '(default ((t (:inherit nil :extend nil :stipple nil  :weight regular :height 180 :width normal :foundry "GOOG" :family "RobotoMono"))))
  '(line-number ((t (:inherit default :foreground "#6599bf" :weight normal :height 170 :width normal :foundry "GOOG" :family "RobotoMono"))))
  '(line-number-current-line ((t (:inherit (hl-line default) :foreground "#bbc2cf" :weight normal :height 170 :width normal :foundry "GOOG" :family "RobotoMono"))))
  '(org-default ((t (:inherit variable-pitch :weight Light :height 1.0 :family "NotoSans"))))
