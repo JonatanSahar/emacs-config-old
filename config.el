@@ -166,6 +166,7 @@
 
 (defun my/org-mode-hook()
           (interactive)
+          (my/org-hide-properties-display)
           (setq after-save-hook '(flycheck-handle-save t ))
           (sp-pair "$" "$")
 )
@@ -339,8 +340,12 @@
 (add-to-list 'default-frame-alist '(width . 90))
 
 (setq org-id-link-to-org-use-id 'create-if-interactive)
+
 (setq python-shell-prompt-detect-failure-warning nil)
 (setq lsp-pylsp-plugins-flake8-max-line-length 90)
+(setq lsp-pylsp-plugins-flake8-enabled nil)
+(setq lsp-pylsp-plugins-autopep8-enabled nil)
+
 (setq which-key-idle-delay 2)
 
 (defmacro csetq (variable value)
@@ -348,8 +353,7 @@
                 'set-default)
             ',variable ,value))
 
-(setq ediff-forward-word-function 'forward-char)
-(setq global-company-mode nil)
 
+(setq ediff-forward-word-function 'forward-char)
 (global-company-mode -1)
 (load! "custom.el")

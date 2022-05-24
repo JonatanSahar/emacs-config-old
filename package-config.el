@@ -565,8 +565,7 @@
 ;; * see also (notes, tags/ other papers):
 ;; ")))
   (setq citar-templates '((main . " ${title:48}    ${date year issued:4}     ${author editor:30}")
-                                   (suffix . "${tags keywords keywords:*}   ${=key= id:15}    ${=type=:12}")
-                                   (preview . "${author editor} (${year issued date}) ${title}, ${journal journaltitle publisher container-title collection-title}.\n")
+                                   (suffix . "${keywords keywords:*}   ${=key= id:15}   ")
                                    (note . "Notes on ${author editor}, ${title}
 * general notes
 * summary and short reference

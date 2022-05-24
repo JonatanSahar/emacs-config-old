@@ -29,7 +29,7 @@
     :nvi "M-l" nil
     :nvi "C-v" nil
     :v "C-c" nil
-    :nvi "C-M i" nil
+    :nvi "C-\M-i" nil
 
     (:map org-mode-map
     :nv "j" nil
@@ -53,11 +53,11 @@
     :n "zl" nil
     :n "zl" nil
 
+    :nvi "C-\M-i" nil
     :v "C-c" nil
     :nvi "C-v" nil
     :nvi "M-l" nil
     :nvi "C-c p" nil
-    :nvi "C-M i" nil
     :nvi "C-i" nil
     :nvi "C-h" nil
     :nvi "C-j" nil
@@ -270,19 +270,21 @@
  ;; :nvi "C-c l" #'toggle-input-method
  :nvi "M-;" #'toggle-input-method
 
- :map vterm-mode-map
+ (:map vterm-mode-map
  :nv "p" #'term-paste
  :nvi "C-c p" #'term-paste
  :nvi "C-c v" #'term-paste
  :nvi "C-c c" #'evil-yank
- :n "!" #'+workspace/close-window-or-workspace
- :map dired-mode-map
- :nv "g\/g" #'dired-filter-mode
- ;; :nv "YY" #'(lambda ()
- ;;              (interactive)
- ;;              (dired-copy-filename-as-kill 0))
+ :n "!" #'+workspace/close-window-or-workspace)
 
- :map org-mode-map
+ (:map dired-mode-map
+ :nv "g\/g" #'dired-filter-mode
+ :nv "gy" #'dired-copy-filename-as-kill
+ :nv "gY" #'(lambda ()
+              (interactive)
+              (dired-copy-filename-as-kill 0)))
+
+ (:map org-mode-map
  :nv "E" #'evil-org-end-of-line
  :nv "W" #'evil-org-beginning-of-line
 
@@ -301,7 +303,7 @@
  :nvi "C-j" #'windmove-down
  :nvi "C-k" #'windmove-up
  :ni "]]" #'org-roam-node-insert
- )
+ ))
 
 ;; (map!
 ;;  :map org-mode-map
