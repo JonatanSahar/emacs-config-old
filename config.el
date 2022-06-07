@@ -22,15 +22,16 @@
 ;; (setq doom-font (font-spec :family "monospace" :size 12 :weight 'semi-light)
 ;;       doom-variable-pitch-font (font-spec :family "sans" :size 13))
 ;; (setq doom-font
-(setq
-       doom-font  (font-spec :family "NotoMono" :size 20)
-       ;; doom-font  (font-spec :family "Source Code Pro" :size 18)
-     ;; doom-font (font-spec :family "Alef" :size 20)
-      doom-big-font (font-spec :family "NotoMono" :size 20)
-      ;; doom-big-font (font-spec :family "JetBrains Mono" :size 20)
-      ;; doom-variable-pitch-font (font-spec :family "Source Code Pro" :size 20)
-      doom-variable-pitch-font (font-spec :family "NotoSans" :size 20)
-      doom-unicode-font (font-spec :name "NotoMono" :size 20))
+;;
+;; (setq
+;;        doom-font  (font-spec :family "NotoMono" :size 10)
+;;        ;; doom-font  (font-spec :family "Source Code Pro" :size 18)
+;;      ;; doom-font (font-spec :family "Alef" :size 10)
+;;       doom-big-font (font-spec :family "NotoMono" :size 10)
+;;       ;; doom-big-font (font-spec :family "JetBrains Mono" :size 10)
+;;       ;; doom-variable-pitch-font (font-spec :family "Source Code Pro" :size 10)
+;;       doom-variable-pitch-font (font-spec :family "NotoSans" :size 10)
+;;       doom-unicode-font (font-spec :name "NotoMono" :size 10))
 
 
 ;; (custom-theme-set-faces 'user
@@ -45,7 +46,6 @@
 ;;
 ;; If you use `org' and don't want your org files in the default location below,
 ;; change `org-directory'. It must be set before org loads!
-(setq org-directory "~/google_drive/notes/slip-box")
 ;;
 ;; This determines the style of line numbers in effect. If set to `nil', line
 ;; numbers are disabled. For relative line numbers, set this to `relative'.
@@ -70,17 +70,16 @@
 ;; various settings
 
 (setq
- bibliography-pdf-dir (list  "~/google_drive/.bibliography/zotero_pdf")
- bibliography-files '("~/google_drive/.bibliography/references.bib"  ) ;
+ ;; bibliography-pdf-dir (list  "~/google_drive/.bibliography/zotero_pdf")
+ ;; bibliography-files '("~/google_drive/.bibliography/references.bib"  ) ;
  ;; bibliography-files '( "~/google_drive/.bibliography/motor-cognition.bib"  "~/google_drive/.bibliography/consciousness.bib" "~/google_drive/.bibliography/methods.bib"  )
- notes-dir (concat (getenv "HOME") "/google_drive/notes/")
+ notes-dir (concat (getenv "HOME") "/notes/")
  gtd-dir (concat notes-dir  "gtd/")
  slip-box-dir (concat notes-dir "slip-box/")
- literature-notes-dir (list  "~/google_drive/notes/slip-box/literature-notes/")
+ literature-notes-dir (list  "~/notes/slip-box/literature-notes/")
 
  org-my-anki-file (concat slip-box-dir "anki.org")
  org-capture-papers-file (concat slip-box-dir "2021-06-17-papers_by_subject.org")
- org-capture-meeting-file (concat slip-box-dir "2020-10-22-meeting_summaries.org")
  org-capture-inbox-file (concat gtd-dir "inbox.org")
  org-capture-reminders-file (concat gtd-dir "reminders.org")
  org-capture-projects-file (concat gtd-dir "projects.org")
@@ -166,7 +165,6 @@
 
 (defun my/org-mode-hook()
           (interactive)
-          (my/org-hide-properties-display)
           (setq after-save-hook '(flycheck-handle-save t ))
           (sp-pair "$" "$")
 )
@@ -174,11 +172,12 @@
 (font-lock-add-keywords nil '(("\"\\(\\(?:.\\|\n\\)*?[^\\]\\)\"" 0 font-lock-string-face)))
 (add-hook! org-agenda-mode #'writeroom-mode)
 (add-hook! org-roam-mode #'visual-line-mode)
-(add-hook! org-mode #'flyspell-mode #'org-superstar-mode  #'my/org-mode-hook) ;;#'writeroom-mode #'org-hide-properties)
+(add-hook! org-mode #'flyspell-mode #'org-superstar-mode #'writeroom-mode #'my/org-mode-hook) ;; #'org-hide-properties)
 (add-hook 'text-mode-hook (lambda ()
                             (setq bidi-paragraph-direction nil)
                             (setq bidi-paragraph-start-re  "^")
                             (setq bidi-paragraph-separate-re  "^")
+                            (setq helm-ff-fuzzy-matching t)
                             (setq captain-predicate (lambda () t))
 
                             (visual-fill-column-mode 1)
@@ -188,8 +187,6 @@
                             (abbrev-mode 1)
                             (font-lock-mode 1)
                             (buffer-face-mode)
-                            ;; (my/set-faces)
-                            ;; (my/org-font)
                             ))
 
 (add-hook 'prog-mode-hook (lambda ()
@@ -199,31 +196,31 @@
 
 (evil-snipe-override-mode 1)
 
-;; (my/set-faces)
+(my/set-faces)
 
-(require 'org-download)
-;; (add-hook 'after-init-hook 'company-statistics-mode)
+;; (require 'org-download)
+(add-hook 'after-init-hook 'company-statistics-mode)
 
-(customize-set-value
- 'org-agenda-category-icon-alist
- `(
-   ("research" "~/google_drive/icons/calendar.svg" nil nil :ascent center)
-   ("school" "~/google_drive/icons/calendar.svg" nil nil :ascent center)
-   ("personal" "~/google_drive/icons/checklist.svg" nil nil :ascent center)
-   ("home" "~/google_drive/icons/checklist.svg" nil nil :ascent center)
-   ("todo" "~/google_drive/icons/checklist.svg" nil nil :ascent center)
-   ("bills" "~/google_drive/icons/money-bag.svg" nil nil :ascent center)
-   ("downtown" "~/google_drive/icons/013-buildings.svg" nil nil :ascent center)
-   ("emacs" "~/google_drive/icons/014-coding.svg" nil nil :ascent center)
-   ))
+;; (customize-set-value
+;;  'org-agenda-category-icon-alist
+;;  `(
+;;    ("research" "~/google_drive/icons/calendar.svg" nil nil :ascent center)
+;;    ("school" "~/google_drive/icons/calendar.svg" nil nil :ascent center)
+;;    ("personal" "~/google_drive/icons/checklist.svg" nil nil :ascent center)
+;;    ("home" "~/google_drive/icons/checklist.svg" nil nil :ascent center)
+;;    ("todo" "~/google_drive/icons/checklist.svg" nil nil :ascent center)
+;;    ("bills" "~/google_drive/icons/money-bag.svg" nil nil :ascent center)
+;;    ("downtown" "~/google_drive/icons/013-buildings.svg" nil nil :ascent center)
+;;    ("emacs" "~/google_drive/icons/014-coding.svg" nil nil :ascent center)
+;;    ))
 
 ;; (add-to-list 'load-path "/home/jonathan/wordnut")
 ;; (require 'wordnut)
 
-(add-to-list 'load-path "/home/jonathan/.emacs.d/orgnv")
-(load "orgnv.el")
-(require 'orgnv)
-(setq orgnv-directories '("/home/jonathan/google_drive/notes/slip-box"))
+;; (add-to-list 'load-path "/home/jonathan/.emacs.d/orgnv")
+;; (load "orgnv.el")
+;; (require 'orgnv)
+;; (setq orgnv-directories '("/home/jonathan/google_drive/notes/slip-box"))
 
 
 (add-hook 'occur-mode-hook
@@ -283,7 +280,7 @@
 (set-input-method 'hebrew-full)
 
 (remove-hook 'after-save-hook #'ws-butler-after-save)   ;
-;; (add-hook 'after-init-hook 'company-statistics-mode)
+(add-hook 'after-init-hook 'company-statistics-mode)
 
 ;; (my-generic-ispell-company-complete-setup)
 
@@ -301,9 +298,9 @@
 
 (my/dedicate-org-roam-buffer)
 
-  (setq
-   org-cite-global-bibliography bibliography-files
-   org-cite-insert-processor 'citar)
+;;   (setq
+;;    org-cite-global-bibliography bibliography-files
+;;    org-cite-insert-processor 'citar)
 ;; (setq org-cite-csl-styles-dir "~/Zotero/styles")
 
 (advice-add #'completing-read-multiple :override #'consult-completing-read-multiple)
@@ -334,26 +331,11 @@
 ;; (advice-add #'completing-read-multiple :override #'conult-completing-read-multiple)
 (setq org-odt-preferred-output-format "docx")
 (defun my/make-small-frame () (interactive) (set-frame-size (selected-frame) 50 42))
-(defun my/make-medium-frame () (interactive) (set-frame-size (selected-frame) 90 42))
-(defun my/make-large-frame () (interactive) (set-frame-size (selected-frame) 120 42))
+(defun my/make-large-frame () (interactive) (set-frame-size (selected-frame) 100 45))
 (add-to-list 'default-frame-alist '(height . 40))
-(add-to-list 'default-frame-alist '(width . 90))
+(add-to-list 'default-frame-alist '(width . 50))
 
 (setq org-id-link-to-org-use-id 'create-if-interactive)
-
 (setq python-shell-prompt-detect-failure-warning nil)
 (setq lsp-pylsp-plugins-flake8-max-line-length 90)
-(setq lsp-pylsp-plugins-flake8-enabled nil)
-(setq lsp-pylsp-plugins-autopep8-enabled nil)
-
-(setq which-key-idle-delay 2)
-
-(defmacro csetq (variable value)
-  `(funcall (or (get ',variable 'custom-set)
-                'set-default)
-            ',variable ,value))
-
-
-(setq ediff-forward-word-function 'forward-char)
-(global-company-mode -1)
-(load! "custom.el")
+(custom-set-variables '(linum-format 'dynamic))

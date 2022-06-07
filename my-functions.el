@@ -416,9 +416,9 @@ https://org-roam.discourse.group/t/org-roam-major-redesign/1198/34."
 
 
 (defun open-file-in-browser (file) (browse-url-of-file file))
-(defun export-to-html-and-open (file)
-  (let* (html-filename (org-html-export-to-html file))
-       (open-file-in-browser html-filename)))
+;; (defun export-to-html-and-open (file)
+;;   (let* (html-filename (org-html-export-to-html file))
+;;        (open-file-in-browser html-filename)))
 (map! :map embark-file-map "O" #'open-file-in-browser)
 (map! :map embark-file-map "F" #'citar-file-open-external)
 (map! :map embark-file-map "C-o" #'find-file-other-frame)
@@ -528,9 +528,9 @@ same directory as the org-buffer and insert a link to this file."
 (global-set-key "\C-cs" #'my/org-paste-screenshot)
 (global-set-key "\C-cS" #'my/org-paste-screenshot-windows-path)
 
-(defun org-html-export-to-mhtml (async subtree visible body)
-  (cl-letf (((symbol-function 'org-html--format-image) 'format-image-inline))
-    (org-html-export-to-html nil subtree visible body)))
+;; (defun org-html-export-to-mhtml (async subtree visible body)
+;;   (cl-letf (((symbol-function 'org-html--format-image) 'format-image-inline))
+;;     (org-html-export-to-html nil subtree visible body)))
 
 (defun format-image-inline (source attributes info)
   (let* ((ext (file-name-extension source))
@@ -540,9 +540,9 @@ same directory as the org-buffer and insert a link to this file."
          (attributes (org-combine-plists `(:src ,data-url) attributes)))
     (org-html-close-tag "img" (org-html--make-attribute-string attributes) info)))
 
-(org-export-define-derived-backend 'html-inline-images 'html
-  :menu-entry '(?h "Export to HTML" ((?m "As MHTML file and open" org-html-export-to-mhtml))))
-
+;; (org-export-define-derived-backend 'html-inline-images 'html
+;;   :menu-entry '(?h "Export to HTML" ((?m "As MHTML file and open" org-html-export-to-mhtml))))
+;; 
 (defun matlab-shell-help-at-point ()
   (interactive)
   (let ((fcn (matlab-read-word-at-point)))

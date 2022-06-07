@@ -1,7 +1,6 @@
 ;;; ~/.doom.d/keybindings.el -*- lexical-binding: t; -*-
 
 (map!
-    :nvi "C-SPC" nil
     :i "C-z" nil
     :i  "C-k" nil
     :nv "E" nil
@@ -28,14 +27,11 @@
     :nvi "C-c p" nil
     :nvi "M-l" nil
     :nvi "C-v" nil
-    :v "C-c" nil
-    :nvi "C-\M-i" nil
 
     (:map org-mode-map
     :nv "j" nil
     :nv "E" nil
     :nv "W" nil
-    :n "zc" nil
     :n "gz" nil
     :n "gh" nil
     :n "gj" nil
@@ -53,8 +49,6 @@
     :n "zl" nil
     :n "zl" nil
 
-    :nvi "C-\M-i" nil
-    :v "C-c" nil
     :nvi "C-v" nil
     :nvi "M-l" nil
     :nvi "C-c p" nil
@@ -99,8 +93,8 @@
   :i "C-S-h" #'left-char
   :i "C-'" #'right-char
   :i "C-;" #'left-char
-  :i "C-k" #'evil-previous-visual-line
-  :i "C-j" #'evil-next-visual-line
+  :i "C-k" #'previous-line
+  :i "C-j" #'next-line
   :i "C-l" #'right-word
   :i "C-h" #'left-word
   :nvi "C-z" #'evil-undo
@@ -127,7 +121,7 @@
               )
  :i "S-SPC" #'evil-force-normal-state
  :map evil-org-mode-map
- ;; :i "C-SPC" #'consult-company
+ :i "C-SPC" #'consult-company
  :ni "C-{" #'org-roam-node-insert)
 ;; :i "C-S-L" #'org-ref-insert-link)
 
@@ -270,21 +264,19 @@
  ;; :nvi "C-c l" #'toggle-input-method
  :nvi "M-;" #'toggle-input-method
 
- (:map vterm-mode-map
+ :map vterm-mode-map
  :nv "p" #'term-paste
  :nvi "C-c p" #'term-paste
  :nvi "C-c v" #'term-paste
  :nvi "C-c c" #'evil-yank
- :n "!" #'+workspace/close-window-or-workspace)
-
- (:map dired-mode-map
+ :n "!" #'+workspace/close-window-or-workspace
+ :map dired-mode-map
  :nv "g\/g" #'dired-filter-mode
- :nv "gy" #'dired-copy-filename-as-kill
- :nv "gY" #'(lambda ()
-              (interactive)
-              (dired-copy-filename-as-kill 0)))
+ ;; :nv "YY" #'(lambda ()
+ ;;              (interactive)
+ ;;              (dired-copy-filename-as-kill 0))
 
- (:map org-mode-map
+ :map org-mode-map
  :nv "E" #'evil-org-end-of-line
  :nv "W" #'evil-org-beginning-of-line
 
@@ -303,7 +295,7 @@
  :nvi "C-j" #'windmove-down
  :nvi "C-k" #'windmove-up
  :ni "]]" #'org-roam-node-insert
- ))
+ )
 
 ;; (map!
 ;;  :map org-mode-map
@@ -473,6 +465,24 @@
 (define-key evil-normal-state-map (kbd "J") 'evil-join)
 (define-key evil-normal-state-map (kbd "K") 'join-line)
 
+;; (setq key-chord-two-keys-delay 0.5)
+;; (key-chord-define evil-insert-state-map "gj" #'evil-force-normal-state)
+;; (key-chord-define term-mode-map "jk" #'evil-force-normal-state)
+;; (key-chord-define evil-visual-state-map "jk" #'evil-force-normal-state)
+
+(global-set-key [f12] 'wordnut-search)
+(global-set-key [(control f12)] 'wordnut-lookup-current-word)
+(global-set-key [f11] 'flyspell-correct-at-point)
+
+(evil-define-key 'normal wordnut-mode-map (kbd "q") 'quit-window)
+(evil-define-key 'normal wordnut-mode-map (kbd "RET") 'wordnut-lookup-current-word)
+(evil-define-key 'normal wordnut-mode-map (kbd "h") 'wordnut-history-backward)
+(evil-define-key 'normal wordnut-mode-map (kbd "l") 'wordnut-history-forward)
+(evil-define-key 'normal wordnut-mode-map (kbd "H") 'wordnut-history-lookup)
+(evil-define-key 'normal wordnut-mode-map (kbd "/") 'wordnut-search)
+(evil-define-key 'normal wordnut-mode-map (kbd "o") 'wordnut-show-overview)
+
+
 (map! :map org-mode-map
    :nvi "C-c  C-y" #'evil-yank
    :nvi "C-c  C-x" #'evil-delete
@@ -481,25 +491,19 @@
    :nvi "C-c  y" #'evil-yank
    :nvi "C-c  v" #'consult-yank-from-kill-ring
    :nvi "C-c  p" #'evil-paste-after
-   :i "C-M i" #'completion-at-point
-   ;; :i "C-SPC" #'completion-at-point
-   :n "zc" #'+org/toggle-fold
-   :n "zC" #'+org/close-fold
    )
 (map!
    :nvi "C-;" #'embark-act
    :nvi "C-c  c" #'evil-yank
    :nvi "C-c  v" #'consult-yank-from-kill-ring
-   ;; :nv "C-v" #'evil-paste-after
+   :nv "C-v" #'evil-paste-after
    :i "C-v" #'evil-paste-before
    :nvi "C-c  y" #'evil-yank
    :nvi "C-c  p" #'evil-paste-after
    :nvi "C-c  P" #'evil-paste-before
-   :nvi "M-p" #'evil-paste-pop
    :nvi "C-c  C-r" #'evil-redo
    :nvi "C-c  C-d" #'evil-delete
    :nvi "C-c  x" #'evil-delete
-   :nvi "C-x  x" #'evil-delete
 
 
    ;; :nvi "C-c  c" #'org-capture
@@ -528,7 +532,7 @@
         "C-." #'embark-act
         "C-," #'embark-become
         "C-/" #'embark-export
-        "C-a" #'embark-act
+        "C-a" #'my/embark-ace-action
         "C-b" #'embark-become
         "C-e" #'embark-export
         "C-j" #'vertico-previous
@@ -538,6 +542,9 @@
 ;;       :nvi "C-c p h" 'org-hide-properties
 ;;       :nvi "C-c p s" 'org-show-properties
 ;;       :nvi "C-c p t" 'org-toggle-properties)
+ ;; (map! :map (evil-org-mode-map emacs-lisp-mode-map) :n "<up>" (lambda nil (scroll-down-command 1)))
+ ;; (map! :map (evil-org-mode-map emacs-lisp-mode-map) :n "<up>" #'evil-scroll-line-up)
+ ;; (map! :map (evil-org-mode-map emacs-lisp-mode-map) :n "<down>" #'evil-scroll-line-down)
 
 (setq scroll-preserve-screen-position 1)
 
@@ -550,25 +557,5 @@
   :prefix "g"
   :nv "z" #'my/mc-hydra/body))
 
-(map!
-      "C-n" nil
-      "C-p" nil
-      "C-SPC" nil)
-
-(map! :map corfu-map
-      ;; "M-d" #'corfu-show-documentation
-      ;; "M-l" #'corfu-show-location
-      "C-n"  #'corfu-next
-      "C-p"  #'corfu-previous
-      "C-j"  #'corfu-next
-      "C-k"  #'corfu-previous
-      ;; "TAB"  #'corfu-next
-      ;; "S-TAB"  #'corfu-previous
-      "C-SPC"  #'completion-at-point
-      "ESC"  #'corfu-quit
-      "#"  #'corfu-insert-separator)
-      ;; "C-SPC"  #'corfu-insert-separator)
-
-(map! :i "C-SPC" #'completion-at-point)
-(map! :map org-mode-map :in "C-c u" #'org-previous-visible-heading)
-(map! :map org-mode-map :in "C-c U" #'outline-up-heading)
+;; (map! :map
+;;    :i "RETURN" #'comint-send-input)
