@@ -166,7 +166,7 @@
   ;;             #'org-roam-reflinks-insert-section
   ;;             ;; #'org-roam-unlinked-references-insert-section
   ;;             ))
-
+  (org-roam-db-autosync-mode)
   (setq org-roam-capture-templates
         '(("d" "default" plain "%?"
            :target (file+head "%<%Y-%m-%d-%H%M%S>-${slug}.org"

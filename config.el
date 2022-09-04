@@ -24,15 +24,17 @@
 ;; (setq doom-font
 ;;
 (setq
-       doom-font  (font-spec :family "Noto Mono" :size 10)
-       ;; doom-font  (font-spec :family "Source Code Pro" :size 18)
-     ;; doom-font (font-spec :family "Alef" :size 10)
-      ;; doom-big-font (font-spec :family "NotoMono" :size 10)
-      doom-big-font (font-spec :family "JetBrains Mono" :size 10)
-      doom-variable-pitch-font (font-spec :family "Source Code Pro" :size 10)
-      ;; doom-variable-pitch-font (font-spec :family "NotoSans" :size 10)
-      ;; doom-unicode-font (font-spec :name "NotoMono" :size 10))
-      )
+        doom-font  (font-spec :family "Roboto Mono" :weight 'regular :size 16)
+        doom-big-font  (font-spec :family "Roboto Mono" :weight 'regular :size 14)
+ ;; doom-font  (font-spec :family "Alef" :size 14)
+ ;; doom-font  (font-spec :family "Source Code Pro" :size 18)
+ ;; doom-font (font-spec :family "Alef" :size 10)
+ ;; doom-big-font (font-spec :family "Noto Mono" :size 10)
+ ;; doom-big-font (font-spec :family "JetBrains Mono" :size 10)
+ ;; doom-variable-pitch-font (font-spec :family "Source Code Pro" :size 14)
+ doom-variable-pitch-font (font-spec :family "Noto Sans" :size 18)
+ ;; doom-unicode-font (font-spec :name "Noto Mono" :size 10))
+ )
 
 
 ;; (custom-theme-set-faces 'user
@@ -264,7 +266,7 @@ emacs-directory (concat (file-name-as-directory (getenv "HOME")) (file-name-as-d
 ;;    org-cite-insert-processor 'citar)
 ;; (setq org-cite-csl-styles-dir "~/Zotero/styles")
 
-(advice-add #'completing-read-multiple :override #'consult-completing-read-multiple)
+;; (advice-add #'completing-read-multiple :override #'consult-completing-read-multiple)
 (defun with-minibuffer-keymap (keymap)
   (lambda (fn &rest args)
     (minibuffer-with-setup-hook
@@ -302,3 +304,13 @@ emacs-directory (concat (file-name-as-directory (getenv "HOME")) (file-name-as-d
 (custom-set-variables '(linum-format 'dynamic))
 (toggle-frame-fullscreen)
 (setq org-fold-core-style "overlays")
+
+ ;; Use Fira Code font faces in current buffer
+ (defun my-buffer-face-mode-programming ()
+   "Sets a fixed width (monospace) font in current buffer"
+   (interactive)
+   (setq buffer-face-mode-face '(:extend t :family "Fira Code"))
+   (buffer-face-mode))
+
+ ;; Set default font faces for Info and ERC modes
+ (add-hook 'prog-mode-hook 'my-buffer-face-mode-programming)
