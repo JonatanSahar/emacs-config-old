@@ -767,4 +767,32 @@ With prefix, rebuild the cache before offering candidates."
 (use-package! lsp-pyright
   :hook (python-mode . (lambda ()
                           (require 'lsp-pyright)
-                          (lsp))))  ; or lsp-deferred
+                          (lsp))))  ; or lsp-
+  :config 
+						  
+	(setq lsp-pyright-use-library-code-for-types t) ;; set this to nil if getting too many false positive type errors
+	(setq lsp-pyright-stub-path (concat (getenv "HOME") "/src/python-type-stubs")) 
+
+(use-package! company
+  :config
+
+  ;; completion
+  (setq company-idle-delay 0.5
+        company-minimum-prefix-length 2
+        company-show-numbers t)
+  (setq-default history-length 1000)
+  (setq-default prescient-history-length 1000)
+  (map! :map org-mode-map :i
+        "C-;" #'+company/complete
+        "M-;" #'+company/complete)
+
+  ;; (set-company-backend! 'text-mode 'company-dabbrev 'company-ispell)
+  ;; (set-company-backend! 'text-mode 'company-capf)
+  (set-company-backend! 'prog-mode '(company-files))
+  (set-company-backend! 'emacs-lisp-mode '(company-files))
+  )
+
+(use-package! poetry
+  :config
+  )
+

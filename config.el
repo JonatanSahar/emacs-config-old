@@ -160,6 +160,7 @@ emacs-directory (concat (file-name-as-directory (getenv "HOME")) (file-name-as-d
           (sp-pair "$" "$"))
 (add-hook! org-mode #'my/org-mode-hook) ;; #'org-hide-properties)
 ;; (add-hook! org-mode #'flyspell-mode #'org-superstar-mode #'writeroom-mode #'my/org-mode-hook) ;; #'org-hide-properties)
+(add-hook 'text-mode-hook 'my-buffer-face-mode-text)
 (add-hook 'text-mode-hook (lambda ()
                             (setq bidi-paragraph-direction nil)
                             (setq bidi-paragraph-start-re  "^")
@@ -174,10 +175,12 @@ emacs-directory (concat (file-name-as-directory (getenv "HOME")) (file-name-as-d
                             (abbrev-mode 1)
                             (font-lock-mode 1)
                             (buffer-face-mode)
+                            (%s/־/-/g)
                             ))
 
+
+(add-hook 'prog-mode-hook 'my-buffer-face-mode-programming)
 (add-hook 'prog-mode-hook (lambda ()
-                            (setq helm-ff-fuzzy-matching t)
                             (setq captain-predicate (lambda () (nth 8 (syntax-ppss (point)))))
                             ))
 
@@ -196,20 +199,7 @@ emacs-directory (concat (file-name-as-directory (getenv "HOME")) (file-name-as-d
     (apply fun args)))
 
 
-;; completion
-(setq company-idle-delay 0.5
-      company-minimum-prefix-length 2
-      company-show-numbers t)
-(setq-default history-length 1000)
-(setq-default prescient-history-length 1000)
-(map! :map org-mode-map :i
-      "C-;" #'+company/complete
-      "M-;" #'+company/complete)
-
-;; (set-company-backend! 'text-mode 'company-dabbrev 'company-ispell)
-;; (set-company-backend! 'text-mode 'company-capf)
-(set-company-backend! 'prog-mode '(company-files))
-(set-company-backend! 'emacs-lisp-mode '(company-files))
+  (setq-default prescient-history-length 1000)
 
 (add-hook 'bibtex-mode-hook 'my/convert-windows-to-linux-paths)
 (add-hook 'text-mode-hook (lambda ()
@@ -243,7 +233,6 @@ emacs-directory (concat (file-name-as-directory (getenv "HOME")) (file-name-as-d
 (set-input-method 'hebrew-full)
 
 (remove-hook 'after-save-hook #'ws-butler-after-save)   ;
-(add-hook 'after-init-hook 'company-statistics-mode)
 
 ;; (my-generic-ispell-company-complete-setup)
 
@@ -305,12 +294,26 @@ emacs-directory (concat (file-name-as-directory (getenv "HOME")) (file-name-as-d
 (toggle-frame-fullscreen)
 (setq org-fold-core-style "overlays")
 
- ;; Use Fira Code font faces in current buffer
- (defun my-buffer-face-mode-programming ()
-   "Sets a fixed width (monospace) font in current buffer"
-   (interactive)
-   (setq buffer-face-mode-face '(:extend t :family "Fira Code"))
-   (buffer-face-mode))
 
- ;; Set default font faces for Info and ERC modes
- (add-hook 'prog-mode-hook 'my-buffer-face-mode-programming)
+(setq flycheck-python-pycompile-executable "c:/Python310/python")
+
+;;; On Windows, commands run by flycheck may have CRs (\r\n line endings).
+;;; Strip them out before parsing.
+(defun flycheck-parse-output (output checker buffer)
+  "Parse OUTPUT from CHECKER in BUFFER.
+
+OUTPUT is a string with the output from the checker symbol
+CHECKER.  BUFFER is the buffer which was checked.
+
+Return the errors parsed with the error patterns of CHECKER."
+  (let ((sanitized-output (replace-regexp-in-string "\r" "" output))
+        )
+    (funcall (flycheck-checker-get checker 'error-parser) sanitized-output checker buffer)))
+
+(setq lsp-typescript-npm "c:/Program Files/nodejs/npm")
+
+(setq lsp-pyright-python-executable-cmd "c:/Python310/python")
+
+(setq +zen-text-scale 1)
+
+(setq +bidi-hebrew-font (font-spec :family "Heebo"))

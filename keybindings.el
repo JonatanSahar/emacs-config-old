@@ -345,6 +345,10 @@
          (end-of-line))))
 
 (map! :localleader
+      ;; (:map emacs-lisp-mode-map
+      ;;       :n "f" :desc "eval function" #'eval-defun
+      ;;       :n "g" :desc "eval buffer" #'eval-buffer)
+
       (:map matlab-shell-mode-map
        :n "~" #'+workspace/close-window-or-workspace
        :n "ESC" #'+workspace/close-window-or-workspace)
@@ -484,7 +488,7 @@
 
 
 (map! :map org-mode-map
-   :nvi "C-c  C-y" #'evil-yank
+  :nvi "C-c  C-y" #'evil-yank
    :nvi "C-c  C-x" #'evil-delete
    :nvi "C-c  C-d" #'evil-delete
    :nvi "C-c  c" #'evil-yank
@@ -497,7 +501,7 @@
    :nvi "C-c  c" #'evil-yank
    :nvi "C-c  v" #'consult-yank-from-kill-ring
    :nv "C-v" #'evil-paste-after
-   :i "C-v" #'evil-paste-before
+   :i "C-v" #'evil-paste-after
    :nvi "C-c  y" #'evil-yank
    :nvi "C-c  p" #'evil-paste-after
    :nvi "C-c  P" #'evil-paste-before

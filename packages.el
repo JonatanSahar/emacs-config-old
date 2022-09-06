@@ -65,8 +65,6 @@
 (package! f)
 
 ;; writing experience
-(package! writeroom-mode)
-;; (package! visual-fill-column)
 (package! olivetti)
 (package! captain) ;; auto capitalize words
 (package! helm-flyspell)
@@ -74,9 +72,6 @@
 (package! company-statistics)
 (package! company-wordfreq)
 (package! flyspell-lazy :pin "3ebf68cc9e...")
-(package! doct
-  :recipe (:host github :repo "progfolio/doct")
-  :pin "1bcec209e1...")
 
 ;; general utils
 (package! wgrep)
@@ -117,5 +112,5 @@
 ;; code related
 (package! matlab-mode)
 (package! lsp-pyright)
+(package! poetry)
 (package! virtualenvwrapper)
-(package! company-statistics)

@@ -21,10 +21,6 @@
   ;; (evil-beginning-of-visual-line)
       )
 
-(defun my/org-font ()
-  (interactive)
-  (face-remap-add-relative 'default :family "NotoSans" :height 190))
-
 (defun org-journal-find-location ()
   ;; Open today's journal, but specify a non-nil prefix argument in order to
   ;; inhibit inserting the heading; org-capture will insert the heading.
@@ -326,6 +322,16 @@ same directory as the org-buffer and insert a link to this file."
   (call-process "powershell.exe" nil nil nil
                 "-Command" (concat "& {" script "}")))
 
+(defun my/fix-hebrew-hyphen()
+  "Hide Org property drawer using text properties.
+Based on the code shared at
+https://org-roam.discourse.group/t/org-roam-major-redesign/1198/34."
+  (interactive)
+  (save-excursion
+    (goto-char (point-min))
+    (while (search-forward "־" nil t)
+      (replace-match "-"))
+    ))
 
 (defun my/org-hide-properties-display ()
   "Hide Org property drawer using text properties.
@@ -385,6 +391,7 @@ https://org-roam.discourse.group/t/org-roam-major-redesign/1198/34."
 ; settings after that. The trouble is, this file (config.el) is called _before_
 ; doom-init-ui-h which is called in window-setup-hook as the last gasp of
 ; doom-initialize! find-file-hook appears to work.
+
 (add-hook 'find-file-hook #'my/set-whitespace-defaults 'append)
 
 ; doom=>default=>off=>doom=>...
@@ -512,6 +519,7 @@ same directory as the org-buffer and insert a link to this file."
       (user-error
        "Error pasting the image, make sure you have an image in the clipboard!"))
     ))
+
 (defun as-windows-path (unix-path)
   ;; "Takes a unix path and returns a matching WSL path
 ;; (e.g. \\wsl$\Ubuntu-20.04\tmp)"
@@ -528,9 +536,6 @@ same directory as the org-buffer and insert a link to this file."
 (global-set-key "\C-cs" #'my/org-paste-screenshot)
 (global-set-key "\C-cS" #'my/org-paste-screenshot-windows-path)
 
-;; (defun org-html-export-to-mhtml (async subtree visible body)
-;;   (cl-letf (((symbol-function 'org-html--format-image) 'format-image-inline))
-;;     (org-html-export-to-html nil subtree visible body)))
 
 (defun format-image-inline (source attributes info)
   (let* ((ext (file-name-extension source))
@@ -540,9 +545,6 @@ same directory as the org-buffer and insert a link to this file."
          (attributes (org-combine-plists `(:src ,data-url) attributes)))
     (org-html-close-tag "img" (org-html--make-attribute-string attributes) info)))
 
-;; (org-export-define-derived-backend 'html-inline-images 'html
-;;   :menu-entry '(?h "Export to HTML" ((?m "As MHTML file and open" org-html-export-to-mhtml))))
-;; 
 (defun matlab-shell-help-at-point ()
   (interactive)
   (let ((fcn (matlab-read-word-at-point)))
@@ -592,11 +594,15 @@ Current pattern: %`evil-mc-pattern
   (+multiple-cursors/evil-mc-toggle-cursor-here)
   (evil-mc-pause-cursors))
 
-;; (defun my/make-cursor-and-next-match ()
-;;   (interactive)
-;;   (evil-mc-make-and-goto-next-match)
-;;   (evil-mc-pause-cursors)
-;;    (forward-word)
-;;    (let ((end (point)))
-;;       (backward-word)
-;;       (region- (point) end) )
+ ;; Use Fira Code font faces in current buffer
+ (defun my-buffer-face-mode-programming ()
+   "Sets a fixed width (monospace) font in current buffer"
+   (interactive)
+   ;; (setq buffer-face-mode-face '(:extend t :family "Fira Code"))
+   (setq buffer-face-mode-face '(:extend t :family "Roboto Mono"))
+   (buffer-face-mode))
+
+(defun my-buffer-face-mode-text ()
+   (interactive)
+   (setq buffer-face-mode-face '(:extend t :family "Heebo"))
+   (buffer-face-mode))

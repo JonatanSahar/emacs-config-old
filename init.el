@@ -50,6 +50,7 @@
        (window-select +switch-window +winum)     ; visually switch windows
        workspaces        ; tab emulation, persistence & separate workspaces
        zen               ; distraction-free coding or writing
+       ;; (ligatures +fira)
 
        :editor
        (evil +everywhere); come to the dark side, we have cookies
