@@ -21,10 +21,8 @@
  '(line-number ((t (:inherit default :foreground "steel blue" :strike-through nil :underline nil :slant normal :weight semi-bold :family "Roboto Mono"))))
  '(line-number-current-line ((t (:inherit (hl-line default) :foreground "light steel blue" :strike-through nil :underline nil :slant normal :weight semi-bold :family "Roboto Mono"))))
  '(org-default ((t (:family "Heebo"))))
- '(org-document-title ((t (:foreground "dark sea green" :weight bold))))
- '(outline-1 ((t (:extend t :foreground "dark green" :weight normal))))
- '(outline-2 ((t (:extend t :foreground "cadet blue" :weight normal))))
- '(outline-3 ((t (:extend t :foreground "sea green" :weight bold))))
- '(term-bold ((t (:weight bold :height 1.0 :family "Noto Sans")))))
-
-
+ ;; '(org-document-title ((t (:foreground "sea green" :weight bold))))
+ ;; '(outline-1 ((t (:extend t :foreground "dark green" :weight normal))))
+ ;; '(outline-2 ((t (:extend t :foreground "cadet blue" :weight normal))))
+ ;; '(outline-3 ((t (:extend t :foreground "sea green" :weight bold))))
+)

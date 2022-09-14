@@ -155,11 +155,14 @@
         org-roam-db-gc-threshold most-positive-fixnum
         org-id-link-to-org-use-id t)
   (add-to-list 'display-buffer-alist
-               '(("\\*org-roam\\*"
-                  (display-buffer-in-direction)
-                  (direction . right)
-                  (window-width . 0.25)
-                  (window-height . fit-window-to-buffer))))
+               '("\\*org-roam\\*"
+                 (display-buffer-in-side-window)
+                 (dedicated . t)
+                 (side . right)
+                 (slot . 0)
+                 (window-width . 0.33)
+                 (window-parameters . ((no-other-window . t)
+                                       (no-delete-other-windows . t)))))
   :config
   ;; (setq org-roam-mode-sections
   ;;       (list #'org-roam-backlinks-insert-section
@@ -183,7 +186,7 @@
 (defun my/get-bib-file-list ()
   "Get the list of all the bib files containing my bib database."
   (mapcan (lambda (dir) (directory-files dir t "\\.bib\\'"))
-'("/home/jonathan/notes/bibliography/")))
+'("g:/My Drive/.bibliography")))
 
 ;; (use-package helm-bibtex
 ;;   :config
@@ -485,7 +488,7 @@
   (setq! citar-at-point-function 'embark-act)
   (setq! citar-file-note-org-include '(org-id org-roam-ref))
   (setq! citar-notes-paths literature-notes-dir)
-  (setq! citar-library-paths "/home/jonathan/notes/bibliography/")
+  (setq! citar-library-paths (list "g:/My Drive/.bibliography/"))
   (setq citar-templates '((main . "${author editor:30}     ${date year issued:4}     ${title:48}")
                                    (suffix . "${tags keywords keywords:*}   ${=key= id:15}    ${=type=:12}")
                                    (preview . "${author editor} (${year issued date}) ${title}, ${journal journaltitle publisher container-title collection-title}.\n")
@@ -713,16 +716,18 @@ the directory.  `REST' is passed to the `CONSULT-RIPGREP-FUNCTION'."
 
 (advice-add #'org-open-file :around #'wsl-fix-org-open-file)
 (use-package org-super-agenda
-  :config
-  (org-super-agenda-mode t))
+:config
+(org-super-agenda-mode t)
 (add-to-list 'org-agenda-custom-commands
              '("r" "Categor: Research" todo ""
-              ((org-super-agenda-groups
-                '((:category ("research"))
-                  ;; (:category ("research"))
-                  (:discard (:anything))
-                  ))
+               ((org-super-agenda-groups
+                 '((:category ("research"))
+                   ;; (:category ("research"))
+                   (:discard (:anything))
+                   ))
                 )))
+)
+
 (with-eval-after-load 'citar
 
   (defun citar-open-library-file (key-entry)
@@ -762,16 +767,18 @@ With prefix, rebuild the cache before offering candidates."
     (if file
         (funcall fn file)
       (message "No associated file"))))
-  )
+)
+
 
 (use-package! lsp-pyright
   :hook (python-mode . (lambda ()
                           (require 'lsp-pyright)
-                          (lsp))))  ; or lsp-
+                          (lsp)))  ; or lsp-
   :config 
 						  
 	(setq lsp-pyright-use-library-code-for-types t) ;; set this to nil if getting too many false positive type errors
-	(setq lsp-pyright-stub-path (concat (getenv "HOME") "/src/python-type-stubs")) 
+	(setq lsp-pyright-stub-path (concat (getenv "HOME") "/src/python-type-stubs"))
+        )
 
 (use-package! company
   :config

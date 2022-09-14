@@ -24,8 +24,8 @@
 ;; (setq doom-font
 ;;
 (setq
-        doom-font  (font-spec :family "Roboto Mono" :weight 'regular :size 16)
-        doom-big-font  (font-spec :family "Roboto Mono" :weight 'regular :size 14)
+        doom-font  (font-spec :family "Roboto Mono" :weight 'regular :size 18)
+        doom-big-font  (font-spec :family "Roboto Mono" :weight 'regular :size 18)
  ;; doom-font  (font-spec :family "Alef" :size 14)
  ;; doom-font  (font-spec :family "Source Code Pro" :size 18)
  ;; doom-font (font-spec :family "Alef" :size 10)
@@ -156,6 +156,7 @@ emacs-directory (concat (file-name-as-directory (getenv "HOME")) (file-name-as-d
 (add-hook! org-roam-mode #'visual-line-mode)
 (defun my/org-mode-hook()
           (interactive)
+          (+zen/toggle)
           ;; (setq after-save-hook '(flycheck-handle-save t ))
           (sp-pair "$" "$"))
 (add-hook! org-mode #'my/org-mode-hook) ;; #'org-hide-properties)
@@ -175,7 +176,7 @@ emacs-directory (concat (file-name-as-directory (getenv "HOME")) (file-name-as-d
                             (abbrev-mode 1)
                             (font-lock-mode 1)
                             (buffer-face-mode)
-                            (%s/־/-/g)
+                            (+zen/toggle)
                             ))
 
 
@@ -237,6 +238,7 @@ emacs-directory (concat (file-name-as-directory (getenv "HOME")) (file-name-as-d
 ;; (my-generic-ispell-company-complete-setup)
 
 (defun my/dedicate-org-roam-buffer ()
+  (interactive)
   (add-to-list 'display-buffer-alist
                '("\\*org-roam\\*"
                  (display-buffer-in-side-window)
@@ -248,7 +250,6 @@ emacs-directory (concat (file-name-as-directory (getenv "HOME")) (file-name-as-d
                                        (no-delete-other-windows . t)))))
   )
 
-(my/dedicate-org-roam-buffer)
 
 ;;   (setq
 ;;    org-cite-global-bibliography bibliography-files
@@ -317,3 +318,13 @@ Return the errors parsed with the error patterns of CHECKER."
 (setq +zen-text-scale 1)
 
 (setq +bidi-hebrew-font (font-spec :family "Heebo"))
+
+(add-hook! (text-mode) :local (lambda ()
+                            (add-hook! after-save-hook #'my/fix-hebrew-hyphen)
+
+                            ))
+
+;; (setq mouse-wheel-scroll-amount '(2 (1)))
+(setq mouse-wheel-scroll-amount '(2 (hscroll)))
+
+(my/dedicate-org-roam-buffer)
