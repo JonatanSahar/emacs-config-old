@@ -29,41 +29,42 @@
     :nvi "C-v" nil
 
     (:map org-mode-map
-    :nv "j" nil
-    :nv "E" nil
-    :nv "W" nil
-    :n "gz" nil
-    :n "gh" nil
-    :n "gj" nil
-    :n "gk" nil
-    :n "gl" nil
-    :n "gJ" nil
-    :n "gK" nil
-    :n "z=" nil
+        :nv "j" nil
+        :nv "E" nil
+        :nv "W" nil
+        :n "gz" nil
+        :n "gh" nil
+        :n "gj" nil
+        :n "gk" nil
+        :n "gl" nil
+        :n "gJ" nil
+        :n "gK" nil
+        :n "z=" nil
 
-    :n "gf" nil
-    :n "gs" nil
-    :n "zh" nil
-    :n "zj" nil
-    :n "zk" nil
-    :n "zl" nil
-    :n "zl" nil
+        :n "gf" nil
+        :n "gs" nil
+        :n "zh" nil
+        :n "zj" nil
+        :n "zk" nil
+        :n "zl" nil
+        :n "zl" nil
 
-    :nvi "C-v" nil
-    :nvi "M-l" nil
-    :nvi "C-c p" nil
-    :nvi "C-i" nil
-    :nvi "C-h" nil
-    :nvi "C-j" nil
-    :nvi "C-k" nil
-    :nvi "C-l" nil)
+        :nvi "C-v" nil
+        :nvi "M-l" nil
+        :nvi "C-c p" nil
+        :nvi "C-i" nil
+        :nvi "C-h" nil
+        :nvi "C-j" nil
+        :nvi "C-k" nil
+        :nvi "C-l" nil
+        )
     (:map org-roam-preview-map :desc "universal argument" "C-u" nil)
     (:map org-roam-mode-map :desc "universal argument" "C-u" nil)
 
     (:map evil-org-mode-map
-    :nvi [C-o] nil
-    :nvi [C-i] nil
-    :nvi "C-S-L" nil)
+        :nvi [C-o] nil
+        :nvi [C-i] nil
+        :nvi "C-S-L" nil)
 
     (:map helm-find-files-map
      [control-backspace] nil)
@@ -253,7 +254,7 @@
 
  :n "g+" #'evil-numbers/inc-at-pt
  :vn "gs" #'evil-snipe-S
- :nv "gf" #'evil-repeat
+ ;; :nv "gf" #'evil-repeat
  :nv "E" #'evil-end-of-line-or-visual-line
  :nv "W" #'evil-beginning-of-visual-line
  :nvi "C-S-l" #'org-roam-insert
@@ -265,36 +266,34 @@
  :nvi "M-;" #'toggle-input-method
 
  :map vterm-mode-map
- :nv "p" #'term-paste
- :nvi "C-c p" #'term-paste
- :nvi "C-c v" #'term-paste
- :nvi "C-c c" #'evil-yank
- :n "!" #'+workspace/close-window-or-workspace
- :map dired-mode-map
- :nv "g\/g" #'dired-filter-mode
+        :nv "p" #'term-paste
+        :nvi "C-c p" #'term-paste
+        :nvi "C-c v" #'term-paste
+        :nvi "C-c c" #'evil-yank
+        :n "!" #'+workspace/close-window-or-workspace
  ;; :nv "YY" #'(lambda ()
  ;;              (interactive)
  ;;              (dired-copy-filename-as-kill 0))
 
  :map org-mode-map
- :nv "E" #'evil-org-end-of-line
- :nv "W" #'evil-org-beginning-of-line
+        :nv "E" #'evil-org-end-of-line
+        :nv "W" #'evil-org-beginning-of-line
 
- :vn "zh" #'org-up-element
- :vn "zj" #'org-forward-heading-same-level
- :vn "zk" #'org-backward-heading-same-level
- :vn "zl" #'org-next-visible-heading
+        :vn "zh" #'org-up-element
+        :vn "zj" #'org-forward-heading-same-level
+        :vn "zk" #'org-backward-heading-same-level
+        :vn "zl" #'org-next-visible-heading
 
- :n "z=" #'helm-flyspell-correct
- :n "g=" #'helm-flyspell-correct
+        :n "z=" #'helm-flyspell-correct
+        :n "g=" #'helm-flyspell-correct
 
- :nv "gf" #'evil-repeat
- :nvi "C-S-l" #'org-roam-insert
- :nvi "C-l" #'windmove-right
- :nvi "C-h" #'windmove-left
- :nvi "C-j" #'windmove-down
- :nvi "C-k" #'windmove-up
- :ni "]]" #'org-roam-node-insert
+        :nv "gf" #'evil-repeat
+        :nvi "C-S-l" #'org-roam-insert
+        :nvi "C-l" #'windmove-right
+        :nvi "C-h" #'windmove-left
+        :nvi "C-j" #'windmove-down
+        :nvi "C-k" #'windmove-up
+        :ni "]]" #'org-roam-node-insert
  )
 
 ;; (map!
@@ -307,12 +306,12 @@
 ;;        )
 
 (map! :prefix "zz"
-      :map org-mode-map
-      :nv "0" #'anki-editor-reset-cloze-number
-      :nv "n" #'anki-editor-cloze-region-auto-incr
-      :nv "N" #'anki-editor-cloze-region-dont-incr
-      :nv "c" #'anki-editor-cloze-word-under-cursor-auto-incr
-      :nv "l" #'evil-next-flyspell-error
+      ;; :map org-mode-map
+      ;; :nv "0" #'anki-editor-reset-cloze-number
+      ;; :nv "n" #'anki-editor-cloze-region-auto-incr
+      ;; :nv "N" #'anki-editor-cloze-region-dont-incr
+      ;; :nv "c" #'anki-editor-cloze-word-under-cursor-auto-incr
+      ;; :nv "l" #'evil-next-flyspell-error
       :nv "Z" (lambda ()
          (interactive)
          (call-interactively #'evil-next-flyspell-error)
@@ -371,6 +370,9 @@
         :desc "avy timer" "j" 'evil-avy-goto-char-timer
         :desc "avy line" "l" 'evil-avy-goto-line)
 
+        (:prefix "t"
+        :nv "T" #'treemacs
+        )
         ;; (:line ("yank" . "y")
         ;;  :desc "header content" "y" #'my/visual-inside-org-header)
 
@@ -493,8 +495,9 @@
    :nvi "C-c  C-d" #'evil-delete
    :nvi "C-c  c" #'evil-yank
    :nvi "C-c  y" #'evil-yank
-   :nvi "C-c  v" #'consult-yank-from-kill-ring
-   :nvi "C-c  p" #'evil-paste-after
+   :nvi "C-c  p" #'consult-yank-from-kill-ring
+   :nvi "C-c  v" #'evil-paste-after
+   :nvi "C-c  s" #'my/org-screenshot
    )
 (map!
    :nvi "C-;" #'embark-act
@@ -536,7 +539,7 @@
         "C-." #'embark-act
         "C-," #'embark-become
         "C-/" #'embark-export
-        "C-a" #'my/embark-ace-action
+        "C-a" #'embark-act
         "C-b" #'embark-become
         "C-e" #'embark-export
         "C-j" #'vertico-previous

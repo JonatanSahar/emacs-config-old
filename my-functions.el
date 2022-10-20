@@ -186,6 +186,25 @@
  (evil-visual-char)
  (end-of-line))
 
+(defun my/fix-windows-bib-file()
+  (interactive)
+        (let ((case-fold-search t)) ; or nil
+                (goto-char (point-min))
+                (while (search-forward "C\\\:" nil t)
+                (replace-match "c:\/"))
+
+                (goto-char (point-min))
+                (while (search-forward "\\\\" nil t)
+                (replace-match "\/"))
+
+                (goto-char (point-min))
+                (while (search-forward "G\\\:" nil t)
+                (replace-match "g:\/")
+
+                ))
+
+                (save-buffer)
+        )
 
 (defun my/convert-windows-to-linux-paths()
   (interactive)
@@ -474,51 +493,21 @@ With a prefix ARG always prompt for command to use."
                     (shell-quote-argument buffer-file-name)))))
 (global-set-key (kbd "C-c O") #'my/open-current-with)
 
-(defun my/org-paste-screenshot ()
-  "Paste an image into a time stamped unique-named file in the
-same directory as the org-buffer and insert a link to this file."
-  (interactive)
-  (let* ((target-file
-          (concat
-           (make-temp-name
-            (concat (buffer-file-name)
-                    "_"
-                    (format-time-string "%Y%m%d_%H%M%S_"))) ".png"))
-         (wsl-path
-          (concat (as-windows-path(file-name-directory (shell-quote-argument target-file))) "\\" (file-name-nondirectory target-file)))
-         (ps-script
-          (concat "(Get-Clipboard -Format image).Save('" wsl-path "')")))
-    (powershell ps-script)
+(defun my/org-screenshot ()
+  "Take a screenshot into a time stamped unique-named file in the
+   same directory as the org-buffer and insert a link to this file."
+   (interactive)
+   (setq filename
+     (concat
+       (make-temp-name
+         (concat (buffer-file-name)
+              "_"
+              (format-time-string "%Y%m%d_%H%M%S_")) ) ".png"))
+   ;; (shell-command "snippingtool /clip")
+   (shell-command (concat "powershell -command \"Add-Type -AssemblyName System.Windows.Forms;if ($([System.Windows.Forms.Clipboard]::ContainsImage())) {$image = [System.Windows.Forms.Clipboard]::GetImage();[System.Drawing.Bitmap]$image.Save('" filename "',[System.Drawing.Imaging.ImageFormat]::Png); Write-Output 'clipboard content saved as file'} else {Write-Output 'clipboard does not contain image data'}\""))
+   (insert (concat "[[file:" filename "]]"))
+   (org-display-inline-images))
 
-    (if (file-exists-p target-file)
-        (progn (insert (concat "[[" target-file "]]"))
-               );; (org-display-inline-images))
-      (user-error
-       "Error pasting the image, make sure you have an image in the clipboard!"))
-    ))
-
-(defun my/org-paste-screenshot-windows-path ()
-  "Paste an image into a time stamped unique-named file in the
-same directory as the org-buffer and insert a link to this file."
-  (interactive)
-  (let* ((target-file
-          (concat
-           (make-temp-name
-            (concat (buffer-file-name)
-                    "_"
-                    (format-time-string "%Y%m%d_%H%M%S_"))) ".png"))
-         (wsl-path
-          (concat (as-windows-path(file-name-directory (shell-quote-argument target-file))) "\\" (file-name-nondirectory target-file)))
-         (ps-script
-          (concat "(Get-Clipboard -Format image).Save('" wsl-path "')")))
-    (powershell ps-script)
-
-    (if (file-exists-p target-file)
-        (progn (insert (concat "[[" wsl-path "]]"))
-               );; (org-display-inline-images))
-      (user-error
-       "Error pasting the image, make sure you have an image in the clipboard!"))
-    ))
 
 (defun as-windows-path (unix-path)
   ;; "Takes a unix path and returns a matching WSL path
@@ -532,10 +521,6 @@ same directory as the org-buffer and insert a link to this file."
   "executes the given script within a powershell and returns its return value"
   (call-process "powershell.exe" nil nil nil
                 "-Command" (concat "& {" script "}")))
-
-(global-set-key "\C-cs" #'my/org-paste-screenshot)
-(global-set-key "\C-cS" #'my/org-paste-screenshot-windows-path)
-
 
 (defun format-image-inline (source attributes info)
   (let* ((ext (file-name-extension source))
@@ -606,3 +591,17 @@ Current pattern: %`evil-mc-pattern
    (interactive)
    (setq buffer-face-mode-face '(:extend t :family "Heebo"))
    (buffer-face-mode))
+
+(defun my/toggle-writing-mode ()
+  "Toggle a distraction-free environment for writing."
+  (interactive)
+  (cond ((bound-and-true-p olivetti-mode)
+         (olivetti-mode -1)
+         (olivetti-toggle-hide-modeline)
+         (toggle-frame-fullscreen)
+         (menu-bar-mode 1))
+        (t
+         (olivetti-mode 1)
+         (olivetti-toggle-hide-modeline)
+         (toggle-frame-fullscreen)
+         (menu-bar-mode -1))))

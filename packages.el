@@ -112,5 +112,7 @@
 ;; code related
 (package! matlab-mode)
 (package! lsp-pyright)
+(package! pyenv)
 (package! poetry)
 (package! virtualenvwrapper)
+(package! ibuffer-projectile)

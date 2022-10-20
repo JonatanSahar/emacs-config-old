@@ -173,7 +173,8 @@
   (setq org-roam-capture-templates
         '(("d" "default" plain "%?"
            :target (file+head "%<%Y-%m-%d-%H%M%S>-${slug}.org"
-                              "#+title: ${title}\n")
+                              "+title: ${title}\n")
+                              ;; "+title: ${title}\n")
                               ;; "${title}\n")
            :unnarrowed t)))
 )
@@ -493,9 +494,15 @@
                                    (suffix . "${tags keywords keywords:*}   ${=key= id:15}    ${=type=:12}")
                                    (preview . "${author editor} (${year issued date}) ${title}, ${journal journaltitle publisher container-title collection-title}.\n")
                                    (note . "Notes on ${author editor}, ${title}
+
 * general notes
+
+  %?
+
 * summary and short reference
+
 * see also (notes, tags/ other papers):
+
 ")))
 
   (setq citar-symbols
@@ -596,9 +603,7 @@
   ;; From https://github.com/minad/consult/wiki#find-files-using-fd
   ;; Note: this requires lexical binding
   (defun jnf/consult-find-using-fd (&optional dir initial)
-    "Find project files.
-
-A replacement for `projectile-find-file'."
+    "Find project files. A replacement for `projectile-find-file'."
     (interactive "P")
     (let ((consult-find-command "fd --color=never --hidden --exclude .git/ --full-path ARG OPTS"))
       (consult-find dir initial)))
@@ -616,7 +621,7 @@ parameters."
            rest))
 
 (defun jnf/consult-ripgrep (consult-ripgrep-function &optional dir &rest rest)
-    "Use region or thing at point to populate initial parameter for `CONSULT-RIPGREP-FUNCTION'.
+"Use region or thing at point to populate initial parameter for `CONSULT-RIPGREP-FUNCTION'.
 
 When there's an active region, use that as the initial parameter
 for the `CONSULT-RIPGREP-FUNCTION'.  Otherwise, use the thing at
@@ -803,3 +808,50 @@ With prefix, rebuild the cache before offering candidates."
   :config
   )
 
+
+(defun consult-find-for-minibuffer ()
+  "Search file with find, enter the result in the minibuffer."
+  (interactive)
+  (let* ((enable-recursive-minibuffers t)
+         (default-directory (file-name-directory (minibuffer-contents)))
+         (file (consult--find
+                (replace-regexp-in-string
+                 "\\s-*[:([].*"
+                 (format " (via find in %s): " default-directory)
+                 (minibuffer-prompt))
+                #'consult--find-builder
+                (file-name-nondirectory (minibuffer-contents)))))
+    (delete-minibuffer-contents)
+    (insert (expand-file-name file default-directory))
+    (exit-minibuffer)))
+
+(defun define-minibuffer-key (key &rest defs)
+  "Define KEY conditionally in the minibuffer.
+DEFS is a plist associating completion categories to commands."
+  (define-key minibuffer-local-map key
+    (list 'menu-item nil defs :filter
+          (lambda (d)
+            (plist-get d (completion-metadata-get
+                          (completion-metadata (minibuffer-contents)
+                                               minibuffer-completion-table
+                                               minibuffer-completion-predicate)
+                          'category))))))
+
+(define-minibuffer-key "\C-s"
+  'file #'consult-find-for-minibuffer)
+
+
+(add-to-list 'ispell-local-dictionary-alist '("english-hunspell"
+                                              "[[:alpha:]]"
+                                              "[^[:alpha:]]"
+                                              "[']"
+                                              t
+                                              ("-d" "en_US" "-p" "C:\\Users\\Jonathan\\programs\\hunspell\\share\\hunspell\\personal.en")
+                                              nil
+                                              iso-8859-1))
+(add-to-list 'exec-path "C:\\Users\\Jonathan\\programs\\hunspell\\bin")
+
+(setq ispell-program-name (locate-file "hunspell"
+exec-path exec-suffixes 'file-executable-p))
+
+(setq ispell-dictionary   "en_US") ; Default dictionary to use
