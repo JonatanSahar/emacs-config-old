@@ -252,12 +252,6 @@
   )
 
 
-;;   (setq
-;;    org-cite-global-bibliography bibliography-files
-;;    org-cite-insert-processor 'citar)
-;; (setq org-cite-csl-styles-dir "~/Zotero/styles")
-
-;; (advice-add #'completing-read-multiple :override #'consult-completing-read-multiple)
 (defun with-minibuffer-keymap (keymap)
   (lambda (fn &rest args)
     (minibuffer-with-setup-hook
@@ -271,9 +265,6 @@
     (define-key map (kbd "<tab>") 'abort-recursive-edit)
     map))
 
-;; (advice-add 'embark-completing-read-prompter :around
-;;             (with-minibuffer-keymap embark-completing-read-prompter-map))
-;; (define-key vertico-map (kbd "C-<tab>") 'embark-act-with-completing-read)
 
   (defun embark-act-with-completing-read (&optional arg)
     (interactive "P")
@@ -285,7 +276,9 @@
 
 (setq org-odt-preferred-output-format "docx")
 (defun my/make-small-frame () (interactive) (set-frame-size (selected-frame) 50 42))
-(defun my/make-large-frame () (interactive) (set-frame-size (selected-frame) 100 45))
+
+(defun my/make-medium-frame () (interactive) (set-frame-size (selected-frame) 100 42))
+(defun my/make-large-frame () (interactive) (set-frame-size (selected-frame) 150 42))
 (add-to-list 'default-frame-alist '(height . 40))
 (add-to-list 'default-frame-alist '(width . 50))
 
@@ -293,7 +286,7 @@
 (setq python-shell-prompt-detect-failure-warning nil)
 (setq lsp-pylsp-plugins-flake8-max-line-length 90)
 (custom-set-variables '(linum-format 'dynamic))
-(toggle-frame-fullscreen)
+;; (toggle-frame-fullscreen)
 (setq org-fold-core-style "overlays")
 
 
@@ -362,3 +355,4 @@ Return the errors parsed with the error patterns of CHECKER."
     (define-key map (kbd "/ g") #'ibuffer-filter-by-content))
 
 (add-hook 'dired-mode-hook 'dired-filter-mode)
+(setq citar--multiple-setup (cons "<tab>"  "RET"))

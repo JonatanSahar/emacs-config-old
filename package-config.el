@@ -173,9 +173,7 @@
   (setq org-roam-capture-templates
         '(("d" "default" plain "%?"
            :target (file+head "%<%Y-%m-%d-%H%M%S>-${slug}.org"
-                              "+title: ${title}\n")
-                              ;; "+title: ${title}\n")
-                              ;; "${title}\n")
+                              "#+title: ${title}\n")
            :unnarrowed t)))
 )
 
@@ -519,13 +517,6 @@
       (((background light)) :foreground "#fafafa"))
     "Face for obscuring/dimming icons"
     :group 'all-the-icons-faces)
-
-  (defun gen-bib-cache-idle ()
-    "Generate bib item caches with idle timer"
-    (run-with-idle-timer 0.5 nil #'citar-refresh))
-
-  (add-hook 'LaTeX-mode-hook #'gen-bib-cache-idle)
-  (add-hook 'org-mode-hook #'gen-bib-cache-idle)
   )
 
 (after! consult
@@ -840,8 +831,10 @@ DEFS is a plist associating completion categories to commands."
 (define-minibuffer-key "\C-s"
   'file #'consult-find-for-minibuffer)
 
+(setq ispell-hunspell-dict-paths-alist
+      '(("en_US" "C:\\Users\\Jonathan\\programs\\hunspell\\share\\hunspell\\en_US.aff")))
 
-(add-to-list 'ispell-local-dictionary-alist '("english-hunspell"
+(add-to-list 'ispell-local-dictionary-alist '("en_US"
                                               "[[:alpha:]]"
                                               "[^[:alpha:]]"
                                               "[']"
@@ -849,9 +842,13 @@ DEFS is a plist associating completion categories to commands."
                                               ("-d" "en_US" "-p" "C:\\Users\\Jonathan\\programs\\hunspell\\share\\hunspell\\personal.en")
                                               nil
                                               iso-8859-1))
+
 (add-to-list 'exec-path "C:\\Users\\Jonathan\\programs\\hunspell\\bin")
 
 (setq ispell-program-name (locate-file "hunspell"
 exec-path exec-suffixes 'file-executable-p))
 
 (setq ispell-dictionary   "en_US") ; Default dictionary to use
+
+(use-package! company-box
+  :hook (company-mode . company-box-mode))

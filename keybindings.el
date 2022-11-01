@@ -57,6 +57,7 @@
         :nvi "C-j" nil
         :nvi "C-k" nil
         :nvi "C-l" nil
+        :nvi "C-M-i" nil
         )
     (:map org-roam-preview-map :desc "universal argument" "C-u" nil)
     (:map org-roam-mode-map :desc "universal argument" "C-u" nil)
@@ -64,6 +65,8 @@
     (:map evil-org-mode-map
         :nvi [C-o] nil
         :nvi [C-i] nil
+        :nvi [C-j] nil
+        :nvi [C-k] nil
         :nvi "C-S-L" nil)
 
     (:map helm-find-files-map
@@ -171,19 +174,20 @@
       "N" #'widen
       )
 
-(map! :nvi
+(map! :nv
       [C-o] #'better-jumper-jump-backward
-      [C-i] #'better-jumper-jump-forward
+      [C-O] #'better-jumper-jump-forward
+      ;; [C-i] #'better-jumper-jump-forward
 
       :map org-mode-map
-      :nvi
+      :nv
       [C-o] #'better-jumper-jump-backward
-      [C-i] #'better-jumper-jump-forward
+      [C-O] #'better-jumper-jump-forward
 
       :map evil-org-mode-map
-      :nvi
+      :nv
       [C-o] #'better-jumper-jump-backward
-      [C-i] #'better-jumper-jump-forward
+      [C-O] #'better-jumper-jump-forward
       )
 
 (map! :map org-roam-backlinks-mode-map "return" #'org-open-at-point)
@@ -255,7 +259,7 @@
  :n "g+" #'evil-numbers/inc-at-pt
  :vn "gs" #'evil-snipe-S
  ;; :nv "gf" #'evil-repeat
- :nv "E" #'evil-end-of-line-or-visual-line
+ ;; :nv "E" #'evil-end-of-line-or-visual-line
  :nv "W" #'evil-beginning-of-visual-line
  :nvi "C-S-l" #'org-roam-insert
  :nv "C-l" #'windmove-right
@@ -372,6 +376,7 @@
 
         (:prefix "t"
         :nv "T" #'treemacs
+        :nv "S" #'shell
         )
         ;; (:line ("yank" . "y")
         ;;  :desc "header content" "y" #'my/visual-inside-org-header)
@@ -423,6 +428,7 @@
         ;; :desc "helm org rifle" "R" 'helm-org-rifle
         :desc "run macro" "e" #'kmacro-end-and-call-macro
         :desc "generate laTex previews" "L" #'org-latex-preview
+        :desc "avy timer goto" "j" #'evil-avy-goto-char-timer
         (:prefix ("r" . "rectangle operations")
          "r" #'replace-rectangle
          :desc "paste rectangle" "p" #'yank-rectangle
@@ -433,7 +439,6 @@
          )
          (:prefix ("b" . "references")
 
-                :desc "refresh bibliography" "r" #'citar-refresh
                 :desc "open bibliography" "b" #'citar-open
                 )
                 ;; (:prefix ("i" . "insert stuff")
@@ -491,7 +496,6 @@
 
 (map! :map org-mode-map
   :nvi "C-c  C-y" #'evil-yank
-   :nvi "C-c  C-x" #'evil-delete
    :nvi "C-c  C-d" #'evil-delete
    :nvi "C-c  c" #'evil-yank
    :nvi "C-c  y" #'evil-yank
@@ -507,9 +511,10 @@
    :i "C-v" #'evil-paste-after
    :nvi "C-c  y" #'evil-yank
    :nvi "C-c  p" #'evil-paste-after
-   :nvi "C-c  P" #'evil-paste-before
+   :nvi "C-c  P" # ss'evil-paste-before
    :nvi "C-c  C-r" #'evil-redo
    :nvi "C-c  C-d" #'evil-delete
+   :nvi "C-c  x" #'evil-delete
    :nvi "C-c  x" #'evil-delete
 
 
@@ -533,6 +538,7 @@
    :n "C-S-k" #'evil-mc-make-cursor-move-prev-line
    :nvi "M-j" #'drag-stuff-down
    :nvi "M-k" #'drag-stuff-up
+   :nv "E" #'evil-backward-word-end
  )
 
   (map! :map vertico-map
