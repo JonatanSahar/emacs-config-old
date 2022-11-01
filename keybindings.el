@@ -57,6 +57,7 @@
         :nvi "C-j" nil
         :nvi "C-k" nil
         :nvi "C-l" nil
+        :nvi "C-M-i" nil
         )
     (:map org-roam-preview-map :desc "universal argument" "C-u" nil)
     (:map org-roam-mode-map :desc "universal argument" "C-u" nil)
@@ -64,6 +65,8 @@
     (:map evil-org-mode-map
         :nvi [C-o] nil
         :nvi [C-i] nil
+        :nvi [C-j] nil
+        :nvi [C-k] nil
         :nvi "C-S-L" nil)
 
     (:map helm-find-files-map

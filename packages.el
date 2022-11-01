@@ -72,6 +72,7 @@
 (package! company-statistics)
 (package! company-wordfreq)
 (package! flyspell-lazy :pin "3ebf68cc9e...")
+(package! company-box)
 
 ;; general utils
 (package! wgrep)
@@ -96,15 +97,11 @@
 (package! selectrum-prescient)
 (package! marginalia)
 (package! ripgrep)
-(package! wgrep)
 (package! orderless)
 (package! consult-dir)
 (package! evil-better-visual-line)
 (package!  helm-bibtex)
 (package!  bibtex-completion)
-;; (when (featurep! :completion vertico)
-;;   (package! citar :pin "08c6ca0e5b736de50a4d1db5a00ce01b4c2093eb"))
-;; (package!  citar)
 (package!  consult-bibtex
  :recipe (:host github
           :repo "mohkale/consult-bibtex"))

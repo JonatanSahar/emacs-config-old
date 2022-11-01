@@ -72,7 +72,7 @@
 ;; they are implemented.
 ;; various settings
 (setq
- notes-dir "G:\\My Drive\\notes"
+ notes-dir "~/Documents/notes"
  gtd-dir (concat (file-name-as-directory notes-dir)  (file-name-as-directory "gtd"))
  slip-box-dir (concat (file-name-as-directory notes-dir)  (file-name-as-directory "slip-box"))
  literature-notes-dir (list (concat (file-name-as-directory slip-box-dir)  (file-name-as-directory "literature-notes")))
@@ -252,12 +252,6 @@
   )
 
 
-;;   (setq
-;;    org-cite-global-bibliography bibliography-files
-;;    org-cite-insert-processor 'citar)
-;; (setq org-cite-csl-styles-dir "~/Zotero/styles")
-
-;; (advice-add #'completing-read-multiple :override #'consult-completing-read-multiple)
 (defun with-minibuffer-keymap (keymap)
   (lambda (fn &rest args)
     (minibuffer-with-setup-hook

@@ -187,118 +187,8 @@
 (defun my/get-bib-file-list ()
   "Get the list of all the bib files containing my bib database."
   (mapcan (lambda (dir) (directory-files dir t "\\.bib\\'"))
-'("g:/My Drive/.bibliography")))
+'("~/Documents/bibliography")))
 
-;; (use-package helm-bibtex
-;;   :config
-;;   (setq
-;;     bibtex-completion-bibliography (my/get-bib-file-list)
-;;     bibtex-completion-library-path '( "~/google_drive/.bibliography/zotero-pdf")
-;;     bibtex-completion-notes-path "/home/jonathan/google_drive/notes/slip-box/literature-notes/"
-
-;;     bibtex-completion-additional-search-fields '(keywords)
-;;     bibtex-completion-display-formats '((t . "${author:36} ${title:36} ${year:4} ${=has-pdf=:1}${=has-note=:1} ${=type=:7} ${keywords:*}"))
-;;     bibtex-completion-pdf-field "File"
-;;     bibtex-completion-find-additional-pdfs t)
-;;     (setq helm-bibtex-notes-template-one-file "
-;;         #+title: notes on: ${author-or-editor} (${year}): ${title}
-;;         * main points
-;;         * findings
-;;         * methods
-;;         * summary and short reference
-;;         * general notes
-;;         * see also (notes, tags/ other papers):
-
-;;         ")
-;;     (setq helm-bibtex-notes-template-multiple-files "
-;;         #+title: notes on: ${author-or-editor} (${year}): ${title}
-;;         * main points
-;;         * findings
-;;         * methods
-;;         * summary and short reference
-;;         * general notes
-;;         * see also (notes, tags/ other papers):
-
-;;         ")
-;;   )
-
-
-;; (use-package! org-ref
-;;   :after org
-;;   :init
-;;   (let
-;;       ((cache-dir (concat doom-cache-dir "org-ref")))
-;;     (unless (file-exists-p cache-dir)
-;;       (make-directory cache-dir t))
-;;     (setq orhc-bibtex-cache-file (concat cache-dir "/orhc-bibtex-cache")))
-;;   :config
-;;  (setq
-;;   org-ref-bibliography-notes "/home/jonathan/google_drive/.notes/slip-box/literature-notes/"
-;;   org-ref-default-bibliography '("/home/jonathan/google_drive/.bibliography/motor-cognition.bib" "~/google_drive/.bibliography/methods.bib" "~/google_drive/.bibliography/consciousness.bib")
-;;   org-ref-pdf-directory "~/google_drive/.bibliography/zotero-pdf"
-;;   org-ref-notes-directory "/home/jonathan/google_drive/.notes/slip-box/literature-notes/"
-;;   org-latex-pdf-process
-;;   '("pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"
-;;     "bibtex %b"
-;;     "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"
-;;     "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f")
-;;   org-ref-notes-function 'orb-edit-notes
-;;  org-latex-logfiles-extensions (quote ("lof" "lot" "tex" "aux" "idx" "log" "out" "toc" "nav" "snm" "vrb" "dvi" "fdb_latexmk" "blg" "brf" "fls" "entoc" "ps" "spl" "bbl" "pygtex" "pygstyle")))
-;;  )
-
-;; (use-package! org-roam-bibtex
-;;   :after org-roam
-;;   :hook (org-roam-mode . org-roam-bibtex-mode)
-;;   :config
-;;   (require 'org-ref)) ; optional: if Org Ref is not loaded anywhere else, load it here
-
-;; Anki configuration
-;; (use-package anki-editor
-;;   :after org
-;;   :config
-;;   (setq anki-editor-create-decks t ;; Allow anki-editor to create a new deck if it doesn't exist
-;;         anki-editor-org-tags-as-anki-tags t)
-
-;;   (defun anki-editor-cloze-region-auto-incr (&optional arg)
-;;     "Cloze region without hint and increase card number."
-;;     (interactive)
-;;     (anki-editor-cloze-region my-anki-editor-cloze-number "")
-;;     (setq my-anki-editor-cloze-number (1+ my-anki-editor-cloze-number))
-;;     (forward-sexp))
-
-;;   (defun anki-editor-cloze-word-under-cursor-auto-incr (&optional arg)
-;;     "Cloze region without hint and increase card number."
-;;     (interactive)
-;;     (evil-backward-word-begin)
-;;     (evil-visual-char)
-
-;;     ;; (evil-select-an-object 'evil-symbol beg end type 1))
-;;     ;; (evil-select-an-object)
-;;     (evil-forward-word-end)
-;;     ;; (evil-forward-char)
-;;     (anki-editor-cloze-region my-anki-editor-cloze-number "")
-;;     (setq my-anki-editor-cloze-number (1+ my-anki-editor-cloze-number))
-;;     (forward-sexp))
-
-;;   (defun anki-editor-cloze-region-dont-incr (&optional arg)
-;;     "Cloze region without hint using the previous card number."
-;;     (interactive)
-;;     (anki-editor-cloze-region (1- my-anki-editor-cloze-number) "")
-;;     (forward-sexp))
-
-;;   (defun anki-editor-reset-cloze-number (&optional arg)
-;;     "Reset cloze number to ARG or 1"
-;;     (interactive)
-;;     (setq my-anki-editor-cloze-number (or arg 1)))
-
-;;   (defun anki-editor-push-tree ()
-;;     "Push all notes under a tree."
-;;     (interactive)
-;;     (anki-editor-push-notes '(4))
-;;     (anki-editor-reset-cloze-number))
-
-;;   ;; Initialize
-;;   (anki-editor-reset-cloze-number))
 
 (use-package hydra
   :defer 5
@@ -441,15 +331,6 @@
          ("C-x C-d" . consult-dir)
          ("C-x C-j" . consult-dir-jump-file)))
 
-;; (use-package ispell
-;;   :config
-;;   (setq
-;;    ispell-complete-word-dict "/home/jonathan/google_drive/dictionaries/en-GB-new.dic"
-;;    ispell-personal-dictionary "/home/jonathan/google_drive/dictionaries/en-GB_personal.dic"
-;;     company-ispell-dictionary ispell-complete-word-dict
-
-;;     ))
-
 (defun my-generic-ispell-company-complete-setup ()
   (when ispell-complete-word-dict
     (let*
@@ -489,7 +370,7 @@
   (setq! citar-at-point-function 'embark-act)
   (setq! citar-file-note-org-include '(org-id org-roam-ref))
   (setq! citar-notes-paths literature-notes-dir)
-  (setq! citar-library-paths (list "g:/My Drive/.bibliography/"))
+  (setq! citar-library-paths (list "~/Documents/bibliography"))
   (setq citar-templates '((main . "${author editor:30}     ${date year issued:4}     ${title:48}")
                                    (suffix . "${tags keywords keywords:*}   ${=key= id:15}    ${=type=:12}")
                                    (preview . "${author editor} (${year issued date}) ${title}, ${journal journaltitle publisher container-title collection-title}.\n")
@@ -855,3 +736,6 @@ DEFS is a plist associating completion categories to commands."
 exec-path exec-suffixes 'file-executable-p))
 
 (setq ispell-dictionary   "en_US") ; Default dictionary to use
+
+(use-package! company-box
+  :hook (company-mode . company-box-mode))
