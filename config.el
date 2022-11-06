@@ -356,3 +356,4 @@ Return the errors parsed with the error patterns of CHECKER."
     (define-key map (kbd "/ g") #'ibuffer-filter-by-content))
 
 (add-hook 'dired-mode-hook 'dired-filter-mode)
+(setq citar--multiple-setup (cons "<tab>"  "RET"))
