@@ -86,7 +86,6 @@
   :n "j" #'evil-next-visual-line
   ;; :n "j" (lambda nil (interactive) (scroll-up-command 1))
   ;; :n "k" (lambda nil (interactive) (scroll-down-command 1))
-  :i "C-c S" #'company-ispell
   :ni "C-c =" #'helm-flyspell-correct
   :nv "C-e" #'evil-end-of-line-or-visual-line
   :i "M-h" #'org-beginning-of-line
@@ -375,6 +374,7 @@
 
         (:prefix "t"
         :nv "T" #'treemacs
+        :nv "s" #'shell
         )
         ;; (:line ("yank" . "y")
         ;;  :desc "header content" "y" #'my/visual-inside-org-header)
@@ -498,19 +498,29 @@
    :nvi "C-c  C-d" #'evil-delete
    :nvi "C-c  c" #'evil-yank
    :nvi "C-c  y" #'evil-yank
-   :nvi "C-c  p" #'consult-yank-from-kill-ring
-   :nvi "C-c  v" #'evil-paste-after
-   :nvi "C-c  s" #'my/org-screenshot
+   :i "C-v" #'(lambda () (interactive) (backward-char) (evil-paste-after 1))
+   :i "C-c p" #'(lambda () (interactive) (backward-char) (evil-paste-after 1))
+   :i "C-c P" #'(lambda () (interactive) (backward-char 2) (evil-paste-after 1))
+   :nvi "C-c  y" #'evil-yank
+   :nv "C-c  p" #'evil-paste-after
+   :nv "C-c  P" #'evil-paste-before
+   :nvi "C-c  C-r" #'evil-redo
+   :nvi "C-c  C-d" #'evil-delete
+   :nvi "C-c  x" #'evil-delete
+   :nvi "C-c  S" #'my/org-screenshot
+   :nvi "C-c  s" #'evil-Surround-region
    )
 (map!
    :nvi "C-;" #'embark-act
    :nvi "C-c  c" #'evil-yank
    :nvi "C-c  v" #'consult-yank-from-kill-ring
-   :nv "C-v" #'evil-paste-after
-   :i "C-v" #'evil-paste-after
+   ;; :nv "C-v" #'evil-paste-after
+   :i "C-v" #'(lambda () (interactive) (backward-char) (evil-paste-after 1))
+   :i "C-c p" #'(lambda () (interactive) (backward-char) (evil-paste-after 1))
+   :i "C-c P" #'(lambda () (interactive) (backward-char 2) (evil-paste-after 1))
    :nvi "C-c  y" #'evil-yank
-   :nvi "C-c  p" #'evil-paste-after
-   :nvi "C-c  P" #'evil-paste-before
+   :nv "C-c  p" #'evil-paste-after
+   :nv "C-c  P" #'evil-paste-before
    :nvi "C-c  C-r" #'evil-redo
    :nvi "C-c  C-d" #'evil-delete
    :nvi "C-c  x" #'evil-delete
@@ -563,9 +573,11 @@
 (if (use-region-p) (evil-surround-region (region-beginning) (region-end) t *)))
 
 (map!
- (:when (featurep! :editor multiple-cursors)
+ (:when (modulep! :editor multiple-cursors)
   :prefix "g"
   :nv "z" #'my/mc-hydra/body))
 
 ;; (map! :map
 ;;    :i "RETURN" #'comint-send-input)
+
+(map! :map shell-mode-map "C-l" #'comint-clear-buffer)

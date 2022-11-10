@@ -204,9 +204,9 @@
   (setq-default prescient-history-length 1000)
 
 (add-hook 'bibtex-mode-hook 'my/fix-windows-bib-file)
-(add-hook 'text-mode-hook (lambda ()
-                            (setq-local company-backends '(company-wordfreq))
-                            (setq-local company-transformers nil)))
+;; (add-hook 'text-mode-hook (lambda ()
+;;                             (setq-local company-backends '(company-wordfreq))
+;;                             (setq-local company-transformers nil)))
 
 (defadvice! prompt-for-buffer (&rest _)
   :after 'evil-window-vsplit (switch-to-buffer))
@@ -279,6 +279,7 @@
 
 (setq org-odt-preferred-output-format "docx")
 (defun my/make-small-frame () (interactive) (set-frame-size (selected-frame) 50 42))
+(defun my/make-medium-frame () (interactive) (set-frame-size (selected-frame) 100 40))
 (defun my/make-large-frame () (interactive) (set-frame-size (selected-frame) 100 45))
 (add-to-list 'default-frame-alist '(height . 40))
 (add-to-list 'default-frame-alist '(width . 50))
@@ -357,3 +358,10 @@ Return the errors parsed with the error patterns of CHECKER."
 
 (add-hook 'dired-mode-hook 'dired-filter-mode)
 (setq citar--multiple-setup (cons "<tab>"  "RET"))
+(setq writeroom-mode-line 't)
+(setq +zen-text-scale 0)
+
+(define-globalized-minor-mode global-delete-selection-mode delete-selection-mode
+  (lambda () (delete-selection-mode 1)))
+
+(global-delete-selection-mode 1)

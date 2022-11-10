@@ -173,7 +173,7 @@
   (setq org-roam-capture-templates
         '(("d" "default" plain "%?"
            :target (file+head "%<%Y-%m-%d-%H%M%S>-${slug}.org"
-                              "+title: ${title}\n")
+                              "#+title: ${title}\n")
                               ;; "+title: ${title}\n")
                               ;; "${title}\n")
            :unnarrowed t)))
@@ -679,10 +679,9 @@ With prefix, rebuild the cache before offering candidates."
         "C-;" #'+company/complete
         "M-;" #'+company/complete)
 
-  ;; (set-company-backend! 'text-mode 'company-dabbrev 'company-ispell)
-  ;; (set-company-backend! 'text-mode 'company-capf)
-  (set-company-backend! 'prog-mode '(company-files))
-  (set-company-backend! 'emacs-lisp-mode '(company-files))
+  (set-company-backend! 'prog-mode '(company-files) '(company-dabbrev-code))
+  (set-company-backend! 'text-mode '(company-dabbrev))
+  (set-company-backend! 'org-mode '(company-files))
   )
 
 (use-package! poetry

@@ -605,3 +605,9 @@ Current pattern: %`evil-mc-pattern
          (olivetti-toggle-hide-modeline)
          (toggle-frame-fullscreen)
          (menu-bar-mode -1))))
+
+(defun my/bash-shell ()
+  (interactive)
+  (let ((shell-file-name "C:\\Windows\\System32\\bash.exe" ))
+    (shell "*bash*"))
+  )
