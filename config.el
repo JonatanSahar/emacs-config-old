@@ -356,3 +356,10 @@ Return the errors parsed with the error patterns of CHECKER."
 
 (add-hook 'dired-mode-hook 'dired-filter-mode)
 (setq citar--multiple-setup (cons "<tab>"  "RET"))
+
+(after! writeroom-mode
+  (setq writeroom-mode-line t
+        writeroom-bottom-divider-width 0
+        +zen-text-scale 0.5
+        )
+  )
