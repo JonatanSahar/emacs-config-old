@@ -298,14 +298,13 @@
         :ni "]]" #'org-roam-node-insert
  )
 
-;; (map!
-;;  :map org-mode-map
-;;  :prefix "gf"
-;;  :vn "h" #'org-up-element
-;;  :vn "j" #'org-forward-heading-same-level
-;;  :vn "k" #'org-backward-heading-same-level
-;;  :vn "l" #'org-next-visible-heading
-;;        )
+(map!
+ (:prefix "g"
+          :prefix "f"
+           :vn "j" #'evil-mc-make-and-goto-next-match
+           :vn "J" #'evil-mc-skip-and-goto-next-match
+           :vn "k" #'evil-mc-make-and-goto-prev-match
+           :vn "K" #'evil-mc-skip-and-goto-prev-match))
 
 (map! :prefix "zz"
       ;; :map org-mode-map
@@ -375,6 +374,10 @@
         (:prefix "t"
         :nv "T" #'treemacs
         :nv "s" #'shell
+        )
+
+        (:prefix "g"
+        :nv "p" #'magit-pull
         )
         ;; (:line ("yank" . "y")
         ;;  :desc "header content" "y" #'my/visual-inside-org-header)
