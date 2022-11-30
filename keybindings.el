@@ -130,12 +130,22 @@
 
 (map!
  :map pdf-view-mode-map
- :nvi "go" nil)
+ :nvi "go" nil
+ :nvi "C-j" nil
+ :nvi "C-k" nil
+
+ )
 (map!
+ :map pdf-occur-buffer-mode-map
+
+ :nv "C-j" #'next-error-no-select
+ :nv "C-k" #'previous-error-no-select
  :map pdf-view-mode-map
  :nvi "C-c O" (lambda () (interactive) (dired-jump) (dired-open))
  :nvi "go" (kbd "SPC o - & RET")
  :vin "gl" nil
+ :nvi "C-j" #'windmove-down
+ :nvi "C-k" #'windmove-upnil
  :map company-active-map "C-s" #'my/save-and-change-to-normal
  )
 
@@ -289,7 +299,7 @@
         :n "z=" #'helm-flyspell-correct
         :n "g=" #'helm-flyspell-correct
 
-        :nv "gf" #'evil-repeat
+        ;; :nv "gf" #'evil-repeat
         :nvi "C-S-l" #'org-roam-insert
         :nvi "C-l" #'windmove-right
         :nvi "C-h" #'windmove-left
@@ -298,14 +308,12 @@
         :ni "]]" #'org-roam-node-insert
  )
 
-;; (map!
-;;  :map org-mode-map
-;;  :prefix "gf"
-;;  :vn "h" #'org-up-element
-;;  :vn "j" #'org-forward-heading-same-level
-;;  :vn "k" #'org-backward-heading-same-level
-;;  :vn "l" #'org-next-visible-heading
-;;        )
+(map!
+ (:prefix "gf"
+           :vn "j" #'evil-mc-make-and-goto-next-match
+           :vn "J" #'evil-mc-skip-and-goto-next-match
+           :vn "k" #'evil-mc-make-and-goto-prev-match
+           :vn "K" #'evil-mc-skip-and-goto-prev-match))
 
 (map! :prefix "zz"
       ;; :map org-mode-map
@@ -375,6 +383,10 @@
         (:prefix "t"
         :nv "T" #'treemacs
         :nv "s" #'shell
+        )
+
+        (:prefix "g"
+        :nv "p" #'magit-pull
         )
         ;; (:line ("yank" . "y")
         ;;  :desc "header content" "y" #'my/visual-inside-org-header)

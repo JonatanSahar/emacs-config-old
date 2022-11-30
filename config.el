@@ -99,6 +99,8 @@
 (require 'orgnv)
 (setq orgnv-directories (list (concat (file-name-as-directory notes-dir)  (file-name-as-directory "slip-box"))))
 
+(general-auto-unbind-keys)
+
 (load! "package-config.el")
 (load! "my-functions.el")
 ;; (load! "faces.el")
@@ -365,3 +367,5 @@ Return the errors parsed with the error patterns of CHECKER."
   (lambda () (delete-selection-mode 1)))
 
 (global-delete-selection-mode 1)
+
+(writeroom-mode 1)

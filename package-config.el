@@ -308,8 +308,8 @@
     ("a" origami-toggle-all-nodes))
   )
 ;; (setq olivetti-body-width 100)
-
-(set-company-backend! 'matlab-mode '(company-capf company-dabbrev))
+;; (setq company-backends '((company-files) (company-dabbrev-code)  company-capf))
+(set-company-backend! 'matlab-mode '(company-files company-dabbrev-code company-capf company-dabbrev))
 (set-company-backend! 'matlab-shell-mode '(company-capf company-matlab-shell company-dabbrev))
 (custom-set-variables '(matlab-shell-command-switches '("-nodesktop -nosplash ")))
 ;; (custom-set-variables '(matlab-shell-command-switches '("-nodesktop -nosplash -nodisplay")))
