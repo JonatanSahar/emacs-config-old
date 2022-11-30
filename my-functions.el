@@ -156,21 +156,13 @@
 
 (defun my/search-replace ()
   (interactive)
-  (if (use-region-p) (my/search-replace-in-region) (evil-ex "/s"))
+  (if (use-region-p) (my/search-replace-in-region) (evil-ex "%s/"))
 )
 
-  (defun my/search-replace-in-region ()
+(defun my/search-replace-in-region ()
   (interactive)
-  (setq evil-ex-initial-input "s/")
-  (call-interactively 'evil-ex)
-  (setq evil-ex-initial-input "")
-  )
-
-(defun my/make-list()
-  (interactive)
-  (concat ":'<,'>s/^/\"/" (kbd "RET") "gv=gv")
-  (evil-visual-restore)
-  (concat ":'<,'>s/\n/\", /" (kbd "RET"))
+  (let ((evil-ex-initial-input "s/"))
+    (call-interactively 'evil-ex))
   )
 
 (evil-define-command my/evil-insert-char (count char)

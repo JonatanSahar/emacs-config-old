@@ -547,7 +547,7 @@
    :nvi "C-c  i" #'org-toggle-item
    ;; :nvi "C-c  i" #'(lambda () (interactive) ((org-toggle-item) (org-end-of-line)))
    :nvi "C-c  a" #'(lambda () (interactive) (org-capture nil "a"))
-   :nvi "C-c  A" #'(lambda () (interactive) (org-capture nil "A"))
+
    :nvi "C-c  o" #'(lambda () (interactive) (org-agenda nil "o"))
    ;; :i "C-c p" #'consult-yank-from-kill-ring
    ;; :i "C-c y" #'evil-yank

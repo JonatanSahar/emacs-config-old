@@ -679,7 +679,8 @@ With prefix, rebuild the cache before offering candidates."
         "C-;" #'+company/complete
         "M-;" #'+company/complete)
 
-  (set-company-backend! 'prog-mode '(company-files) '(company-dabbrev-code))
+  ;; (set-company-backend! 'prog-mode '(company-files) '(company-dabbrev-code))
+  (set-company-backend! 'prog-mode '(company-semantic company-capf company-files (company-dabbrev-code company-dabbrev))
   (set-company-backend! 'text-mode '(company-dabbrev))
   (set-company-backend! 'org-mode '(company-files))
   )
