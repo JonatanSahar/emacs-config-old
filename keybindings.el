@@ -537,6 +537,8 @@
    :nvi "C-c  C-d" #'evil-delete
    :nvi "C-c  x" #'evil-delete
 
+   :nvi "M-p" #'evil-paste-pop
+   :nvi "C-p" #'projectile-find-file
 
    ;; :nvi "C-c  c" #'org-capture
    :nvi "C-c  m" #'my/evil-mc-make-vertical-cursors
