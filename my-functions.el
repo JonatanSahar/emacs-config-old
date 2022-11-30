@@ -154,10 +154,16 @@
     (delete-region beg end)
     (insert replacement)))
 
-(defun my/search-replace-in-region ()
+(defun my/search-replace ()
+  (interactive)
+  (if (use-region-p) (my/search-replace-in-region) (evil-ex "/s"))
+)
+
+  (defun my/search-replace-in-region ()
   (interactive)
   (setq evil-ex-initial-input "s/")
   (call-interactively 'evil-ex)
+  (setq evil-ex-initial-input "")
   )
 
 (defun my/make-list()

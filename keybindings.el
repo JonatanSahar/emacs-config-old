@@ -418,7 +418,7 @@
         :desc "kill buffer and window" "W" '+workspace/close-window-or-workspace
         :desc "kill buffer" "d" 'kill-current-buffer
         :desc "switch to previous buffer" "k" 'evil-switch-to-windows-last-buffer
-        :desc "search and replace vim style" "s" #'(lambda () (interactive) (evil-ex "%s/"))
+        :desc "search and replace vim style" "s" #'my/search-replace
         :desc "search and replace vim style - in region" "S" #'my/search-replace-in-region
         :desc "refile subtree" "R" 'org-refile
         :desc "paste from kill-ring" "p" 'consult-yank-from-kill-ring
