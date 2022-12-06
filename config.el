@@ -369,3 +369,10 @@ Return the errors parsed with the error patterns of CHECKER."
 (global-delete-selection-mode 1)
 
 (writeroom-mode 1)
+
+(defun my/org-roam-find-node ()
+  (interactive)
+  (org-roam-node-find nil nil (org-roam-node-read nil (lambda (node)
+                                                        (string-match "Notes on" (org-roam-node-title node)))))
+
+ )
