@@ -203,10 +203,10 @@
       :nvi "gl" nil
       :nvi "k" (lambda ()
          (interactive)
-         (pdf-view-scroll-down-or-previous-page  10))
+         (pdf-view-scroll-down-or-previous-page  1))
       :nvi "j" (lambda ()
          (interactive)
-         (pdf-view-scroll-up-or-next-page 10))
+         (pdf-view-scroll-up-or-next-page 1))
       ;; :nvi "j" #'pdf-view-scroll-up-or-next-page
       ;; :nvi "k" #'pdf-view-scroll-down-or-previous-page
 
@@ -488,7 +488,7 @@
 (define-key evil-normal-state-map (kbd "K") 'join-line)
 
 ;; (setq key-chord-two-keys-delay 0.5)
-;; (key-chord-define evil-insert-state-map "gj" #'evil-force-normal-state)
+;; (key-chord-define evil-insert-state-map "[[" #'org-roam-insert)
 ;; (key-chord-define term-mode-map "jk" #'evil-force-normal-state)
 ;; (key-chord-define evil-visual-state-map "jk" #'evil-force-normal-state)
 
@@ -555,6 +555,7 @@
    :ni "C-c I" #'org-cite-insert
    ;; :ni "C-c I" #'org-ref-insert-cite-link
    :ni "C-c ]" #'org-roam-node-insert
+   :ni "C-c [" #'org-roam-node-insert
    ;; :ni "C-c I" #'org-cite-insert
 
    :n "C-S-j" #'evil-mc-make-cursor-move-next-line

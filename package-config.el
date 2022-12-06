@@ -173,10 +173,15 @@
   (setq org-roam-capture-templates
         '(("d" "default" plain "%?"
            :target (file+head "%<%Y-%m-%d-%H%M%S>-${slug}.org"
-                              "#+title: ${title}\n")
-                              ;; "+title: ${title}\n")
-                              ;; "${title}\n")
+                              "#+title: ${title}\n- tags :: \n")
            :unnarrowed t)))
+
+  (defun my/org-roam-node-insert-immediate (arg &rest args)
+  (interactive "P")
+  (let ((args (cons arg args))
+        (org-roam-capture-templates (list (append (car org-roam-capture-templates)
+                                                  '(:immediate-finish t)))))
+    (apply #'org-roam-node-insert args)))
 )
 
 ;; Since the org module lazy loads org-protocol (waits until an org URL is
@@ -374,15 +379,16 @@
   (setq citar-templates '((main . "${author editor:30}     ${date year issued:4}     ${title:48}")
                                    (suffix . "${tags keywords keywords:*}   ${=key= id:15}    ${=type=:12}")
                                    (preview . "${author editor} (${year issued date}) ${title}, ${journal journaltitle publisher container-title collection-title}.\n")
-                                   (note . "Notes on ${author editor}, ${title}
+                                   (note .
+"Notes on \"${title}\" (${author})
 
-* general notes
+* General notes
 
-  %?
 
-* summary and short reference
+* Summary and short reference
 
-* see also (notes, tags/ other papers):
+
+* See also (notes, tags, related papers):
 
 ")))
 
@@ -401,12 +407,6 @@
     "Face for obscuring/dimming icons"
     :group 'all-the-icons-faces)
 
-  (defun gen-bib-cache-idle ()
-    "Generate bib item caches with idle timer"
-    (run-with-idle-timer 0.5 nil #'citar-refresh))
-
-  (add-hook 'LaTeX-mode-hook #'gen-bib-cache-idle)
-  (add-hook 'org-mode-hook #'gen-bib-cache-idle)
   )
 
 (after! consult

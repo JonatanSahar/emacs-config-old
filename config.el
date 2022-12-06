@@ -370,6 +370,12 @@ Return the errors parsed with the error patterns of CHECKER."
 
 (writeroom-mode 1)
 
+(defun my/org-roam-find-node ()
+  (interactive)
+  (org-roam-node-find nil nil (org-roam-node-read nil (lambda (node)
+                                                        (string-match "Notes on" (org-roam-node-title node)))))
+ )
+
 (defmacro define-and-bind-text-object (key start-regex end-regex)
   (let ((inner-name (make-symbol "inner-name"))
         (outer-name (make-symbol "outer-name")))
