@@ -19,7 +19,7 @@
   (move-to-column (evil-mc-column-number end))
   ;; (evil-digit-argument-or-evil-beginning-of-line)
   ;; (evil-beginning-of-visual-line)
-      )
+  )
 
 (defun org-journal-find-location ()
   ;; Open today's journal, but specify a non-nil prefix argument in order to
@@ -33,11 +33,11 @@
 (defun get-buffers-matching-mode (mode)
   "Returns a list of buffers where their major-mode is equal to MODE"
   (let ((buffer-mode-matches '()))
-   (dolist (buf (buffer-list))
-     (with-current-buffer buf
-       (if (eq mode major-mode)
-           (push 'buffer-mode-matches buf))))
-   buffer-mode-matches))
+    (dolist (buf (buffer-list))
+      (with-current-buffer buf
+        (if (eq mode major-mode)
+            (push 'buffer-mode-matches buf))))
+    buffer-mode-matches))
 
 (defun multi-occur-in-this-mode ()
   "Show all lines matching REGEXP in buffers with this major mode."
@@ -53,10 +53,10 @@
 (defun my/org-archive-done-tasks ()
   (interactive)
   (org-map-entries
-    (lambda ()
-      (org-archive-subtree)
-      (setq org-map-continue-from (org-element-property :begin (org-element-at-point))))
-    "/DONE" 'agenda))
+   (lambda ()
+     (org-archive-subtree)
+     (setq org-map-continue-from (org-element-property :begin (org-element-at-point))))
+   "/DONE" 'agenda))
 
 (defun my/paragraph-LTR ()
   (interactive)
@@ -79,12 +79,12 @@
 (defun my_get_anki_cloze()
   (interactive)
   (when (looking-at ".*[.*].*$")
-         (save-excursion
-           (beginning-of-line)
-           (setq question
-                 (buffer-substring-no-properties (point) (line-end-position)))
-           (with-temp-buffer
-             (insert "
+    (save-excursion
+      (beginning-of-line)
+      (setq question
+            (buffer-substring-no-properties (point) (line-end-position)))
+      (with-temp-buffer
+        (insert "
 ** Question %^G
 :PROPERTIES:
 :ANKI_NOTE_TYPE: Cloze
@@ -92,26 +92,26 @@
 :END:
 *** Text
 \t"
-                       question
-                       "
+                question
+                "
 *** Extra
 \t"
-                       )
+                )
 
-             (search-backward "Question")
-             (my_refile org-my-anki-file "Waiting for export")))))
+        (search-backward "Question")
+        (my_refile org-my-anki-file "Waiting for export")))))
 
 (defun my_get_anki_question()
   (interactive)
   (when (looking-at ".*Q\..*$")
-           (beginning-of-line)
-           (search-forward "Q.")
-           (setq question (string-trim-left (concat (org-get-heading) "\n" (org-get-entry)) "\t*\**Q\."))
-           (search-forward "A.")
-           (setq answer (string-trim-left (concat (org-get-heading) "\n" (org-get-entry)) "\t*\**A\."))
-         (save-excursion
-           (with-temp-buffer
-             (insert "
+    (beginning-of-line)
+    (search-forward "Q.")
+    (setq question (string-trim-left (concat (org-get-heading) "\n" (org-get-entry)) "\t*\**Q\."))
+    (search-forward "A.")
+    (setq answer (string-trim-left (concat (org-get-heading) "\n" (org-get-entry)) "\t*\**A\."))
+    (save-excursion
+      (with-temp-buffer
+        (insert "
 ** Question %^G
 :PROPERTIES:
 :ANKI_NOTE_TYPE: Basic
@@ -119,14 +119,14 @@
 :END:
 *** Front
 \t"
-                       question
-                       "
+                question
+                "
 *** Back
 \t"
-                       answer)
+                answer)
 
-             (search-backward "drill")
-             (my_refile org-my-anki-file "Waiting for export")))))
+        (search-backward "drill")
+        (my_refile org-my-anki-file "Waiting for export")))))
 
 
 (defun my/org-open-other-window ()
@@ -157,7 +157,7 @@
 (defun my/search-replace ()
   (interactive)
   (if (use-region-p) (my/search-replace-in-region) (evil-ex "%s/"))
-)
+  )
 
 (defun my/search-replace-in-region ()
   (interactive)
@@ -178,50 +178,50 @@
   (insert (make-string count char)))
 
 (defun my/visual-inside-org-header()
- (interactive)
- (evil-middle-of-visual-line)
- (evil-org-beginning-of-line)
- (evil-visual-char)
- (end-of-line))
+  (interactive)
+  (evil-middle-of-visual-line)
+  (evil-org-beginning-of-line)
+  (evil-visual-char)
+  (end-of-line))
 
 (defun my/fix-windows-bib-file()
   (interactive)
-        (let ((case-fold-search t)) ; or nil
-                (goto-char (point-min))
-                (while (search-forward "C\\\:" nil t)
-                (replace-match "c:\/"))
+  (let ((case-fold-search t)) ; or nil
+    (goto-char (point-min))
+    (while (search-forward "C\\\:" nil t)
+      (replace-match "c:\/"))
 
-                (goto-char (point-min))
-                (while (search-forward "\\\\" nil t)
-                (replace-match "\/"))
+    (goto-char (point-min))
+    (while (search-forward "\\\\" nil t)
+      (replace-match "\/"))
 
-                (goto-char (point-min))
-                (while (search-forward "G\\\:" nil t)
-                (replace-match "g:\/")
+    (goto-char (point-min))
+    (while (search-forward "G\\\:" nil t)
+      (replace-match "g:\/")
 
-                ))
+      ))
 
-                (save-buffer)
-        )
+  (save-buffer)
+  )
 
 (defun my/convert-windows-to-linux-paths()
   (interactive)
-        (let ((case-fold-search t)) ; or nil
-                (goto-char (point-min))
-                (while (search-forward "C\\:" nil t)
-                (replace-match "\/mnt\/c"))
+  (let ((case-fold-search t)) ; or nil
+    (goto-char (point-min))
+    (while (search-forward "C\\:" nil t)
+      (replace-match "\/mnt\/c"))
 
-                (goto-char (point-min))
-                (while (search-forward "\\\\" nil t)
-                (replace-match "\/"))
-                (save-buffer) ;; repeat for other string pairs
+    (goto-char (point-min))
+    (while (search-forward "\\\\" nil t)
+      (replace-match "\/"))
+    (save-buffer) ;; repeat for other string pairs
 
-                (goto-char (point-min))
-                (while (search-forward "G\\:" nil t)
-                (replace-match "\/mnt\/g")
+    (goto-char (point-min))
+    (while (search-forward "G\\:" nil t)
+      (replace-match "\/mnt\/g")
 
-                (save-buffer)
-)))
+      (save-buffer)
+      )))
 
 (defun my/get-buffer-name()
   "Copy and show the name of the current buffer."
@@ -253,21 +253,21 @@ Org-mode properties drawer already, keep the headline and don’t insert
       (kill-line))))
 
 (defun my/export-org-to-docx ()
- "Export the current org file as a docx via markdown."
- (interactive)
- (let* ((bibfile (expand-file-name (car (org-ref-find-bibliography))))
-        ;; this is probably a full path
-        (current-file (buffer-file-name))
-        (basename (file-name-sans-extension current-file))
-        (docx-file (concat basename ".docx")))
-   (save-buffer)
-   (when (file-exists-p docx-file) (delete-file docx-file))
-   (shell-command (format
-                   ;; "pandoc -s -S %s -o %s"
-                   ;; (shell-quote-argument current-file) (shell-quote-argument docx-file)))
-                   "pandoc -s -S --bibliography=%s %s -o %s"
-                   (shell-quote-argument bibfile) (shell-quote-argument current-file) (shell-quote-argument docx-file)))
-   ))
+  "Export the current org file as a docx via markdown."
+  (interactive)
+  (let* ((bibfile (expand-file-name (car (org-ref-find-bibliography))))
+         ;; this is probably a full path
+         (current-file (buffer-file-name))
+         (basename (file-name-sans-extension current-file))
+         (docx-file (concat basename ".docx")))
+    (save-buffer)
+    (when (file-exists-p docx-file) (delete-file docx-file))
+    (shell-command (format
+                    ;; "pandoc -s -S %s -o %s"
+                    ;; (shell-quote-argument current-file) (shell-quote-argument docx-file)))
+                    "pandoc -s -S --bibliography=%s %s -o %s"
+                    (shell-quote-argument bibfile) (shell-quote-argument current-file) (shell-quote-argument docx-file)))
+    ))
 
 (defun helm-bibtex-format-pandoc-citation (keys)
   (concat "[" (mapconcat (lambda (key) (concat "@" key)) keys "; ") "]"))
@@ -277,21 +277,21 @@ Org-mode properties drawer already, keep the headline and don’t insert
 ;;   'helm-bibtex-format-pandoc-citation)
 
 (setq bibtex-completion-format-citation-functions
-  '((org-mode      . helm-bibtex-format-pandoc-citation)
-    (latex-mode    . bibtex-completion-format-citation-cite)
-    (markdown-mode . bibtex-completion-format-citation-pandoc-citeproc)
-    (default       . bibtex-completion-format-citation-default)))
+      '((org-mode      . helm-bibtex-format-pandoc-citation)
+        (latex-mode    . bibtex-completion-format-citation-cite)
+        (markdown-mode . bibtex-completion-format-citation-pandoc-citeproc)
+        (default       . bibtex-completion-format-citation-default)))
 (setq bibtex-completion-additional-search-fields '(keywords))
 (defun my/yank-org-headline ()
   (interactive)
   (let
       ((text (nth 4 (org-heading-components))))
-      (kill-new text)))
+    (kill-new text)))
 
-           ;; (make-temp-name
-           ;;  (concat (s-replace  "/mnt/c/Users/Jonathan/Google Drive/" "/home/jonathan/google_drive/" (buffer-file-name))
-           ;;          "_"
-           ;;          (format-time-string "%Y%m%d_%H%M%S_"))) ".png"))
+;; (make-temp-name
+;;  (concat (s-replace  "/mnt/c/Users/Jonathan/Google Drive/" "/home/jonathan/google_drive/" (buffer-file-name))
+;;          "_"
+;;          (format-time-string "%Y%m%d_%H%M%S_"))) ".png"))
 (defun my/org-paste-image ()
   "Paste an image into a time stamped unique-named file in the
 same directory as the org-buffer and insert a link to this file."
@@ -320,15 +320,15 @@ same directory as the org-buffer and insert a link to this file."
     ))
 
 (defun my/capture-screen ()
-(interactive)
+  (interactive)
   (let* ((ps-script "[system.windows.forms.sendkeys]::sendwait('{PRTSC}')"))
-  (powershell ps-script)
+    (powershell ps-script)
+    )
   )
-)
 
 (defun as-windows-path (unix-path)
-   ;; "Takes a unix path and returns a matching WSL path
-;; (e.g. \\wsl$\Ubuntu-20.04\tmp)"
+  ;; "Takes a unix path and returns a matching WSL path
+  ;; (e.g. \\wsl$\Ubuntu-20.04\tmp)"
   ;; substring removes the trailing \n
   (substring
    (shell-command-to-string
@@ -373,8 +373,8 @@ https://org-roam.discourse.group/t/org-roam-major-redesign/1198/34."
     (while (re-search-forward
             "^ *:PROPERTIES:\n\\( *:.+?:.*\n\\)+ *:END:\n" nil t)
       (remove-list-of-text-properties (match-beginning 0) (match-end 0)
-                           (list 'display
-                                 'line-prefix)))))
+                                      (list 'display
+                                            'line-prefix)))))
 
 (defun my/helm-or-evil-escape ()
   "Escape from anything."
@@ -390,10 +390,10 @@ https://org-roam.discourse.group/t/org-roam-major-redesign/1198/34."
         ((keyboard-quit))))
 
 
-; alternate whitespace-mode with whitespace.el defaults, doom defaults and off:
+                                        ; alternate whitespace-mode with whitespace.el defaults, doom defaults and off:
 
 (defun my/set-whitespace-defaults()
-  ; only save the values the first time we get here
+                                        ; only save the values the first time we get here
   (unless (boundp 'my/default-whitespace-style)
     (setq bh:default-whitespace-style                (default-value 'whitespace-style)
           bh:default-whitespace-display-mappings     (default-value 'whitespace-display-mappings)
@@ -401,17 +401,17 @@ https://org-roam.discourse.group/t/org-roam-major-redesign/1198/34."
           bh:doom-whitespace-display-mappings        whitespace-display-mappings
           bh:whitespace-mode                         "doom")))
 
-; whitespace-style etc are set up with default-values in whitespace.el and then
-; modified in doom-highlight-non-default-indentation-h (in core/core-ui.el).
-; This is added to after-change-major-mode-hook in doom-init-ui-h (in
-; core/core-ui.el) and called a LOT: so I need to capture doom's modified
-; settings after that. The trouble is, this file (config.el) is called _before_
-; doom-init-ui-h which is called in window-setup-hook as the last gasp of
-; doom-initialize! find-file-hook appears to work.
+                                        ; whitespace-style etc are set up with default-values in whitespace.el and then
+                                        ; modified in doom-highlight-non-default-indentation-h (in core/core-ui.el).
+                                        ; This is added to after-change-major-mode-hook in doom-init-ui-h (in
+                                        ; core/core-ui.el) and called a LOT: so I need to capture doom's modified
+                                        ; settings after that. The trouble is, this file (config.el) is called _before_
+                                        ; doom-init-ui-h which is called in window-setup-hook as the last gasp of
+                                        ; doom-initialize! find-file-hook appears to work.
 
 (add-hook 'find-file-hook #'my/set-whitespace-defaults 'append)
 
-; doom=>default=>off=>doom=>...
+                                        ; doom=>default=>off=>doom=>...
 (defun my/toggle-whitespace () (interactive)
        (cond ((equal my/whitespace-mode "doom")
               (setq whitespace-style my/default-whitespace-style
@@ -454,8 +454,8 @@ https://org-roam.discourse.group/t/org-roam-major-redesign/1198/34."
 ;;   (setq writeroom-width (if writeroom-width )))
 
 (defun my/orgnv-update-db ()
-           (setq orgnv--database (orgnv-build-database))
-)
+  (setq orgnv--database (orgnv-build-database))
+  )
 
 (defmacro wsl--open-with (id &optional app dir)
   `(defun ,(intern (format "wsl/%s" id)) ()
@@ -494,22 +494,22 @@ With a prefix ARG always prompt for command to use."
 (defun my/org-screenshot ()
   "Take a screenshot into a time stamped unique-named file in the
    same directory as the org-buffer and insert a link to this file."
-   (interactive)
-   (setq filename
-     (concat
-       (make-temp-name
-         (concat (buffer-file-name)
-              "_"
-              (format-time-string "%Y%m%d_%H%M%S_")) ) ".png"))
-   ;; (shell-command "snippingtool /clip")
-   (shell-command (concat "powershell -command \"Add-Type -AssemblyName System.Windows.Forms;if ($([System.Windows.Forms.Clipboard]::ContainsImage())) {$image = [System.Windows.Forms.Clipboard]::GetImage();[System.Drawing.Bitmap]$image.Save('" filename "',[System.Drawing.Imaging.ImageFormat]::Png); Write-Output 'clipboard content saved as file'} else {Write-Output 'clipboard does not contain image data'}\""))
-   (insert (concat "[[file:" filename "]]"))
-   (org-display-inline-images))
+  (interactive)
+  (setq filename
+        (concat
+         (make-temp-name
+          (concat (buffer-file-name)
+                  "_"
+                  (format-time-string "%Y%m%d_%H%M%S_")) ) ".png"))
+  ;; (shell-command "snippingtool /clip")
+  (shell-command (concat "powershell -command \"Add-Type -AssemblyName System.Windows.Forms;if ($([System.Windows.Forms.Clipboard]::ContainsImage())) {$image = [System.Windows.Forms.Clipboard]::GetImage();[System.Drawing.Bitmap]$image.Save('" filename "',[System.Drawing.Imaging.ImageFormat]::Png); Write-Output 'clipboard content saved as file'} else {Write-Output 'clipboard does not contain image data'}\""))
+  (insert (concat "[[file:" filename "]]"))
+  (org-display-inline-images))
 
 
 (defun as-windows-path (unix-path)
   ;; "Takes a unix path and returns a matching WSL path
-;; (e.g. \\wsl$\Ubuntu-20.04\tmp)"
+  ;; (e.g. \\wsl$\Ubuntu-20.04\tmp)"
   ;; substring removes the trailing \n
   (substring
    (shell-command-to-string
@@ -566,9 +566,9 @@ Current pattern: %`evil-mc-pattern
   ("<escape>" #'evil-mc-resume-cursors "quit" :color blue))
 
 (defun my/revert-buffer-no-confirm ()
-    "Revert buffer without confirmation."
-    (interactive)
-    (revert-buffer :ignore-auto :noconfirm))
+  "Revert buffer without confirmation."
+  (interactive)
+  (revert-buffer :ignore-auto :noconfirm))
 
 (shell-command-to-string "wslpath -w '/mnt/g/My Drive/notes/gtd/inbox.org_20220410_170636_v4R344.png'")
 
@@ -577,18 +577,18 @@ Current pattern: %`evil-mc-pattern
   (+multiple-cursors/evil-mc-toggle-cursor-here)
   (evil-mc-pause-cursors))
 
- ;; Use Fira Code font faces in current buffer
- (defun my-buffer-face-mode-programming ()
-   "Sets a fixed width (monospace) font in current buffer"
-   (interactive)
-   ;; (setq buffer-face-mode-face '(:extend t :family "Fira Code"))
-   (setq buffer-face-mode-face '(:extend t :family "Roboto Mono"))
-   (buffer-face-mode))
+;; Use Fira Code font faces in current buffer
+(defun my-buffer-face-mode-programming ()
+  "Sets a fixed width (monospace) font in current buffer"
+  (interactive)
+  ;; (setq buffer-face-mode-face '(:extend t :family "Fira Code"))
+  (setq buffer-face-mode-face '(:extend t :family "Roboto Mono"))
+  (buffer-face-mode))
 
 (defun my-buffer-face-mode-text ()
-   (interactive)
-   (setq buffer-face-mode-face '(:extend t :family "Heebo"))
-   (buffer-face-mode))
+  (interactive)
+  (setq buffer-face-mode-face '(:extend t :family "Heebo"))
+  (buffer-face-mode))
 
 (defun my/toggle-writing-mode ()
   "Toggle a distraction-free environment for writing."
@@ -609,3 +609,9 @@ Current pattern: %`evil-mc-pattern
   (let ((shell-file-name "C:\\Windows\\System32\\bash.exe" ))
     (shell "*bash*"))
   )
+
+(defun my/indent-buffer ()
+  (interactive)
+  (save-excursion
+    (evil-indent (point-min) (point-max))
+    ))

@@ -277,6 +277,7 @@
  ;; :nvi "C-c l" #'toggle-input-method
  :nvi "M-;" #'toggle-input-method
 
+ :n "z=" #'my/indent-buffer
  :map vterm-mode-map
         :nv "p" #'term-paste
         :nvi "C-c p" #'term-paste

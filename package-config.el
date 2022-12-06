@@ -680,7 +680,9 @@ With prefix, rebuild the cache before offering candidates."
         "M-;" #'+company/complete)
 
   ;; (set-company-backend! 'prog-mode '(company-files) '(company-dabbrev-code))
-  (set-company-backend! 'prog-mode '(company-semantic company-capf company-files (company-dabbrev-code company-dabbrev))
+  (set-company-backend! 'prog-mode '(company-semantic company-capf company-files (company-dabbrev-code company-dabbrev)))
+  (set-company-backend! 'emacs-lisp-mode '(company-semantic company-capf company-files (company-dabbrev-code company-dabbrev)))
+  (set-company-backend! 'matlab-mode '(company-semantic company-capf company-files (company-dabbrev-code company-dabbrev)))
   (set-company-backend! 'text-mode '(company-dabbrev))
   (set-company-backend! 'org-mode '(company-files))
   )
