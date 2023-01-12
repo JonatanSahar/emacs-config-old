@@ -180,12 +180,14 @@
                             (font-lock-mode 1)
                             (buffer-face-mode)
                             (+zen/toggle)
+                            (my/fix-hebrew-hyphen)
                             ))
 
 
 (add-hook 'prog-mode-hook 'my-buffer-face-mode-programming)
 (add-hook 'prog-mode-hook (lambda ()
                             (setq captain-predicate (lambda () (nth 8 (syntax-ppss (point)))))
+                            (+zen/toggle)
                             ))
 
 (evil-snipe-override-mode 1)
@@ -388,3 +390,5 @@ Return the errors parsed with the error patterns of CHECKER."
        (define-key evil-outer-text-objects-map ,key (quote ,outer-name)))))
 
 (define-and-bind-text-object "l" "^" "\s*$") ; a line object without trailing whitespaces
+
+(yas-global-mode 0)

@@ -90,16 +90,16 @@
   :nv "C-e" #'evil-end-of-line-or-visual-line
   :i "M-h" #'org-beginning-of-line
   :i "M-l" #'org-end-of-line
-  :i "C-S-k" #'previous-line
   :i "C-S-j" #'next-line
-  :i "C-S-l" #'right-char
-  :i "C-S-h" #'left-char
+  :i "C-S-k" #'previous-line
   :i "C-'" #'right-char
   :i "C-;" #'left-char
   :i "C-k" #'previous-line
   :i "C-j" #'next-line
-  :i "C-l" #'right-word
-  :i "C-h" #'left-word
+  :i "C-l" #'right-char
+  :i "C-S-l" #'right-word
+  :i "C-h" #'left-char
+  :i "C-S-h" #'left-word
   :nvi "C-z" #'evil-undo
   :nvi "C-y" #'evil-redo
   )
@@ -240,6 +240,7 @@
       :desc "citar references"  "nb" #'citar-open
       :desc "rebuild orgNv database"  "nr" #'(lambda () (interactive) (setq orgnv--database (orgnv-build-database)))
       :desc "Org Noter"  "nN" #'org-noter
+      :desc "agenda for literature followup" "oal" #'(lambda () (interactive) (org-agenda nil "l"))
       "M-x" :n "SPC" #'execute-extended-command)
 
 
@@ -309,12 +310,13 @@
         :ni "]]" #'org-roam-node-insert
  )
 
-(map!
- (:prefix "gf"
-           :vn "j" #'evil-mc-make-and-goto-next-match
-           :vn "J" #'evil-mc-skip-and-goto-next-match
-           :vn "k" #'evil-mc-make-and-goto-prev-match
-           :vn "K" #'evil-mc-skip-and-goto-prev-match))
+;; (map!
+ ;; (:prefix "g"
+ ;;          (:prefix "f"
+ ;;           :vn "j" #'evil-mc-make-and-goto-next-match
+ ;;           :vn "J" #'evil-mc-skip-and-goto-next-match
+ ;;           :vn "k" #'evil-mc-make-and-goto-prev-match
+ ;;           :vn "K" #'evil-mc-skip-and-goto-prev-match)))
 
 (map! :prefix "zz"
       ;; :map org-mode-map
@@ -426,6 +428,7 @@
         :desc "orgnv + rebuild DB" "G" #'(lambda () (interactive) (my/orgnv-update-db) (orgnv-browse))
         :desc "kill all other windows" "o" 'delete-other-windows
         :desc "resize window to small" "f" 'my/make-small-frame
+        :desc "resize window to medium" "m" 'my/make-medium-frame
         :desc "make new frame" "F" 'make-frame-command
         :desc "writeroom mode" "w" #'writeroom-mode
         :desc "kill buffer and window" "W" '+workspace/close-window-or-workspace
@@ -508,7 +511,7 @@
 (map! :map org-mode-map
   :nvi "C-c  C-y" #'evil-yank
    :nvi "C-c  C-x" #'evil-delete
-   :nvi "C-c  C-d" #'evil-delete
+   :nvi "C-c  d" #'evil-delete
    :nvi "C-c  c" #'evil-yank
    :nvi "C-c  y" #'evil-yank
    :i "C-v" #'(lambda () (interactive) (backward-char) (evil-paste-after 1))
@@ -535,10 +538,11 @@
    :nv "C-c  p" #'evil-paste-after
    :nv "C-c  P" #'evil-paste-before
    :nvi "C-c  C-r" #'evil-redo
-   :nvi "C-c  C-d" #'evil-delete
+   :nvi "C-c  d" #'evil-delete
    :nvi "C-c  x" #'evil-delete
 
    :nvi "M-p" #'evil-paste-pop
+   :nvi "M-n" #'evil-paste-pop-next
    :nvi "C-p" #'projectile-find-file
 
    ;; :nvi "C-c  c" #'org-capture

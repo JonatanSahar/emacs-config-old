@@ -61,7 +61,8 @@
 
     org-agenda-block-separator " "
     org-agenda-custom-commands
-    '(("o" "my agenda"
+    '(
+      ("o" "my agenda"
        (
         (todo "NEXT|HOLD" (
                            (org-agenda-overriding-header "\n⚡ Next up:\n")
@@ -82,7 +83,28 @@
                                                   (0900 1200 1800 2100)
                                                   "      " "┈┈┈┈┈┈┈┈┈┈┈┈┈")))))
         )
-       ))
+       )
+
+      ("l" "literature follow up"
+       (
+        (todo "READ" (
+                           (org-agenda-overriding-header "\n⚡ Next up:\n")
+                           (org-agenda-remove-tags t)
+                           ;; (org-agenda-prefix-format (concat " %b  %-2i  %t%s" ))
+                           (org-agenda-prefix-format '((agenda . " %i %-12:c%?-12t% s")
+                                                       (timeline . "  % s")
+                                                       (todo .
+                                                             " %i %-12:c %(concat \"[ \"(org-format-outline-path (org-get-outline-path)) \" ]\") ")
+                                                       (tags .
+                                                             " %i %-12:c %(concat \"[ \"(org-format-outline-path (org-get-outline-path)) \" ]\") ")
+                                                       (search . " %i %-12:c"))
+                                                     )
+                           (org-agenda-todo-keyword-format "")))
+        )
+       )
+
+
+      )
     org-capture-templates '(
                             ("t" "Todo"
                              entry
@@ -173,6 +195,7 @@
   (setq org-roam-capture-templates
         '(("d" "default" plain "%?"
            :target (file+head "%<%Y-%m-%d-%H%M%S>-${slug}.org"
+                              ;; "${title}\n- tags :: \n")
                               "#+title: ${title}\n- tags :: \n")
            :unnarrowed t)))
 
@@ -680,11 +703,8 @@ With prefix, rebuild the cache before offering candidates."
         "M-;" #'+company/complete)
 
   ;; (set-company-backend! 'prog-mode '(company-files) '(company-dabbrev-code))
-  (set-company-backend! 'prog-mode '(company-semantic company-capf company-files (company-dabbrev-code company-dabbrev)))
-  (set-company-backend! 'emacs-lisp-mode '(company-semantic company-capf company-files (company-dabbrev-code company-dabbrev)))
-  (set-company-backend! 'matlab-mode '(company-semantic company-capf company-files (company-dabbrev-code company-dabbrev)))
-  (set-company-backend! 'text-mode '(company-dabbrev))
-  (set-company-backend! 'org-mode '(company-files))
+  (set-company-backend! 'prog-mode '((company-capf company-files company-dabbrev-code company-dabbrev)))
+  (set-company-backend! 'text-mode '((company-dabbrev company-files)))
   )
 
 (use-package! poetry
