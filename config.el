@@ -94,10 +94,20 @@
  backup-directory-alist `(("." . ,(concat user-emacs-directory "autosaved_files")))
  truncate-string-ellipsis "…")               ; Unicode ellispis are nicer than "...", and also save /precious/ space
 
+;; load orgnv
 (add-to-list 'load-path (concat emacs-directory (file-name-as-directory "orgnv")))
 (load "orgnv.el")
 (require 'orgnv)
 (setq orgnv-directories (list (concat (file-name-as-directory notes-dir)  (file-name-as-directory "slip-box"))))
+
+;; load openai-api
+(add-to-list 'load-path (concat emacs-directory (file-name-as-directory "aide.el")))
+(load "aide.el")
+(require 'aide)
+
+;; load dired+
+(add-load-path! "../dired-plus")
+(load "dired+.el")
 
 (general-auto-unbind-keys)
 
@@ -171,7 +181,8 @@
                             (setq bidi-paragraph-separate-re  "^")
                             (setq helm-ff-fuzzy-matching t)
                             (setq captain-predicate (lambda () t))
-
+                            (setq company-backends '((company-capf company-files company-dabbrev-code company-dabbrev)))
+                            (delete-selection-mode 1)                         ; Replace selection when inserting text
                             (visual-fill-column-mode 1)
                             (visual-line-mode 1)
                             ;; (flyspell-mode 1)
@@ -187,7 +198,10 @@
 (add-hook 'prog-mode-hook 'my-buffer-face-mode-programming)
 (add-hook 'prog-mode-hook (lambda ()
                             (setq captain-predicate (lambda () (nth 8 (syntax-ppss (point)))))
+                            (setq company-backends '((company-capf company-files company-dabbrev-code company-dabbrev)))
                             (+zen/toggle)
+                            ; Replace selection when inserting text
+                            (delete-selection-mode 1)
                             ))
 
 (evil-snipe-override-mode 1)
@@ -208,9 +222,6 @@
   (setq-default prescient-history-length 1000)
 
 (add-hook 'bibtex-mode-hook 'my/fix-windows-bib-file)
-;; (add-hook 'text-mode-hook (lambda ()
-;;                             (setq-local company-backends '(company-wordfreq))
-;;                             (setq-local company-transformers nil)))
 
 (defadvice! prompt-for-buffer (&rest _)
   :after 'evil-window-vsplit (switch-to-buffer))
@@ -296,7 +307,6 @@
 (setq org-fold-core-style "overlays")
 
 
-(setq flycheck-python-pycompile-executable "c:/Python310/python")
 
 ;;; On Windows, commands run by flycheck may have CRs (\r\n line endings).
 ;;; Strip them out before parsing.
@@ -313,7 +323,14 @@ Return the errors parsed with the error patterns of CHECKER."
 
 (setq lsp-typescript-npm "c:/Program Files/nodejs/npm")
 
-(setq lsp-pyright-python-executable-cmd "c:/Python310/python")
+(setq lsp-python-ms-python-executable-cmd "c:/Users/Jonathan/miniconda3/python")
+(setq lsp-pyright-python-executable-cmd "c:/Users/Jonathan/miniconda3/python")
+
+(setq flycheck-python-pyright-executable  "c:/Users/Jonathan/programs/scripts/pyright.exe")
+(setq flycheck-python-pycompile-executable "c:/Users/Jonathan/miniconda3/python")
+
+(setq python-shell-interpreter "c:/Users/Jonathan/miniconda3/python")
+
 
 (setq +zen-text-scale 1)
 
@@ -375,8 +392,7 @@ Return the errors parsed with the error patterns of CHECKER."
 (defun my/org-roam-find-node ()
   (interactive)
   (org-roam-node-find nil nil (org-roam-node-read nil (lambda (node)
-                                                        (string-match "Notes on" (org-roam-node-title node)))))
- )
+                                                        (string-match "Notes on" (org-roam-node-title node))))))
 
 (defmacro define-and-bind-text-object (key start-regex end-regex)
   (let ((inner-name (make-symbol "inner-name"))
@@ -392,3 +408,166 @@ Return the errors parsed with the error patterns of CHECKER."
 (define-and-bind-text-object "l" "^" "\s*$") ; a line object without trailing whitespaces
 
 (yas-global-mode 0)
+
+(setq eshell-prompt-function
+      (lambda()
+        (concat (getenv "USER") "@" (getenv "HOST") ":"
+                ((lambda (p-lst)
+                   (if (> (length p-lst) 3)
+                       (concat
+                        (mapconcat (lambda (elm) (substring elm 0 1))
+                                   (butlast p-lst (- (length p-lst) 3))
+                                   "/")
+                        "/"
+                        (mapconcat (lambda (elm) elm)
+                                   (last p-lst (- (length p-lst) 3))
+                                   "/"))
+                     (mapconcat (lambda (elm) elm)
+                                p-lst
+                                "/")))
+                 (split-string (eshell/pwd) "/"))
+                (if (= (user-uid) 0) " # " " $ "))))
+
+(setq tramp-default-method "plink")
+
+(when (< 26 emacs-major-version)
+ (tab-bar-mode 1)                           ;; enable tab bar
+ (setq tab-bar-show 1)                      ;; hide bar if <= 1 tabs open
+ (setq tab-bar-close-button-show nil)       ;; hide tab close / X button
+ (setq tab-bar-new-tab-choice "*doom*");; buffer to show in new tabs
+ (setq tab-bar-tab-hints t)                 ;; show tab numbers
+  (setq tab-bar-format '(tab-bar-format-tabs tab-bar-separator)))
+                                            ;; elements to include in bar
+
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(line-number ((t (:inherit default :foreground "steel blue" :strike-through nil :underline nil :slant normal :weight semi-bold :family "Roboto Mono"))))
+ '(line-number-current-line ((t (:inherit (hl-line default) :foreground "light steel blue" :strike-through nil :underline nil :slant normal :weight semi-bold :family "Roboto Mono"))))
+ '(org-default ((t (:family "Heebo")))))
+
+(persp-mode 0)
+
+(setq company-backends '((company-capf company-files company-dabbrev-code company-dabbrev)))
+(setq writeroom-width 100)
+(diredp-toggle-find-file-reuse-dir 1)
+(setq dired-compress-file-alist '(("\\.gz\\'" . "gzip -9f %i") ("\\.bz2\\'" . "bzip2 -9f %i") ("\\.xz\\'" . "xz -9f %i") ("\\.zst\\'" . "zstd -qf -19 --rm -o %o %i") ("\\.zip\\'" . "zip %o -r --filesync %i")))
+(+word-wrap-mode 1)
+
+
+; Setting up openAI integration
+
+(setenv "OPENAI_API_KEY" "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")
+
+(setq codex-edit-helper-location "c:/Users/Jonathan/Documents/Code/openAI/codex_edit.py")
+(setq codex-complete-helper-location "c:/Users/Jonathan/Documents/Code/openAI/codex_complete.py")
+(setq text-edit-helper-location "c:/Users/Jonathan/Documents/Code/openAI/text_edit.py")
+(setq text-complete-helper-location "c:/Users/Jonathan/Documents/Code/openAI/text_complete.py")
+
+(defun maybe-get-region ()
+  "If region is active, return region, else return the empty string."
+(if (use-region-p)
+      (buffer-substring-no-properties (region-beginning) (region-end)) '""))
+
+(defun get-edit-output (filepath input instructions)
+  "Call the codex API to get the 'edit completion'.
+FILEPATH is the path to the python file calling the API
+INPUT and INSTRUCTIONS are the strings that will go into the respective API fields"
+  (shell-command-to-string (format "python %s '%s' '%s'" filepath input instructions)))
+
+(defun get-completion-output (filepath input)
+  "Call the codex API to get the 'edit completion'.
+FILEPATH is the path to the python file calling the API
+INPUT and INSTRUCTIONS are the strings that will go into the respective API fields"
+  (shell-command-to-string (format "python %s '%s'" filepath input)))
+
+;; (defun my/openai-codex-edit (instructions)
+;;   "Interactively asks for INSTRUCTIONS, combines with region or empty string."
+;;   (interactive "sInstructions:")
+;;   (let ((resulting-text (get-edit-output codex-helper-location (maybe-get-region) instructions)))
+;;     (if (use-region-p)
+;;         (progn
+;;           (goto-char (region-end))
+;;           (evil-insert-newline-below)
+;;             (insert resulting-text)
+;;             (+evil/insert-newline-above))
+;;       (progn
+;;             (insert resulting-text)
+;;             (+evil--insert-newline-above 2)
+;;       ))))
+
+;; (defun my/openai-text-edit (instructions)
+;;   "Interactively asks for INSTRUCTIONS, combines with region or empty string."
+;;   (interactive "sInstructions:")
+;;   (let ((resulting-text (get-edit-output text-edit-helper-location (maybe-get-region) instructions)))
+;;     (if (use-region-p)
+;;       (progn
+;; 	(kill-region (region-beginning) (region-end))
+;; 	(insert resulting-text))
+;; 	(insert resulting-text))))
+
+;; (defun my/openai-codex-complete (instructions)
+;;   "Interactively asks for INSTRUCTIONS, combines with region or whole buffer."
+;;   (interactive "sInstructions:")
+;;   (let ((resulting-text (get-edit-output codex-complete-helper-location (maybe-get-region) instructions)))
+;;     (insert resulting-text)))
+
+;; (defun my/openai-text-complete (instructions)
+;;   "Interactively asks for INSTRUCTIONS, combines with region or whole buffer."
+;;   (interactive "sInstructions:")
+;;   (let ((resulting-text (get-edit-output text-complete-helper-location (maybe-get-region) instructions)))
+;;     (insert resulting-text)))
+
+ (defun my/openai-generate-text (query)
+  "Generate text from OpenAI API based on QUERY and insert it after the selected text or at point."
+  (interactive "sEnter a query: ")
+  (let* ((selected-text (when (use-region-p) (buffer-substring-no-properties (region-beginning) (region-end))))
+         (prompt-text (if selected-text (concat selected-text " " query) query))
+         (generated-text (get-completion-output text-complete-helper-location (shell-quote-argument prompt-text))))
+    (if selected-text
+        (progn
+          (goto-char (region-end))
+          (insert "\n\n" generated-text))
+      (insert generated-text "\n"))))
+
+ (defun my/openai-edit-text (query)
+  "Generate text from OpenAI API based on QUERY and insert it after the selected text or at point."
+  (interactive "sEnter a query: ")
+  (let* ((selected-text (maybe-get-region))
+         (prompt-text query)
+         (generated-text (get-edit-output text-edit-helper-location (shell-quote-argument selected-text) (shell-quote-argument prompt-text))))
+    (if selected-text
+        (progn
+          (goto-char (region-end))
+          (insert "\n\n" generated-text))
+      (insert generated-text "\n"))))
+
+ (defun my/openai-generate-code (query)
+  "Generate text from OpenAI API based on QUERY and insert it after the selected text or at point."
+  (interactive "sEnter a query: ")
+  (let* ((selected-text (when (use-region-p) (buffer-substring-no-properties (region-beginning) (region-end))))
+         (prompt-text (if selected-text (concat selected-text " " query) query))
+         (generated-text (get-completion-output codex-complete-helper-location (shell-quote-argument prompt-text))))
+    (if selected-text
+        (progn
+          (goto-char (region-end))
+          (insert "\n\n" generated-text))
+      (insert generated-text "\n"))))
+
+ (defun my/openai-edit-code (query)
+  "Generate text from OpenAI API based on QUERY and insert it after the selected text or at point."
+  (interactive "sEnter a query: ")
+  (let* ((selected-text (maybe-get-region))
+         (prompt-text query)
+         (generated-text (get-edit-output codex-edit-helper-location (shell-quote-argument selected-text) (shell-quote-argument prompt-text))))
+    (if selected-text
+        (progn
+          (goto-char (region-end))
+          (insert "\n\n" generated-text))
+      (insert generated-text "\n"))))
+
+(setq openai-api-key "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")
+
+(set-popup-rule! "^\\*Ibuffer" :side 'bottom :size 0.2 :ttl nil)

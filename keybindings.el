@@ -72,6 +72,10 @@
     (:map helm-find-files-map
      [control-backspace] nil)
 
+    (:map dired-mode-map
+     :n "s" nil
+     :n "/" nil)
+
    :i "C-v" nil) ;;unmap a bunch of keys
 
 (map! :map (evil-org-mode-map emacs-lisp-mode-map prog-mode-map text-mode-map org-mode-map)
@@ -87,7 +91,7 @@
   ;; :n "j" (lambda nil (interactive) (scroll-up-command 1))
   ;; :n "k" (lambda nil (interactive) (scroll-down-command 1))
   :ni "C-c =" #'helm-flyspell-correct
-  :nv "C-e" #'evil-end-of-line-or-visual-line
+  :nv "C-e" #'evil-end-of-visual-line
   :i "M-h" #'org-beginning-of-line
   :i "M-l" #'org-end-of-line
   :i "C-S-j" #'next-line
@@ -268,8 +272,8 @@
  :n "g+" #'evil-numbers/inc-at-pt
  :vn "gs" #'evil-snipe-S
  ;; :nv "gf" #'evil-repeat
- :nv "E" #'evil-end-of-line-or-visual-line
- :nv "W" #'evil-beginning-of-visual-line
+ :nv "E" #'evil-forward-WORD-end
+ :nv "W" #'evil-forward-WORD-begin
  :nvi "C-S-l" #'org-roam-insert
  :nv "C-l" #'windmove-right
  :nv "C-h" #'windmove-left
@@ -384,8 +388,15 @@
         :desc "avy line" "l" 'evil-avy-goto-line)
 
         (:prefix "t"
-        :nv "T" #'treemacs
+        :nv "t" #'treemacs
         :nv "s" #'shell
+        )
+
+        (:prefix "o"
+        :nv :desc "windows cmd" "w" #'shell
+        :nv :desc "eshell" "s" #'eshell
+        :nv :desc "dired in some dir" "d" #'consult-dir
+        :nv :desc "dired in a new window" "D" #'consult-dir
         )
 
         (:prefix "g"
@@ -601,3 +612,39 @@
 ;;    :i "RETURN" #'comint-send-input)
 
 (map! :map shell-mode-map "C-l" #'comint-clear-buffer)
+;; (map! :map dired-mode-map "C-d" nil)
+;; (map! :map dired-mode-map "Q" #'(lambda ()
+;;                                   (interactive)
+;;                                   (+dired/quit-all)
+;;                                   (if  (not (one-window-p))
+;;                                                   (+workspace/close-window-or-workspace))))
+
+(map! :map dired-mode-map
+      :v "u" nil
+      :n "=" nil
+      :n "s" nil
+      :n "/" nil)
+
+
+(map! :map dired-mode-map
+      :n "=" #'diredp-ediff)
+
+(map! :leader :nv "TAB" nil)
+
+(map! :leader
+      :prefix "TAB"
+      "r" #'tab-rename
+      "n" #'tab-new
+      "t" #'tab-new
+      "w" #'tab-close
+      "d" #'tab-close
+      "1" #'tab-bar-select-tab
+      "2" #'tab-bar-select-tab
+      "3" #'tab-bar-select-tab
+      "4" #'tab-bar-select-tab
+      "5" #'tab-bar-select-tab
+       "h" #'tab-previous
+       "l" #'tab-next
+       "j" #'tab-previous
+       "k" #'tab-next
+       )

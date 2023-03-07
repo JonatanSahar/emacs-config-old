@@ -161,6 +161,8 @@
 
 (defun my/search-replace-in-region ()
   (interactive)
+  ;; (if (eq last-command 'evil-yank)
+      
   (let ((evil-ex-initial-input "s/"))
     (call-interactively 'evil-ex))
   )
@@ -577,7 +579,6 @@ Current pattern: %`evil-mc-pattern
   (+multiple-cursors/evil-mc-toggle-cursor-here)
   (evil-mc-pause-cursors))
 
-;; Use Fira Code font faces in current buffer
 (defun my-buffer-face-mode-programming ()
   "Sets a fixed width (monospace) font in current buffer"
   (interactive)

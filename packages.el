@@ -87,6 +87,9 @@
 (package! org-mime)
 (package! dired-hacks-utils)
 (package! dired-filter)
+(package! tabspaces)
+(package! popper)
+(package! conda)
 
 ;; ivy/helm alternative
 (package! consult)
@@ -105,6 +108,9 @@
 (package!  consult-bibtex
  :recipe (:host github
           :repo "mohkale/consult-bibtex"))
+
+;; (package! lambda-themes
+;;   :recipe (:host github :repo "lambda-emacs/lambda-themes"))
 
 ;; code related
 (package! matlab-mode)

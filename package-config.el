@@ -335,10 +335,9 @@
     ("f" origami-forward-toggle-node)
     ("a" origami-toggle-all-nodes))
   )
-;; (setq olivetti-body-width 100)
-;; (setq company-backends '((company-files) (company-dabbrev-code)  company-capf))
-(set-company-backend! 'matlab-mode '(company-files company-dabbrev-code company-capf company-dabbrev))
-(set-company-backend! 'matlab-shell-mode '(company-capf company-matlab-shell company-dabbrev))
+
+
+;; (set-company-backend! 'matlab-shell-mode '(company-capf company-matlab-shell company-dabbrev))
 (custom-set-variables '(matlab-shell-command-switches '("-nodesktop -nosplash ")))
 ;; (custom-set-variables '(matlab-shell-command-switches '("-nodesktop -nosplash -nodisplay")))
 (setq matlab-verify-on-save-flag nil)
@@ -701,10 +700,6 @@ With prefix, rebuild the cache before offering candidates."
   (map! :map org-mode-map :i
         "C-;" #'+company/complete
         "M-;" #'+company/complete)
-
-  ;; (set-company-backend! 'prog-mode '(company-files) '(company-dabbrev-code))
-  (set-company-backend! 'prog-mode '((company-capf company-files company-dabbrev-code company-dabbrev)))
-  (set-company-backend! 'text-mode '((company-dabbrev company-files)))
   )
 
 (use-package! poetry
@@ -761,3 +756,96 @@ exec-path exec-suffixes 'file-executable-p))
 
 (use-package! company-box
   :hook (company-mode . company-box-mode))
+
+;; (use-package lambda-themes
+;;   :custom
+;;   (lambda-themes-set-italic-comments t)
+;;   (lambda-themes-set-italic-keywords t)
+;;   (lambda-themes-set-variable-pitch t)
+;;   :config
+;;   ;; load preferred theme
+;;   (load-theme 'lambda-light))
+
+;; (use-package tabspaces
+;;   :hook (after-init . tabspaces-mode) ;; use this only if you want the minor-mode loaded at startup.
+;;   :commands (tabspaces-switch-or-create-workspace
+;;              tabspaces-open-or-create-project-and-workspace)
+;;   :custom
+;;   (tabspaces-use-filtered-buffers-as-default t)
+;;   (tabspaces-default-tab "Default")
+;;   (tabspaces-remove-to-default t)
+;;   (tabspaces-include-buffers '("*scratch*"))
+;;   ;; sessions
+;;   (tabspaces-session t)
+;;   (tabspaces-session-auto-restore t)
+
+;;   :config
+;;   (defvar tabspaces-command-map
+;;     (let ((map (make-sparse-keymap)))
+;;       (define-key map (kbd "C") 'tabspaces-clear-buffers)
+;;       (define-key map (kbd "b") 'tabspaces-switch-to-buffer)
+;;       (define-key map (kbd "d") 'tabspaces-close-workspac)
+;;       (define-key map (kbd "k") 'tabspaces-kill-buffers-close-workspace)
+;;       (define-key map (kbd "o") 'tabspaces-open-or-create-project-and-workspace)
+;;       (define-key map (kbd "r") 'tabspaces-remove-current-buffer)
+;;       (define-key map (kbd "R") 'tabspaces-remove-selected-buffer)
+;;       (define-key map (kbd "s") 'tabspaces-switch-or-create-workspace)
+;;       (define-key map (kbd "t") 'tabspaces-switch-buffer-and-tab)
+;;       map)
+;;     "Keymap for tabspace/workspace commands after `tabspaces-keymap-prefix'.")
+
+;;   ;; Filter Buffers for Consult-Buffer
+
+;;   (with-eval-after-load 'consult
+;;     ;; hide full buffer list (still available with "b" prefix)
+;;     (consult-customize consult--source-buffer :hidden t :default nil)
+;;     ;; set consult-workspace buffer list
+;;     (defvar consult--source-workspace
+;;       (list :name     "Workspace Buffers"
+;;             :narrow   ?w
+;;             :history  'buffer-name-history
+;;             :category 'buffer
+;;             :state    #'consult--buffer-state
+;;             :default  t
+;;             :items    (lambda () (consult--buffer-query
+;;                                   :predicate #'tabspaces--local-buffer-p
+;;                                   :sort 'visibility
+;;                                   :as #'buffer-name)))
+
+;;       "Set workspace buffer list for consult-buffer.")
+;;     (add-to-list 'consult-buffer-sources 'consult--source-workspace))
+;;   )
+
+;; (use-package popper
+;;   :ensure t ; or :straight t
+;;   :bind (("C-`"   . popper-toggle-latest)
+;;          ("M-`"   . popper-cycle)
+;;          ("C-M-`" . popper-toggle-type))
+;;   :init
+;;   (setq popper-reference-buffers
+;;         '("\\*Messages\\*"
+;;           "Output\\*$"
+;;           "\\*Async Shell Command\\*"
+;;           "\\*Python\\*"
+;;           "\\*MATLAB\\*"
+;;           help-mode
+;;           compilation-mode))
+;;   (popper-mode +1)
+;;   (popper-echo-mode +1))                ; For echo area hints
+
+;; (require 'conda)
+;; (conda-env-initialize-interactive-shells)
+;; (conda-env-initialize-eshell)
+;; (conda-env-autoactivate-mode t)
+;; (add-hook 'find-file-hook (lambda () (when (bound-and-true-p conda-project-env-path)
+;;                                          (conda-env-activate-for-buffer))))
+;; (custom-set-variables
+;;  '(conda-anaconda-home "c:/Users/Jonathan/miniconda3/"))
+(use-package openai-api
+  :load-path "~/.emacs.d/openai-api.el/"
+  :config
+  (setq openai-api-key "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")
+
+  (with-eval-after-load 'git-commit-mode
+    (define-key git-commit-mode-map (kbd "C-c i") #'openai-current-commit-msg))
+)
